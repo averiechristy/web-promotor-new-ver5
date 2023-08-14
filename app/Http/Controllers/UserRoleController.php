@@ -37,12 +37,43 @@ class UserRoleController extends Controller
             'jenis_role'=> $request->jenis_role,
         ]);
 
-        return redirect(route('admin.userrole.index'));
+        return redirect(route('admin.userrole.index'))->with('sucess','new role has been added!');
     }
 
     /**
      * Display the specified resource.
      */
+
+     public function tampildata ($id){
+        $data = UserRole::find($id);
+        
+        // return view('tampildata',[
+        //     'data'->$data
+        // ]);
+
+        return view('admin.userrole.edit', [
+            'data' => $data
+        ]);
+     }
+
+     public function updatedata(Request $request, $id){
+        $data = UserRole::find($id);
+        $data->update($request->all());
+
+        return redirect(route('admin.userrole.index'))->with('sucess','role has been updated!');
+
+        
+
+     }
+
+     public function destroy (Request $request, $id) {
+        $data = UserRole::find($id);
+        $data->delete();
+
+        return redirect(route('admin.userrole.index'))->with('sucess','role has been deleted!');
+
+     }
+     
     public function show(string $id)
     {
         //
@@ -67,8 +98,5 @@ class UserRoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+   
 }

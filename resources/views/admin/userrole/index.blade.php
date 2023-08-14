@@ -11,14 +11,23 @@
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
+                        
                         <div class="card-header py-3">
                             <a href="{{route ('admin.userrole.create')}}" class="btn btn-warning btn-sm">Add Data</a>
+                            
                         </div>
+
+
+
+
+
                         <div class="card-body">
+
+                        
                             
                             <div class="table-responsive">
                             
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
+                                <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>
                                            
@@ -38,9 +47,11 @@
                                             <td>{{$item->jenis_role}}</td>
                                             <td> 
                                                <div class="row">
+                                               <a href="{{route('tampildata', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
+                                                  
+                                               
+                                               <a href="{{route('delete', $item->id)}}" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white" onclick="return confirm ('Are you sure?')"></i></a>                 
 
-                                                    <button type="button" class="btn btn-warning icon-circle" > <i class="fas fa-fw fa-edit" style="color:white"></i></button>
-                                                    <button type="button" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
 
                                                       
                                                 </div>
@@ -50,7 +61,14 @@
                                         @endforeach
                                         
                                     </tbody>
+                                    
                                 </table>
+                                <nav aria-label="Page navigation example">
+
+
+</nav>
+                               
+
                             </div>
                         </div>
                     </div>

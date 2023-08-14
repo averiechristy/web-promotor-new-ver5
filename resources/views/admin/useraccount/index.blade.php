@@ -18,7 +18,7 @@
                             
                             <div class="table-responsive">
                             
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
+                                <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>
                                           
@@ -48,7 +48,7 @@
                                             <td>{{ $item->Role->jenis_role }}</td>
                                             <td> 
                                                <div class="row">
-                                                    <button type="button" class="btn btn-warning icon-circle" > <i class="fas fa-fw fa-edit" style="color:white"></i></button>
+                                               <a href="{{route('tampildata', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
                                                     <button type="button" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
                                             
                                                 </div>

@@ -121,10 +121,22 @@ Route::get('admin/userrole/index', [UserRoleController::class, 'index'])->name('
 Route::get('admin/userrole/create', [UserRoleController::class, 'create'])->name('admin.userrole.create');
 Route::post('admin/userrole/simpan', [UserRoleController::class, 'store'])->name('admin.userrole.simpan');
 
+Route::get('/tampildata/{id}', [UserRoleController::class, 'tampildata'])->name('tampildata');
+Route::post('/updatedata/{id}', [UserRoleController::class, 'updatedata'])->name('updatedata');
+Route::get('/delete/{id}', [UserRoleController::class, 'destroy'])->name('delete');
+
+
 // user account route
 Route::get('admin/useraccount/index', [UserController::class, 'index'])->name('admin.useraccount.index');
 Route::get('admin/useraccount/create', [UserController::class, 'create'])->name('admin.useraccount.create');
 Route::post('admin/useraccount/simpan', [UserController::class, 'store'])->name('admin.useraccount.simpan');
+
+
+
+
+
+
+
 
 
 // // login
