@@ -22,6 +22,12 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+
+        Schema::table('package_incomes', function($table) {
+            $table->foreign('produk_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('role_id')->references('id')->on('user_roles')->onDelete('cascade')->onUpdate('cascade');
+        });
     }
 
     /**

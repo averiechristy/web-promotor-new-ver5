@@ -16,10 +16,15 @@ return new class extends Migration
             $table->string('nama_produk');
             $table->unsignedBigInteger('role_id');
             $table->integer('poin_produk');
-            $table->binary('gambar_produk');
+            $table->string('gambar_produk');
             $table->string('deskripsi_produk');
             $table->softDeletes();
             $table->timestamps();
+        });
+
+
+        Schema::table('products', function($table) {
+            $table->foreign('role_id')->references('id')->on('user_roles')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

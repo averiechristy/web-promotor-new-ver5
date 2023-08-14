@@ -57,6 +57,43 @@ class UserController extends Controller
         return redirect(route('admin.useraccount.index'));
     }
 
+
+    public function tampiluser ($id){
+        $data = User::find($id);
+        $akses = Akses::all();
+        $role = UserRole::all();
+       
+        
+        // return view('tampildata',[
+        //     'data'->$data
+        // ]);
+
+        return view('admin.useraccount.edit', [
+            'data' => $data,
+            'akses' => $akses,
+            'role' => $role,
+        ]);
+     }
+
+     public function updateuser(Request $request, $id){
+       
+        $data = User::find($id);
+       $data->akses_id    = $request->akses_id;
+       $data->role_id  = $request->role_id;
+       $data->nama  = $request->nama;
+       $data->username  = $request->username;
+       $data->email = $request->email;
+       $data->password = $request->password;
+       $data->phone_number  = $request->phone_number;
+
+       $data->save();
+
+        return redirect(route('admin.useraccount.index'))->with('sucess','role has been updated!');
+
+        
+
+     }
+
     /**
      * Display the specified resource.
      */
@@ -86,6 +123,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        User::find($id)->delete();
+
+        return redirect(route('admin.useraccount.index'))->with('sucess','user has been deleted!');
     }
 }

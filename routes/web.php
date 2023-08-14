@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AksesController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +116,12 @@ Route::get('admin/akses/index', [AksesController::class, 'index'])->name('admin.
 Route::get('admin/akses/create', [AksesController::class, 'create'])->name('admin.akses.create');
 Route::post('admin/akses/simpan', [AksesController::class, 'store'])->name('admin.akses.simpan');
 
+Route::get('/tampilakses/{id}',[AksesController::class,'tampilakses'])->name('tampilakses');
+Route::post('/updateakses/{id}',[AksesController::class,'updateakses'])->name('updateakses');
+
+
+Route::delete('/deleteakses/{id}', [AksesController::class, 'destroy'])->name('deleteakses');
+
 
 // user role route
 Route::get('admin/userrole/index', [UserRoleController::class, 'index'])->name('admin.userrole.index');
@@ -123,7 +130,7 @@ Route::post('admin/userrole/simpan', [UserRoleController::class, 'store'])->name
 
 Route::get('/tampildata/{id}', [UserRoleController::class, 'tampildata'])->name('tampildata');
 Route::post('/updatedata/{id}', [UserRoleController::class, 'updatedata'])->name('updatedata');
-Route::get('/delete/{id}', [UserRoleController::class, 'destroy'])->name('delete');
+Route::delete('/delete/{id}', [UserRoleController::class, 'destroy'])->name('delete');
 
 
 // user account route
@@ -131,8 +138,16 @@ Route::get('admin/useraccount/index', [UserController::class, 'index'])->name('a
 Route::get('admin/useraccount/create', [UserController::class, 'create'])->name('admin.useraccount.create');
 Route::post('admin/useraccount/simpan', [UserController::class, 'store'])->name('admin.useraccount.simpan');
 
+Route::get('/tampiluser/{id}',[UserController::class,'tampiluser'])->name('tampiluser');
+Route::post('/updateuser/{id}',[UserController::class,'updateuser'])->name('updateuser');
+Route::delete('/deleteuser/{id}', [UserController::class, 'destroy'])->name('deleteuser');
 
 
+
+// Product Route
+Route::get('admin/product/index', [ProductController::class, 'index'])->name('admin.product.index');
+Route::get('admin/product/create', [ProductController::class, 'create'])->name('admin.product.create');
+Route::post('admin/product/simpan', [ProductController::class, 'store'])->name('admin.product.simpan');
 
 
 

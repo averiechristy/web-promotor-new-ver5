@@ -11,7 +11,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <a href="add-product.html" class="btn btn-warning btn-sm">Add Data</a>
+        <a href="{{route('admin.product.create')}}" class="btn btn-warning btn-sm">Add Data</a>
     </div>
     <div class="card-body">
         
@@ -20,27 +20,31 @@
             <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
                     <tr>
-                        <th>No</th>
+                        
                         <th>Id Produk</th>
                         <th>Nama Produk</th>
                         <th>Poin Produk</th>
                         <th>Gambar Produk</th>
                         <th>Deskripsi Produk</th>
+                        <th>Role Produk</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 
                 <tbody>
+                @foreach ($dtProduct as $item)
                     <tr>
-                        <td>1</td>
-                        <td>MS001</td>
-                        <td>QRIS</td>
-                        <td>4</td>
+                  
+                     
+                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->nama_produk }}</td>
+                        <td>{{ $item->poin_produk}}</td>
                         <td>
-
-                            <img src="{{asset('img/produk.png')}}" style="height: 100px; width: 100px; ">
+                        <!-- <img src="{{ $item->gambar_produk }}" style="height: 100px; width: 100px; " > -->
+                        {{ $item->foto_produk}}
                         </td>
-                        <td>Lorem ipsum dolor sit amet consectetur</td>
+                        <td>{{ $item->deskripsi_produk }}</td>
+                        <td>{{ $item->Role->jenis_role }}</td>
                         
                         <td> 
                            <div class="row">
@@ -51,7 +55,7 @@
                             </td>
                         
                     </tr>
-
+                    @endforeach
                     
                 </tbody>
             </table>

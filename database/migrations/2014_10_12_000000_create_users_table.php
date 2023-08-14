@@ -23,7 +23,18 @@ return new class extends Migration
             $table->binary('avatar')->nullable();
             $table->string('phone_number');
             $table->timestamps();
-            $table->softDeletes();        });
+            $table->softDeletes();      
+
+
+          });
+
+          
+   Schema::table('users', function($table) {
+    $table->foreign('akses_id')->references('id')->on('akses')->onDelete('cascade')->onUpdate('cascade');
+    $table->foreign('role_id')->references('id')->on('user_roles')->onDelete('cascade')->onUpdate('cascade');
+});
+
+          
     }
     
 

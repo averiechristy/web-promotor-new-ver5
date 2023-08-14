@@ -40,6 +40,29 @@ class AksesController extends Controller
 
     }
 
+
+    public function tampilakses($id){
+        $data = Akses::find($id);
+        
+        // return view('tampildata',[
+        //     'data'->$data
+        // ]);
+
+        return view('admin.akses.edit', [
+            'data' => $data
+        ]);
+     }
+
+
+     public function updateakses(Request $request, $id){
+        $data = Akses::find($id);
+        $data->update($request->all());
+
+        return redirect(route('admin.akses.index'))->with('sucess','akses has been updated!');
+
+        
+
+     }
     /**
      * Display the specified resource.
      */
@@ -67,8 +90,10 @@ class AksesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function destroy (Request $request, $id) {
+        Akses::find($id)->delete();
+
+        return redirect(route('admin.akses.index'))->with('sucess','akses has been deleted!');
+
+     }
 }

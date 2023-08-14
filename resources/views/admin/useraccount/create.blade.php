@@ -12,14 +12,14 @@
                                         Insert a new user account
                                     </div>
                                     <div class="card-body">
-                                       <form action="{{route('admin.useraccount.simpan')}}" method="post">
+                                       <form action="{{route('admin.product.simpan')}}" method="post">
                                             @csrf
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">User Akses</label>
 
                                                 <select name = "akses_id" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>Pilih Akses</option>
+                                                    <option selected>-- Pilih Akses --</option>
                                                    @foreach ($akses as $item)
                                                     <option value="{{ $item->id }}">{{ $item->jenis_akses }}</option>
                                                 @endforeach
@@ -33,7 +33,7 @@
                                                 <label for="" class="form-label">Kode Role</label>
 
                                                 <select name = "role_id" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>Pilih Kode Role</option>
+                                                    <option selected>-- Pilih Kode Role--</option>
                                                     @foreach ($role as $item)
                                                     <option value="{{ $item->id }}">{{ $item->kode_role }} - {{$item->jenis_role}}</option>
                                                 @endforeach

@@ -67,8 +67,7 @@ class UserRoleController extends Controller
      }
 
      public function destroy (Request $request, $id) {
-        $data = UserRole::find($id);
-        $data->delete();
+        UserRole::find($id)->delete();
 
         return redirect(route('admin.userrole.index'))->with('sucess','role has been deleted!');
 

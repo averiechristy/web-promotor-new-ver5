@@ -12,16 +12,16 @@
                                         Edit user account
                                     </div>
                                     <div class="card-body">
-                                       <form action="/updatedata/{{$data->id}}" method="post">
+                                       <form action="/updateuser/{{$data->id}}" method="post">
                                             @csrf
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">User Akses</label>
 
                                                 <select name = "akses_id" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>Pilih Akses</option>
+                                                    <option selected>{{ $data->Akses->jenis_akses }}</option>
                                                    @foreach ($akses as $item)
-                                                    <option value="{{ $item->Akses->jenis_akses }}">{{ $item->jenis_akses }}</option>
+                                                    <option value="{{ $item->id }}" {{ $data->akses_id == $item->id ? 'selected':''}}> {{ $item->jenis_akses }} </option>
                                                 @endforeach
                                                   
                                                   </select>
@@ -33,9 +33,9 @@
                                                 <label for="" class="form-label">Kode Role</label>
 
                                                 <select name = "role_id" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>Pilih Kode Role</option>
+                                                    <option selected>{{ $data->Role->jenis_role }}</option>
                                                     @foreach ($role as $item)
-                                                    <option value="{{ $item->Role->jenis_role }}">{{ $item->kode_role }} - {{$item->jenis_role}}</option>
+                                                    <option value="{{ $item->id }}" {{ $data->role_id == $item->id ? 'selected':''}}> {{ $item->kode_role }} - {{$item->jenis_role}}</option>
                                                 @endforeach
                                                   </select>
                                                 <!-- @if ($errors->has('name'))
@@ -63,11 +63,11 @@
                                                   <label for="inputPassword6" class="col-form-label">Password</label>
                                                 </div>
                                                 <div class="col-auto">
-                                                  <input name= "password" type="text" style="border-color: #01004C;" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" value="{{ $data->password }}" required>
+                                                  <input name= "password" type="text" style="border-color: #01004C;" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" value ="{{ $data->password }}" required>
                                                 </div>
 
                                                 <div class="col-auto">
-                                                    <input type="text" style="border-color: #01004C;"  id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" placeholder="Re-type Password" value="{{ $data->password }}" required>
+                                                    <input type="text" style="border-color: #01004C;"  id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" placeholder="Re-type Password" value ="{{ $data->password }}" required>
 
                                                 </div>
                                               </div>
@@ -89,7 +89,7 @@
                                             </div>
 
                                             <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Submit</button>
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Save</button>
                                             </div>
                                         </form>
                                     </div>

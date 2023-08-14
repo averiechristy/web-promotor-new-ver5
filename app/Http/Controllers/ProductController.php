@@ -2,46 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
 use App\Models\UserRole;
-use App\Models\User;
-use App\Models\UserAccount;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class LoginController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('login');
-    }
 
-
-    public function authenticate(Request $request)
-    {
-       $credentials = $request->validate([
-            'username' => 'required',
-            'password'  => 'required',
+        $dtProduct = Product::all();
+        return view('admin.product.index', [
+            'dtProduct' => $dtProduct
         ]);
-
-        
-        if (Auth::attempt($credentials)){
-            $request->session()->regenerate();
-            return redirect()->inteded('admin.dashboard');
-        }
-    
-        return back()->with('error', 'email atau password salah');
-
-        dd('berhasil login');
+       
     }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        $role = UserRole::all();
+        
+
+        return view ('admin.product.create',[
+            'role' => $role,
+        ]);
     }
 
     /**
@@ -49,10 +40,21 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        
+       
+    
+        Product::create([
+            'gambar_produk'     => $request->gambar_produk,
+            'role_id'     => $request->role_id,
+            'nama_produk'   => $request->nama_produk,
+            'poin_produk'   => $request->poin_produk,
+            'deskripsi_produk'   => $request->deskripsi_produk,
+
+        ]);
+
+        return redirect(route('admin.product.index'))->with('sucess','new product has been added!');
+
+
     }
-
-
 
     /**
      * Display the specified resource.

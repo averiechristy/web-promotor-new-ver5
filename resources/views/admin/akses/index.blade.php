@@ -7,7 +7,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">User Role</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Akses </h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -39,9 +39,12 @@
                                             <td> 
                                                <div class="row">
 
-                                                    <button type="button" class="btn btn-warning icon-circle" > <i class="fas fa-fw fa-edit" style="color:white"></i></button>
-                                                    <button type="button" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
-
+                                               <a href="{{route('tampilakses', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
+                                               <form method="POST" action="{{ route('deleteakses', $item->id) }}">
+                            @csrf
+                            <input name="_method" type="hidden" value="DELETE">
+                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
+                        </form>
                                                       
                                                 </div>
                                                 </td>

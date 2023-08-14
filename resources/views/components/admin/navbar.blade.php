@@ -45,7 +45,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link " href="product.html" data-toggle="" data-target="#collapseTwo"
+        <a class="nav-link " href="{{route('admin.product.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-box" style="color: #01004C"></i>
             <span style="color: #01004C">Product</span>

@@ -14,16 +14,17 @@
                                         Insert a new product
                                     </div>
                                     <div class="card-body">
-                                       <form action="#" method="post">
-                                            <!-- @csrf -->
+                                       <form action="" method="post">
+                                            @csrf
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Role</label>
 
                                                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>Pilih Kode Role</option>
-                                                    <option value="1">MS</option>
-                                                    <option value="2">TM</option>
-                                                    <option value="3">MR</option>
+                                                <option selected>Pilih Kode Role</option>
+                                                    @foreach ($role as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->kode_role }} - {{$item->jenis_role}}</option>
+                                                @endforeach
+                                                  
                                                   </select>
                                                 <!-- @if ($errors->has('name'))
                                                     <p class="text-danger">{{$errors->first('name')}}</p>
@@ -36,26 +37,26 @@
                                                   <label for="inputPassword6" class="col-form-label">Nama Produk</label>
                                                 </div>
                                                 <div class="col-auto">
-                                                  <input type="text" style="border-color: #01004C;" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" required>
+                                                  <input name ="nama_produk" type="text" style="border-color: #01004C;" id="" class="form-control" aria-describedby="passwordHelpInline" required>
                                                 </div>
                                                 <div class="col-auto">
                                                     <label for="inputPassword6" class="col-form-label">Poin</label>
                                                   </div>
                                                 <div class="col-auto">
-                                                    <input type="text" style="border-color: #01004C;"  id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" required>
+                                                    <input name="poin_produk" type="text" style="border-color: #01004C;"  id="" class="form-control" aria-describedby="passwordHelpInline" required>
 
                                                 </div>
                                               </div>
                                               <form>
                                                 <div class="form-group">
                                                   <label for="exampleFormControlFile1">Upload Gambar Produk</label>
-                                                  <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                                  <input  name="gambar_produk" type="file" class="form-control-file">
                                                 </div>
                                               </form>
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Product</label>
-                                                <textarea name="code" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required > </textarea>
+                                                <textarea name="deskripsi_produk" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required > </textarea>
                                                 <!-- @if ($errors->has('code'))
                                                     <p class="text-danger">{{$errors->first('code')}}</p>
                                                 @endif -->

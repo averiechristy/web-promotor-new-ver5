@@ -50,8 +50,11 @@
                                                <a href="{{route('tampildata', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
                                                   
                                                
-                                               <a href="{{route('delete', $item->id)}}" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white" onclick="return confirm ('Are you sure?')"></i></a>                 
-
+                                               <form method="POST" action="{{ route('delete', $item->id) }}">
+                            @csrf
+                            <input name="_method" type="hidden" value="DELETE">
+                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
+                        </form>
 
                                                       
                                                 </div>
