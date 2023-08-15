@@ -40,28 +40,72 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-       
-    
-        Product::create([
-            'gambar_produk'     => $request->gambar_produk,
-            'role_id'     => $request->role_id,
-            'nama_produk'   => $request->nama_produk,
-            'poin_produk'   => $request->poin_produk,
-            'deskripsi_produk'   => $request->deskripsi_produk,
+        $nm = $request->gambar_produk;
+        $namaFile = $nm->getClientOriginalName();
 
-        ]);
+        
 
-        return redirect(route('admin.product.index'))->with('sucess','new product has been added!');
+        $dtProduk = new Product;
+        $dtProduk->nama_produk = $request->nama_produk;
+        $dtProduk->role_id = $request->role_id;
+        $dtProduk->poin_produk = $request->poin_produk;
+        $dtProduk->deskripsi_produk = $request->deskripsi_produk;
+        $dtProduk->gambar_produk = $namaFile;
+
+
+        $nm->move(public_path().'/img', $namaFile);
+        $dtProduk->save();
+
+        return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
+
+        // dd($request->all());
+
 
 
     }
+
+    public function tampilproduct ($id){
+        $data = Product::find($id);
+      
+        $role = UserRole::all();
+       
+        
+        // return view('tampildata',[
+        //     'data'->$data
+        // ]);
+
+        return view('admin.product.edit', [
+            'data' => $data,
+            'role' => $role,
+        ]);
+     }
+
+     public function updateproduct(Request $request, $id){
+       
+      $ubah = Product::findorfail($id);
+      $awal = $ubah->gambar_produk;
+
+      $dtProduk = [
+        'role_id'=>$request->role_id,
+        'nama_produk'=>$request->nama_produk,
+        'poin_produk'=>$request->poin_produk,
+        'gambar_produk'=>$awal,
+        'deskripsi_produk'=>$request->deskripsi_produk,
+      ];
+
+      $request->gambar_produk->move(public_path().'/img',$awal);
+      $ubah->update($dtProduk);
+      
+      return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
+
+     }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+       
     }
 
     /**
@@ -85,6 +129,11 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Product::find($id)->delete();
+
+        return redirect(route('admin.product.index'))->with('sucess','role has been deleted!');
+
     }
+
+    
 }

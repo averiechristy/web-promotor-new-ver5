@@ -11,16 +11,16 @@
                                         Insert a new Package Income
                                     </div>
                                     <div class="card-body">
-                                       <form action="#" method="post">
-                                            <!-- @csrf -->
+                                       <form action="{{route('admin.product.simpan')}}" method="post">
+                                            @csrf
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Role</label>
 
-                                                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>Pilih Kode Role</option>
-                                                    <option value="1">MS</option>
-                                                    <option value="2">TM</option>
-                                                    <option value="3">MR</option>
+                                                <select class="form-control" aria-label=".form-select-lg example" style=" width: 50%;" required>
+                                                                             <option selected>-- Pilih Kode Role--</option>
+                                                    @foreach ($role as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->kode_role }} - {{$item->jenis_role}}</option>
+                                                @endforeach
                                                   </select>
                                                 <!-- @if ($errors->has('name'))
                                                     <p class="text-danger">{{$errors->first('name')}}</p>
@@ -43,14 +43,56 @@
                                                     <p class="text-danger">{{$errors->first('code')}}</p>
                                                 @endif -->
                                             </div>
+  <form action="#" method="POST">
+          <div class="control-group after-add-more">
+          <div class="form-row">
+    <div class="col-md-5 mb-3">
+      <label for="validationCustom01">Nama Produk</label>
+     
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationCustom02">Quantity</label>
+     
+    </div>
+    
+   
+    </div>
+    </div>
+    
+    <div class="form-group mb-4">
+    <button class="btn btn-success add-more" type="button">
+              <i class="glyphicon glyphicon-plus"></i> Add Produk
+            </button>                                        
+            </div>
 
-                                            <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #FF9900; color: white; border-radius: 50px;">
-                                                  
-                                                        <i class="fa fa-plus" style="font-size: 14px;"></i> Tambah Produk
-                                                      
-                                                    </button>
-                                            </div>
+            <div class="copy invisible">
+            <div class="control-group">
+            <div class="form-row">
+    <div class="col-md-5 mb-3">
+    <select class="form-control "  required>
+                                                                             <option selected>-- Pilih Produk--</option>
+                                                    @foreach ($produk as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->Role->jenis_role }}- {{$item->nama_produk}}</option>
+                                                @endforeach
+                                                  </select> 
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- <label for="validationCustom02">Quantity</label> -->
+      <input type="text" name="qty_produk" class="form-control" id="validationCustom02" placeholder="" value="" required>
+     
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <!-- <label for="validationCustom05">Action</label> -->
+      <button type="button" class="btn btn-danger icon-circle remove"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
+      
+    </div>
+    </div>
+            </div>
+          </div>
+  
+          </form>
+  
 
                                             <div class="form-group mb-4">
                                                 <button type="submit" class="btn " style="background-color: #01004C; color: white;">Submit</button>

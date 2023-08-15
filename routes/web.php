@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AksesController;
+use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
@@ -110,6 +113,9 @@ Route::get('/user/income', function () {
     return view('/user/income');
 });
 
+Route::get('/coba', function () {
+    return view('/coba');
+});
 
 //akses route
 Route::get('admin/akses/index', [AksesController::class, 'index'])->name('admin.akses.index');
@@ -149,6 +155,26 @@ Route::get('admin/product/index', [ProductController::class, 'index'])->name('ad
 Route::get('admin/product/create', [ProductController::class, 'create'])->name('admin.product.create');
 Route::post('admin/product/simpan', [ProductController::class, 'store'])->name('admin.product.simpan');
 
+Route::get('/tampilproduct/{id}',[ProductController::class,'tampilproduct'])->name('tampilproduct');
+Route::post('/updateproduct/{id}',[ProductController::class,'updateproduct'])->name('updateproduct');
+Route::delete('/deleteproduct/{id}', [ProductController::class, 'destroy'])->name('deleteproduct');
+
+
+
+// Package Route
+
+Route::get('admin/package/index', [PackageController::class, 'index'])->name('admin.package.index');
+Route::get('admin/package/create', [PackageController::class, 'create'])->name('admin.package.create');
+Route::post('admin/package/simpan', [PackageController::class, 'store'])->name('admin.package.simpan');
+
+
+// Artikel Route
+Route::get('admin/artikel/index', [ArtikelController::class, 'index'])->name('admin.artikel.index');
+Route::get('admin/artikel/create', [ArtikelController::class, 'create'])->name('admin.artikel.create');
+Route::post('admin/artikel/simpan', [ArtikelController::class, 'store'])->name('admin.artikel.simpan');
+
+Route::get('/tampilartikel/{id}',[ArtikelController::class,'show'])->name('tampilartikel');
+Route::post('/updateartikel/{id}',[ArtikelController::class,'updateartikel'])->name('updateartikel');
 
 
 

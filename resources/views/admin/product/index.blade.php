@@ -40,17 +40,21 @@
                         <td>{{ $item->nama_produk }}</td>
                         <td>{{ $item->poin_produk}}</td>
                         <td>
-                        <!-- <img src="{{ $item->gambar_produk }}" style="height: 100px; width: 100px; " > -->
-                        {{ $item->foto_produk}}
+
+                        <a href="{{asset('img/'.$item->gambar_produk)}}" target="_black" rel="noopener noreferrer">Lihat Gambar</a>
+                        <!-- {{ $item->gambar_produk}} -->
                         </td>
                         <td>{{ $item->deskripsi_produk }}</td>
                         <td>{{ $item->Role->jenis_role }}</td>
                         
                         <td> 
                            <div class="row">
-                                <button type="button" class="btn btn-warning icon-circle" > <i class="fas fa-fw fa-edit" style="color:white"></i></button>
-                                <button type="button" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
-                        
+                           <a href="{{route('tampilproduct', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
+                           <form method="POST" action="{{ route('deleteproduct', $item->id) }}">
+                            @csrf
+                            <input name="_method" type="hidden" value="DELETE">
+                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
+                        </form>                                              
                             </div>
                             </td>
                         

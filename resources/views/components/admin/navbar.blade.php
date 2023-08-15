@@ -54,7 +54,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link " href="package-income.html" data-toggle="" data-target="#collapseTwo"
+        <a class="nav-link " href="{{route('admin.package.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-money-bill-wave-alt" style="color: #01004C"></i>
             <span style="color: #01004C">Package Income</span>
@@ -63,7 +63,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link " href="artikel.html" data-toggle="" data-target="#collapseTwo"
+        <a class="nav-link " href="{{route('admin.artikel.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="far fa-newspaper" style="color: #01004C"></i>
             <span style="color: #01004C">Article</span>

@@ -11,7 +11,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="add-package-income.html" class="btn btn-warning btn-sm">Add Data</a>
+                            <a href="{{route('admin.package.create')}}" class="btn btn-warning btn-sm">Add Data</a>
                         </div>
                         <div class="card-body">
                             
@@ -20,7 +20,7 @@
                                 <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
+                                           
                                             <th>Judul Paket</th>
                                             <th>Deskripsi Paket</th>
                                             <th>Nama Produk</th>
@@ -31,7 +31,7 @@
                                     
                                     <tbody>
                                         <tr>
-                                            <td>1</td>
+                                            
                                             <td>Penghasilan 3 juta</td>
                                             <td>Lorem ipsum dolor sit amet consectetur</td>
                                             <td>QRIS</td>

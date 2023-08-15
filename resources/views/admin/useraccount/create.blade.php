@@ -12,7 +12,7 @@
                                         Insert a new user account
                                     </div>
                                     <div class="card-body">
-                                       <form action="{{route('admin.product.simpan')}}" method="post">
+                                       <form action="{{route('admin.useraccount.simpan')}}" method="post">
                                             @csrf
 
                                             <div class="form-group mb-4">
