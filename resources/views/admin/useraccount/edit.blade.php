@@ -9,7 +9,7 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Edit user account
+                                        Edit User Account
                                     </div>
                                     <div class="card-body">
                                        <form action="/updateuser/{{$data->id}}" method="post">

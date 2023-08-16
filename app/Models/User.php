@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, SoftDeletes, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -61,4 +61,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public static function generateCustomID()
+{
+    // Logic untuk menghasilkan custom ID, misalnya menggunakan timestamp dan role
+    $timestamp = now()->format('YmdHis');
+    $role = auth()->user()->jenis_role; // Anda dapat mengubah sumber role sesuai kebutuhan
+    $customID = $role . '-' . $timestamp;
+    
+    return $customID;
+}
 }

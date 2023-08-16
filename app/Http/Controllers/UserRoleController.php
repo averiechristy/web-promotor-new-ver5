@@ -37,6 +37,8 @@ class UserRoleController extends Controller
             'jenis_role'=> $request->jenis_role,
         ]);
 
+        $request->session()->flash('success', 'A new User Role has been created');
+
         return redirect(route('admin.userrole.index'))->with('sucess','new role has been added!');
     }
 
@@ -60,6 +62,7 @@ class UserRoleController extends Controller
         $data = UserRole::find($id);
         $data->update($request->all());
 
+        $request->session()->flash('success', "{$data->jenis_role} has been updated");
         return redirect(route('admin.userrole.index'))->with('sucess','role has been updated!');
 
         
@@ -67,7 +70,10 @@ class UserRoleController extends Controller
      }
 
      public function destroy (Request $request, $id) {
-        UserRole::find($id)->delete();
+       $userrole = UserRole::find($id);
+        $userrole->delete();
+
+        $request->session()->flash('error', "{$userrole->jenis_role} has been deleted");
 
         return redirect(route('admin.userrole.index'))->with('sucess','role has been deleted!');
 

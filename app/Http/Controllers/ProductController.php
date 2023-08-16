@@ -56,6 +56,8 @@ class ProductController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtProduk->save();
 
+        $request->session()->flash('success', 'A new Product has been created');
+
         return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
 
         // dd($request->all());
@@ -82,20 +84,42 @@ class ProductController extends Controller
 
      public function updateproduct(Request $request, $id){
        
-      $ubah = Product::findorfail($id);
-      $awal = $ubah->gambar_produk;
+        $ubah = Product::find($id);
+
+     if($request->file != ''){        
+          $path = public_path().'/img';
+
+          //code for remove old file
+          if($ubah->file != ''  && $ubah->file != null){
+               $file_old = $path.$ubah->file;
+               unlink($file_old);
+          }
+
+          //upload new file
+          $file = $request->gambar_produk;
+          $filename = $file->getClientOriginalName();
+          $file->move($path, $filename);
+
+          //for update in table
+          $ubah->update(['gambar_produk' => $filename]);
+     }
+
+    //   $ubah = Product::findorfail($id);
+    //   $awal = $ubah->gambar_produk;
 
       $dtProduk = [
         'role_id'=>$request->role_id,
         'nama_produk'=>$request->nama_produk,
         'poin_produk'=>$request->poin_produk,
-        'gambar_produk'=>$awal,
+        // 'gambar_produk'=>$awal,
         'deskripsi_produk'=>$request->deskripsi_produk,
       ];
 
-      $request->gambar_produk->move(public_path().'/img',$awal);
+    //   $request->gambar_produk->move(public_path().'/img',$awal);
       $ubah->update($dtProduk);
-      
+
+      $request->session()->flash('success', "Product has been updated");
+
       return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
 
      }
@@ -127,12 +151,13 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
-        Product::find($id)->delete();
+       $product = Product::find($id)->delete();
 
-        return redirect(route('admin.product.index'))->with('sucess','role has been deleted!');
+        $request->session()->flash('error', "{$product->nama_produk} has been deleted");
 
+        return redirect(route('admin.product.index'))->with('sucess','user has been deleted!');
     }
 
     

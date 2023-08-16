@@ -45,6 +45,8 @@ class ArtikelController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtArtikel->save();
 
+        $request->session()->flash('success', 'A new Article has been created');
+
         return redirect(route('admin.artikel.index'))->with('sucess','Artikel has been Added!');
     }
 
@@ -66,18 +68,41 @@ class ArtikelController extends Controller
 
     public function updateartikel(Request $request, $id){
        
-        $ubah = Artikel::findorfail($id);
-        $awal = $ubah->gambar_artikel;
+
+        $ubah = Artikel::find($id);
+
+        if($request->file != ''){        
+             $path = public_path().'/img';
+   
+             //code for remove old file
+             if($ubah->file != ''  && $ubah->file != null){
+                  $file_old = $path.$ubah->file;
+                  unlink($file_old);
+             }
+   
+             //upload new file
+             $file = $request->gambar_artikel;
+             $filename = $file->getClientOriginalName();
+             $file->move($path, $filename);
+   
+             //for update in table
+             $ubah->update(['gambar_artikel' => $filename]);
+        }
+   
+        // $ubah = Artikel::findorfail($id);
+        // $awal = $ubah->gambar_artikel;
   
         $dtArtikel = [
           'judul_artikel'=>$request->judul_artikel,
           'isi_artikel'=>$request->isi_artikel,
-          'gambar_artikel'=>$awal,
+        //   'gambar_artikel'=>$awal,
         ];
   
-        $request->gambar_artikel->move(public_path().'/img',$awal);
+        // $request->gambar_artikel->move(public_path().'/img',$awal);
         $ubah->update($dtArtikel);
         
+        $request->session()->flash('success', "Article has been updated");
+
         return redirect(route('admin.artikel.index'))->with('sucess','Artikel has been updated!');
   
        }
@@ -102,8 +127,13 @@ class ArtikelController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
-        //
+       $artikel = Artikel::find($id);
+       $artikel->delete();
+
+        $request->session()->flash('error', "{$artikel->judul_artikel} has been deleted");
+
+        return redirect(route('admin.artikel.index'))->with('sucess','user has been deleted!');
     }
 }

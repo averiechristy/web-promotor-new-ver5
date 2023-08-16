@@ -175,8 +175,12 @@ Route::post('admin/artikel/simpan', [ArtikelController::class, 'store'])->name('
 
 Route::get('/tampilartikel/{id}',[ArtikelController::class,'show'])->name('tampilartikel');
 Route::post('/updateartikel/{id}',[ArtikelController::class,'updateartikel'])->name('updateartikel');
+Route::delete('/deleteartikel/{id}', [ArtikelController::class, 'destroy'])->name('deleteartikel');
 
 
+
+//Dashboard Route
+Route::get('admin/dashboard/index', [PackageController::class, 'index'])->name('admin.dashboard.index');
 
 
 

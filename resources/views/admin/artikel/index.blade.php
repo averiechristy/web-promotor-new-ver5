@@ -16,7 +16,8 @@
                         <div class="card-body">
                             
                             <div class="table-responsive">
-                            
+                            @include('components.alert')
+
                                 <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>
@@ -42,8 +43,11 @@
                                             <td> 
                                                <div class="row">
                                                <a href="{{route('tampilartikel', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
-                                                    <button type="button" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
-                                            
+                                               <form method="POST" action="{{ route('deleteartikel', $item->id) }}">
+                            @csrf
+                            <input name="_method" type="hidden" value="DELETE">
+                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
+                        </form>                                              
                                                 </div>
                                                 </td>
                                             

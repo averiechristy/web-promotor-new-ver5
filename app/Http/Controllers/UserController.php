@@ -32,6 +32,8 @@ class UserController extends Controller
     {
         $akses = Akses::all();
         $role = UserRole::all();
+
+        
         return view ('admin.useraccount.create',[
             'akses' => $akses,
             'role' => $role,
@@ -51,8 +53,10 @@ class UserController extends Controller
             'email'=> $request->email,
             'password'=> $request->password,
             'phone_number'=> $request->phone_number,
+            
 
         ]);
+        $request->session()->flash('success', 'A new User Account has been created');
 
         return redirect(route('admin.useraccount.index'));
     }
@@ -85,8 +89,11 @@ class UserController extends Controller
        $data->email = $request->email;
        $data->password = $request->password;
        $data->phone_number  = $request->phone_number;
+      
 
        $data->save();
+
+       $request->session()->flash('success', "User Account has been updated");
 
         return redirect(route('admin.useraccount.index'))->with('sucess','role has been updated!');
 
@@ -121,10 +128,14 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
-        User::find($id)->delete();
+       $useraccount = User::find($id);
+       $useraccount->delete();
+
+        $request->session()->flash('error', "{$useraccount->nama} has been deleted");
 
         return redirect(route('admin.useraccount.index'))->with('sucess','user has been deleted!');
     }
+    
 }

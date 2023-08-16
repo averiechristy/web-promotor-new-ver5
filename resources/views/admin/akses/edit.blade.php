@@ -9,7 +9,7 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Edit akses
+                                        Edit Akses
                                     </div>
                                     <div class="card-body">
                                        <form action="/updateakses/{{$data->id}}" method="post">

@@ -12,7 +12,7 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Insert a new Artikel
+                                        Insert a new Article
                                     </div>
                                     <div class="card-body">
                                        <form action="{{route('admin.artikel.simpan')}}" method="post"  enctype="multipart/form-data">

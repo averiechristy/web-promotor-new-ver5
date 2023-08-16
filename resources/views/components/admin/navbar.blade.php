@@ -15,7 +15,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="dashboard">
+        <a class="nav-link" href="{{route('admin.dashboard.index')}}">
             <i class="fas fa-fw fa-tachometer-alt" style="color: #01004C"></i>
             <span style="color: #01004C">Dashboard</span></a>
     </li>

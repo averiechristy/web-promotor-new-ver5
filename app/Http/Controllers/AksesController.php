@@ -35,6 +35,7 @@ class AksesController extends Controller
             'jenis_akses'=> $request->jenis_akses,
             
         ]);
+        $request->session()->flash('success', 'A new  Akses has been created');
 
         return redirect(route('admin.akses.index'));
 
@@ -57,6 +58,9 @@ class AksesController extends Controller
      public function updateakses(Request $request, $id){
         $data = Akses::find($id);
         $data->update($request->all());
+
+        $request->session()->flash('success', "Akses Account has been updated");
+        
 
         return redirect(route('admin.akses.index'))->with('sucess','akses has been updated!');
 

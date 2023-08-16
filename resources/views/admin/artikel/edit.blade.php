@@ -12,7 +12,7 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                      Edit Artikel
+                                      Edit Article
                                     </div>
                                     <div class="card-body">
                                        <form action="/updateartikel/{{$data->id}}" method="post"  enctype="multipart/form-data">
@@ -42,7 +42,7 @@
                                               <textarea name="isi_artikel" class="my-editor form-control" id="my-editor" cols="30" rows="10" value="">{{$data->isi_artikel}}</textarea>                                             </div>
 
                                             <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Submit</button>
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Save</button>
                                             </div>
                                         </form>
                                     </div>

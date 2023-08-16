@@ -16,7 +16,8 @@
     <div class="card-body">
         
         <div class="table-responsive">
-        
+        @include('components.alert')
+
             <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
                     <tr>

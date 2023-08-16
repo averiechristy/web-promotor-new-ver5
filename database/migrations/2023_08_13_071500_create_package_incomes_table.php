@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('produk_id');
             $table->string('judul_paket');
             $table->string('deskripsi_paket');
-            $table->string('nama_produk');
+            // $table->string('nama_produk');
             $table->integer('qty_produk');
             $table->softDeletes();
             $table->timestamps();
