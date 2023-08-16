@@ -111,7 +111,9 @@
   
 </script>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
+
+
     $(document).ready(function() {
       $(".add-more").click(function(){ 
           var html = $(".copy").html();
@@ -123,8 +125,29 @@
           $(this).parents(".control-group").remove();
       });
     });
-    
-</script>
+    </script> -->
+
+
+
+
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+
+    <script type="text/javascript">
+    $(.addcustomer).on('click',function(){
+    addcustomer();
+    });
+
+    function addcusotmer(){
+        var cusotmer='<div><div class="form-group mb-4"><label for="" class="form-label">Judul Paket</label><input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required /></div></div>';
+        $('.cusotmer').append(cusotmer);
+    };
+
+    $('.remove').live('click',function(){
+    $(this).parent().parent().parent().remove();
+    }) ;
+
+    </script> -->
 
 
 

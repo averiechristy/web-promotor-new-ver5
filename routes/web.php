@@ -168,6 +168,7 @@ Route::get('admin/package/create', [PackageController::class, 'create'])->name('
 Route::post('admin/package/simpan', [PackageController::class, 'store'])->name('admin.package.simpan');
 
 
+
 // Artikel Route
 Route::get('admin/artikel/index', [ArtikelController::class, 'index'])->name('admin.artikel.index');
 Route::get('admin/artikel/create', [ArtikelController::class, 'create'])->name('admin.artikel.create');
@@ -176,6 +177,7 @@ Route::post('admin/artikel/simpan', [ArtikelController::class, 'store'])->name('
 Route::get('/tampilartikel/{id}',[ArtikelController::class,'show'])->name('tampilartikel');
 Route::post('/updateartikel/{id}',[ArtikelController::class,'updateartikel'])->name('updateartikel');
 Route::delete('/deleteartikel/{id}', [ArtikelController::class, 'destroy'])->name('deleteartikel');
+
 
 
 

@@ -65,8 +65,6 @@ class UserRoleController extends Controller
         $request->session()->flash('success', "{$data->jenis_role} has been updated");
         return redirect(route('admin.userrole.index'))->with('sucess','role has been updated!');
 
-        
-
      }
 
      public function destroy (Request $request, $id) {
