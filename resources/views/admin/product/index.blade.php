@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         
-                        <th>Id Produk</th>
+                        <th>Kode Produk</th>
                         <th>Nama Produk</th>
                         <th>Poin Produk</th>
                         <th>Gambar Produk</th>
@@ -37,7 +37,7 @@
                     <tr>
                   
                      
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->kode_produk}}</td>
                         <td>{{ $item->nama_produk }}</td>
                         <td>{{ $item->poin_produk}}</td>
                         <td>

@@ -15,10 +15,13 @@ class PackageIncome extends Model
         'role_id',
         'judul_paket',
         'deskripsi_paket',
-        'nama_produk',
-        'qty_produk',
+       
         
     ];
+
+    protected $casts = [
+        'produk' => 'array',
+        ];
 
     public function Role()
     {

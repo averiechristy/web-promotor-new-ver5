@@ -185,6 +185,11 @@ Route::delete('/deleteartikel/{id}', [ArtikelController::class, 'destroy'])->nam
 Route::get('admin/dashboard/index', [PackageController::class, 'index'])->name('admin.dashboard.index');
 
 
+Route::get('getProduct/{id}', function ($id) {
+    $produk = App\Models\Product::where('role_id',$id)->get();
+    return response()->json($produk);
+});
+
 
 // // login
 // Route::get('/login',[LoginController::class, 'index'])->name('login')->middleware('guest');

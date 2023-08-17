@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_role')->unique();
-            $table->string('jenis_role')->unique();
-
-            $table->timestamps();
-            $table->softDeletes();        });
+        Schema::table('products', function (Blueprint $table) {
+        });
     }
 
     /**
@@ -25,6 +20,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_roles');
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -50,6 +50,9 @@ class ProductController extends Controller
         $dtProduk->role_id = $request->role_id;
         $dtProduk->poin_produk = $request->poin_produk;
         $dtProduk->deskripsi_produk = $request->deskripsi_produk;
+        $dtProduk->number = $request->number;
+        $dtProduk->kode_produk = $request->kode_produk;
+
         $dtProduk->gambar_produk = $namaFile;
 
 

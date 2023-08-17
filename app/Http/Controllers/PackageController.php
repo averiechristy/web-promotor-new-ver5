@@ -45,9 +45,34 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {  
-        dd($request->all());
         
+        dd($request->all());
+        // $dataProduk = $request->input('data_produk');
+
+        // foreach ($dataProduk as $data) {
+        //     $produk = [
+        //         'nama_produk' => $data['nama_produk'],
+        //         'qty_produk' => $data['qty_produk']
+        //     ];
+            
+        //     dd($produk);
+        // }
+
+//         $dataProduk = $request->input('data_produk');
+// $semuaProduk = [];
+
+// foreach ($dataProduk as $data) {
+//     $produk = [
+//         'nama_produk' => $data['nama_produk'],
+//         'qty_produk' => $data['qty_produk']
+//     ];
+    
+//     $semuaProduk[] = $produk;
+// }
+
+// dd($semuaProduk);
     }
+    
 
     /**
      * Display the specified resource.
