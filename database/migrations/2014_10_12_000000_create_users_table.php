@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('akses_id');
             $table->unsignedBigInteger('role_id');
+            $table->string('number');
+            $table->string('kode_user')->nullable();
             $table->string('nama');
             $table->string('username');
             $table->string('email')->unique();

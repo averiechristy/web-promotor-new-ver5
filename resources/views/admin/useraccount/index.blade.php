@@ -39,7 +39,7 @@
                                     @foreach ($dtUser as $item) 
                                         <tr>
                                            
-                                            <td>{{ $item->id }}</td>
+                                            <td>{{ $item->kode_user}}</td>
                                             <td>{{ $item->nama }}</td>
                                             <td>{{ $item->username }}</td>
                                             <td>{{ $item->password }}</td>

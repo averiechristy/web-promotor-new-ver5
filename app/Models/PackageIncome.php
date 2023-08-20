@@ -28,4 +28,10 @@ class PackageIncome extends Model
 
         return $this->belongsTo(UserRole::class);
     }
+
+    
+    public function products()
+    {
+        return $this->belongsToMany(Product::class)->withPivot('qty_produk');
+    }
 }

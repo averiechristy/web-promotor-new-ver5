@@ -45,32 +45,31 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {  
+        $dataProduk = $request->input('data_produk');
+        $semuaProduk = [];
         
-        dd($request->all());
-        // $dataProduk = $request->input('data_produk');
-
-        // foreach ($dataProduk as $data) {
-        //     $produk = [
-        //         'nama_produk' => $data['nama_produk'],
-        //         'qty_produk' => $data['qty_produk']
-        //     ];
-            
-        //     dd($produk);
-        // }
-
-//         $dataProduk = $request->input('data_produk');
-// $semuaProduk = [];
-
-// foreach ($dataProduk as $data) {
-//     $produk = [
-//         'nama_produk' => $data['nama_produk'],
-//         'qty_produk' => $data['qty_produk']
-//     ];
+        foreach ($dataProduk as $data) {
+            $produk = [
+                'nama_produk' => $data['nama_produk'],
+                'qty_produk' => $data['qty_produk'],
+            ];
+        
+            $semuaProduk[] = $produk;
+        }
+      
+        
+        $jsonData = json_encode($semuaProduk);
+      
+        $package = new PackageIncome();
+        $package->judul_paket = $request->judul_paket;
+        $package->deskripsi_paket = $request->deskripsi_paket;
+        $package->role_id = $request->role_id;
+        $package->produk = $jsonData;
+        $package->save();
     
-//     $semuaProduk[] = $produk;
-// }
+$request->session()->flash('success', 'A new Product has been created');
 
-// dd($semuaProduk);
+        return redirect(route('admin.package.index'))->with('sucess','product has been updated!');
     }
     
 
@@ -79,8 +78,68 @@ class PackageController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+        $package = PackageIncome::find($id); // Menggunakan find() untuk menghindari error jika tidak ditemukan
+        
+
+        $produk = Product::where('role_id', $package->role_id)->get(); // Assuming your model name is Product
+        $produk = Product::all();
+        $package->produk = json_decode($package->produk, true); // Decode the JSON data into an array
+        $role = UserRole::all();
+        $selectedRoleId = $package->role_id;
+
+return view('admin.package.edit')->with([
+    'package' => $package,
+    'produk' => $produk,
+    'role' => $role,
+    'selectedRoleId' => $selectedRoleId,
+]);
+
     }
+
+    public function updatepackage(Request $request, $id){
+        $package = PackageIncome::findOrFail($id);
+        $package->judul_paket = $request->judul_paket;
+        $package->deskripsi_paket = $request->deskripsi_paket;
+    
+        $dataProduk = $request->input('data_produk');
+        $existingProduk = json_decode($package->produk, true); // Data produk yang ada sebelumnya
+        
+        
+        foreach ($dataProduk as $index => $data) {
+            $nama_produk = $data['nama_produk'];
+            $qty_produk = $data['qty_produk'];
+        
+            // Cek apakah indeks $index ada dalam existingProduk
+            if (array_key_exists($index, $existingProduk)) {
+                // Update qty_produk jika indeks ada
+                $existingProduk[$index]['qty_produk'] = $qty_produk;
+            } else {
+                // Tambahkan data baru jika indeks tidak ada
+                $existingProduk[$index] = [
+                    'nama_produk' => $nama_produk,
+                    'qty_produk' => $qty_produk,
+                ];
+            }
+        }
+
+        // dd($existingProduk);
+
+       $jsonData = json_encode($existingProduk);
+        $package = PackageIncome::findOrFail($id);
+        $package->produk = $jsonData;
+    $package->judul_paket = $request->judul_paket;
+    $package->deskripsi_paket = $request->deskripsi_paket;
+    if ($request->has('role')) {
+        $package->role_id = $request->input('role');
+    }
+        $package->save();
+    $request->session()->flash('success', 'Product has been updated');
+
+    return redirect(route('admin.package.index'))->with('success', 'Product has been updated!');
+    
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -101,10 +160,24 @@ class PackageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $package = PackageIncome::find($id);
+        $package->delete();
+
+        $request->session()->flash('error', "{$package->judul_paket} has been deleted");
+
+        return redirect(route('admin.package.index'))->with('sucess','user has been deleted!');
     }
 
    
+   
+    public function getProductsByRole($roleId)
+    {
+        $products = Product::findOrFail($roleId)->products;
+        return response()->json($products);
+    }
+
+    
+
 }

@@ -18,40 +18,50 @@
                             <div class="table-responsive">
                             @include('components.alert')
 
-                                <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
-                                    <thead>
-                                        <tr>
-                                           
-                                            <th>Judul Paket</th>
-                                            <th>Deskripsi Paket</th>
-                                            <th>Nama Produk</th>
-                                            <th>QTY</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        <tr>
-                                            
-                                            <td>Penghasilan 3 juta</td>
-                                            <td>Lorem ipsum dolor sit amet consectetur</td>
-                                            <td>QRIS</td>
-                                            <td>50</td>
-                                            
-                                           
-                                            <td> 
-                                               <div class="row">
-                                                    <button type="button" class="btn btn-warning icon-circle" > <i class="fas fa-fw fa-edit" style="color:white"></i></button>
-                                                    <button type="button" class="btn btn-danger icon-circle"><i class="fas fa-fw fa-trash" style="color:white"  data-toggle="modal" data-target="#deleteModal"></i></button>
-                                            
-                                                </div>
-                                                </td>
-                                            
-                                        </tr>
+                            <table id="myDataTable" class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
+    <thead>
+        <tr>
+            <th>Judul Paket</th>
+            <th>Deskripsi Paket</th>
+            <th>Produk</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($dtPackage as $item)
+            <tr>
+                <td>{{ $item->judul_paket }}</td>
+                <td>{{ $item->deskripsi_paket }}</td>
+                
+                    
+                    <td>
+                <ul>
+                @foreach (json_decode($item->produk, true) as $produk)
+    <li>{{ $produk['nama_produk'] }} (Qty Produk: {{ $produk['qty_produk'] }})</li>
+    
+@endforeach
 
-                                        
-                                    </tbody>
-                                </table>
+        </ul>
+                </td>
+                <td>
+                    <div class="row">
+                        <a href="{{ route('tampilpackage', $item->id) }}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white"></i></a>
+                        <form method="POST" action="{{ route('deletepackage', $item->id) }}">
+                            @csrf
+                            <input name="_method" type="hidden" value="DELETE">
+                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
+                        </form>                                               </div>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+
+
+
+
                             </div>
                         </div>
                     </div>

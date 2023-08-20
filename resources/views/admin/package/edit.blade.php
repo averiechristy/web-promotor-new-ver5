@@ -12,12 +12,12 @@
                                     </div>
                                     <div class="card-body">
                                         
-                                       <form action="{{route('admin.package.simpan')}}" method="post">
+                                       <form action="/updatepackage/{{$package->id}}" method="post">
                                        @csrf
                                             
                                             <div class="form-group mb-4 " id="koderole">
                                             <label for="role">Select Role:</label>
-    <select name = "role_id" id="role" class="form-control">
+                                            <select name="role" id="role" class="form-control">
     <option value="" disabled selected>Select a role</option> <!-- Hidden option -->
         <!-- Render options from database -->
         @php
@@ -29,10 +29,13 @@
             @php
                 $selectedRoleIds[] = $item->role_id;
             @endphp
-            <option value="{{ $item->role_id }}">{{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}</option>
+            <option value="{{ $item->Role->id }}" {{ $package->role_id == $item->Role->id ? 'selected' : '' }}>
+            {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
+        </option>
         @endif
     @endforeach
     </select>
+
 
                                                
                                             </div>
@@ -40,13 +43,13 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
-                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required />
+                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{$package->judul_paket}}" required />
                                                
                                             </div>
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Paket</label>
-                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required > </textarea>
+                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required >{{$package->deskripsi_paket}}</textarea>
                                                 <!-- @if ($errors->has('code'))
                                                     <p class="text-danger">{{$errors->first('code')}}</p>
                                                 @endif -->
@@ -56,36 +59,41 @@
                                            
                                             <div class="form-group mb-4">
                                             <div id="product-container">
-        <div class="product-item">
-            <label for="product">Select Product:</label>
-            <select name="data_produk[${counter}][nama_produk]" class="product-select form-control">
-                <!-- JavaScript will populate this based on selected role -->
-                <option value="" disabled selected>Select a product</option> <!-- Hidden option -->
-            </select>
-            <label for="quantity">Quantity:</label>
-            <input type="number" name="data_produk[${counter}][qty_produk]" class="quantity-input form-control">
+                                            @foreach ($package->produk as $index => $productData)
+            <div class="product-item">
+                <label for="product">Select Product:</label>
+                <select name="data_produk[{{ $index }}][nama_produk]" class="product-select form-control">
+                    @foreach ($produk as $product)
+                        @if ($product->role_id == $selectedRoleId)
+                            <option value="{{ $product->nama_produk }}" {{ $productData['nama_produk'] == $product->nama_produk ? 'selected' : '' }}>
+                                {{ $product->kode_produk }} - {{ $product->nama_produk }}
+                            </option>
+                        @endif
+                    @endforeach
+                </select>
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="data_produk[{{ $index }}][qty_produk]" class="quantity-input form-control" value="{{ $productData['qty_produk'] }}">
+
+                <div class="form-group mb-4">
+                    <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Remove</button>
+                </div>
+            </div>
+        @endforeach
+
 
                    
-    <div class="form-group mb-4">
-            <button type="button " class="remove-product btn btn-danger  btn-sm mt-2 mb-2" style="float: right">Remove</button> <!-- Tombol Remove -->
-            </div>
+    
         </div>
     </div>
     </div>
             
-    <div class="form-group mb-4">
+    <div class="form-group mb-4 ml-3">
     <button type="button" class="add-product btn btn-success">Add More Product</button>
 
     </div>                                       
 
-                                               
-
-                                            
-
-    
-
-                                            <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Submit</button>
+                                            <div class="form-group mb-4  ml-3">
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Save</button>
                                             </div>
                                         </form>
                                     </div>
@@ -120,7 +128,8 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        var counter = 0;
+        var counter = {{ count($package->produk) }}; // Set counter sesuai dengan jumlah produk yang ada
+
         $('#role').change(function() {
             var roleId = $(this).val();
             $.ajax({

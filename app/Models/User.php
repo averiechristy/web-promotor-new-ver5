@@ -28,6 +28,8 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'avatar',
+        'number',
+        'kode_user',
     ];
 
     public function Akses()
@@ -66,9 +68,17 @@ class User extends Authenticatable
 {
     // Logic untuk menghasilkan custom ID, misalnya menggunakan timestamp dan role
     $timestamp = now()->format('YmdHis');
-    $role = auth()->user()->jenis_role; // Anda dapat mengubah sumber role sesuai kebutuhan
+    $role = auth()->user()->kode_role; // Anda dapat mengubah sumber role sesuai kebutuhan
     $customID = $role . '-' . $timestamp;
     
     return $customID;
+}
+
+public static function boot(){
+    parent::boot();
+    static::creating(function($model){
+        $model->number = Product::where('role_id', $model->role_id)->max('number')+1;
+        $model->kode_user = $model->Role->kode_role . '-' .str_pad($model->number,5,'0',STR_PAD_LEFT);
+    });
 }
 }

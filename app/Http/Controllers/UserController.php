@@ -53,6 +53,8 @@ class UserController extends Controller
             'email'=> $request->email,
             'password'=> $request->password,
             'phone_number'=> $request->phone_number,
+            'number' => $request->number,
+            'kode_user' => $request->kode_user,
             
 
         ]);

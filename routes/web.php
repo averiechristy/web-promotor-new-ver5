@@ -113,9 +113,7 @@ Route::get('/user/income', function () {
     return view('/user/income');
 });
 
-Route::get('/coba', function () {
-    return view('/coba');
-});
+
 
 //akses route
 Route::get('admin/akses/index', [AksesController::class, 'index'])->name('admin.akses.index');
@@ -167,6 +165,13 @@ Route::get('admin/package/index', [PackageController::class, 'index'])->name('ad
 Route::get('admin/package/create', [PackageController::class, 'create'])->name('admin.package.create');
 Route::post('admin/package/simpan', [PackageController::class, 'store'])->name('admin.package.simpan');
 
+Route::get('/tampilpackage/{id}',[PackageController::class,'show'])->name('tampilpackage');
+Route::post('/updatepackage/{id}',[PackageController::class,'updatepackage'])->name('updatepackage');
+
+
+Route::get('admin/package/cobacreate', [PackageController::class, 'create'])->name('admin.package.createcopy');
+
+Route::delete('/deletepackage/{id}', [PackageController::class, 'destroy'])->name('deletepackage');
 
 
 // Artikel Route
@@ -189,6 +194,11 @@ Route::get('getProduct/{id}', function ($id) {
     $produk = App\Models\Product::where('role_id',$id)->get();
     return response()->json($produk);
 });
+
+// routes/web.php
+Route::get('/get-products/{role}', [PackageController::class, 'getProductsByRole']);
+Route::resource('products', 'ProductController');
+
 
 
 // // login
