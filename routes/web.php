@@ -3,11 +3,14 @@
 use App\Http\Controllers\AksesController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +28,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function () {
-    return view('login');
-});
+// Route::get('/login', function () {
+//     return view('login');
+// });
 
 Route::get('/admin/dashboard', function () {
     return view('admin/dashboard');
@@ -173,6 +176,7 @@ Route::get('admin/package/cobacreate', [PackageController::class, 'create'])->na
 
 Route::delete('/deletepackage/{id}', [PackageController::class, 'destroy'])->name('deletepackage');
 
+Route::delete('/admin/package/delete-product', [PackageController::class,'deleteProduct'])->name('admin.package.deleteProduct');
 
 // Artikel Route
 Route::get('admin/artikel/index', [ArtikelController::class, 'index'])->name('admin.artikel.index');
@@ -200,13 +204,25 @@ Route::get('/get-products/{role}', [PackageController::class, 'getProductsByRole
 Route::resource('products', 'ProductController');
 
 
+// // home route
+Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
+
+
+//Login Route
+
+Route::get('login', [LoginController::class, 'index'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
+
+// ...
+
+
+
+
 
 // // login
 // Route::get('/login',[LoginController::class, 'index'])->name('login')->middleware('guest');
 // Route::post('/login/auth',[LoginController::class, 'authenticate'])->name('login.auth');
 
-// // home route
-// Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
 
 // // dashboard admin route
 // Route::get('admin/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');

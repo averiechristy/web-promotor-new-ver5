@@ -156,11 +156,12 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-       $product = Product::find($id)->delete();
-
-        $request->session()->flash('error', "{$product->nama_produk} has been deleted");
-
-        return redirect(route('admin.product.index'))->with('sucess','user has been deleted!');
+        $produk = Product::find($id);
+        $produk->delete();
+ 
+         $request->session()->flash('error', "{$produk->nama_produk} has been deleted");
+ 
+         return redirect(route('admin.product.index'))->with('sucess','user has been deleted!');
     }
 
     

@@ -44,34 +44,38 @@ class PackageController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {  
-        $dataProduk = $request->input('data_produk');
-        $semuaProduk = [];
-        
-        foreach ($dataProduk as $data) {
-            $produk = [
-                'nama_produk' => $data['nama_produk'],
-                'qty_produk' => $data['qty_produk'],
-            ];
-        
-            $semuaProduk[] = $produk;
-        }
-      
-        
-        $jsonData = json_encode($semuaProduk);
-      
-        $package = new PackageIncome();
-        $package->judul_paket = $request->judul_paket;
-        $package->deskripsi_paket = $request->deskripsi_paket;
-        $package->role_id = $request->role_id;
-        $package->produk = $jsonData;
-        $package->save();
+{
+    $dataProduk = $request->input('data_produk');
+    $produkArray = []; // Initialize an empty array
     
-$request->session()->flash('success', 'A new Product has been created');
 
-        return redirect(route('admin.package.index'))->with('sucess','product has been updated!');
+    // dd($dataProduk);
+    foreach ($dataProduk as $data) {
+       
+        
+        $produkArray[] = [
+        
+            'nama_produk' => $data['nama_produk'],
+            'qty_produk' => $data['qty_produk'],
+            
+        ];
     }
+
+    // dd($produkArray);
+    $jsonData = json_encode($produkArray);
+
+    $package = new PackageIncome();
+    $package->judul_paket = $request->judul_paket;
+    $package->deskripsi_paket = $request->deskripsi_paket;
+    $package->role_id = $request->role_id;
+    $package->produk = $jsonData;
+
+    $package->save();
     
+    $request->session()->flash('success', 'A new Package has been created');
+    return redirect(route('admin.package.index'))->with('success', 'Package has been created successfully!');
+}
+
 
     /**
      * Display the specified resource.
@@ -81,6 +85,7 @@ $request->session()->flash('success', 'A new Product has been created');
 
         $package = PackageIncome::find($id); // Menggunakan find() untuk menghindari error jika tidak ditemukan
         
+      
 
         $produk = Product::where('role_id', $package->role_id)->get(); // Assuming your model name is Product
         $produk = Product::all();
@@ -98,45 +103,34 @@ return view('admin.package.edit')->with([
     }
 
     public function updatepackage(Request $request, $id){
-        $package = PackageIncome::findOrFail($id);
+        $dataProduk = $request->input('data_produk');
+        $produkArray = []; // Initialize an empty array
+        
+        
+       
+        foreach ($dataProduk as $data) {
+        
+            
+            $produkArray[] = [
+                'nama_produk' => $data['nama_produk'],
+                'qty_produk' => $data['qty_produk'],
+            ];
+        }
+    
+       
+        $jsonData = json_encode($produkArray);
+    
+       
+        $package = PackageIncome::findOrFail($id); // Find the package by ID
         $package->judul_paket = $request->judul_paket;
         $package->deskripsi_paket = $request->deskripsi_paket;
-    
-        $dataProduk = $request->input('data_produk');
-        $existingProduk = json_decode($package->produk, true); // Data produk yang ada sebelumnya
-        
-        
-        foreach ($dataProduk as $index => $data) {
-            $nama_produk = $data['nama_produk'];
-            $qty_produk = $data['qty_produk'];
-        
-            // Cek apakah indeks $index ada dalam existingProduk
-            if (array_key_exists($index, $existingProduk)) {
-                // Update qty_produk jika indeks ada
-                $existingProduk[$index]['qty_produk'] = $qty_produk;
-            } else {
-                // Tambahkan data baru jika indeks tidak ada
-                $existingProduk[$index] = [
-                    'nama_produk' => $nama_produk,
-                    'qty_produk' => $qty_produk,
-                ];
-            }
-        }
-
-        // dd($existingProduk);
-
-       $jsonData = json_encode($existingProduk);
-        $package = PackageIncome::findOrFail($id);
+        $package->role_id = $request->role_id;
         $package->produk = $jsonData;
-    $package->judul_paket = $request->judul_paket;
-    $package->deskripsi_paket = $request->deskripsi_paket;
-    if ($request->has('role')) {
-        $package->role_id = $request->input('role');
-    }
+        // dd($package);
         $package->save();
-    $request->session()->flash('success', 'Product has been updated');
-
-    return redirect(route('admin.package.index'))->with('success', 'Product has been updated!');
+        
+        $request->session()->flash('success', 'Package has been updated');
+        return redirect(route('admin.package.index'))->with('success', 'Package has been updated successfully!');
     
     }
 
@@ -171,7 +165,19 @@ return view('admin.package.edit')->with([
     }
 
    
-   
+   public function deleteproduk(Request $request, $id){
+    $product = PackageIncome::find('produk');
+
+    if (!$product) {
+        return response()->json(['message' => 'Product not found.'], 404);
+    }
+
+    $product->delete();
+
+    return response()->json(['message' => 'Product deleted successfully.']);
+   }
+
+
     public function getProductsByRole($roleId)
     {
         $products = Product::findOrFail($roleId)->products;

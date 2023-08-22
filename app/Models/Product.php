@@ -27,12 +27,14 @@ class Product extends Model
         return $this->belongsTo(UserRole::class);
     }
 
-    public static function boot(){
+    public static function boot()
+    {
         parent::boot();
         static::creating(function($model){
-            $model->number = Product::where('role_id', $model->role_id)->max('number')+1;
-            $model->kode_produk = $model->Role->kode_role . '-' .str_pad($model->number,5,'0',STR_PAD_LEFT);
+            $model->number = static::where('role_id', $model->role_id)->max('number') + 1;
+            $model->kode_produk = $model->Role->kode_role . '-' . str_pad($model->number, 5, '0', STR_PAD_LEFT);
         });
     }
+
  
 }

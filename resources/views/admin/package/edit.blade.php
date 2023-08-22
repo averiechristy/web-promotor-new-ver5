@@ -15,30 +15,28 @@
                                        <form action="/updatepackage/{{$package->id}}" method="post">
                                        @csrf
                                             
-                                            <div class="form-group mb-4 " id="koderole">
-                                            <label for="role">Select Role:</label>
-                                            <select name="role" id="role" class="form-control">
-    <option value="" disabled selected>Select a role</option> <!-- Hidden option -->
-        <!-- Render options from database -->
+                                       <div class="form-group mb-4" id="koderole">
+    <label for="role">Select Role:</label>
+    <select name="role_id" id="role" class="form-control">
+        <option value="" disabled>Select a role</option> <!-- Hidden option -->
+        <!-- Render unique role options from database -->
         @php
         $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
-    @endphp
+        @endphp
 
-    @foreach ($produk as $item)
-        @if (!in_array($item->role_id, $selectedRoleIds))
-            @php
-                $selectedRoleIds[] = $item->role_id;
-            @endphp
-            <option value="{{ $item->Role->id }}" {{ $package->role_id == $item->Role->id ? 'selected' : '' }}>
-            {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
-        </option>
-        @endif
-    @endforeach
+        @foreach ($produk as $item)
+            @if (!in_array($item->Role->id, $selectedRoleIds))
+                @php
+                    $selectedRoleIds[] = $item->Role->id;
+                @endphp
+                <option value="{{ $item->Role->id }}" @if ($item->Role->id == $selectedRoleId) selected @endif>
+                    {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
+                </option>
+            @endif
+        @endforeach
     </select>
+</div>
 
-
-                                               
-                                            </div>
         
 
                                             <div class="form-group mb-4">
@@ -61,6 +59,7 @@
                                             <div id="product-container">
                                             @foreach ($package->produk as $index => $productData)
             <div class="product-item">
+            
                 <label for="product">Select Product:</label>
                 <select name="data_produk[{{ $index }}][nama_produk]" class="product-select form-control">
                     @foreach ($produk as $product)
@@ -71,12 +70,14 @@
                         @endif
                     @endforeach
                 </select>
+
+
                 <label for="quantity">Quantity:</label>
                 <input type="number" name="data_produk[{{ $index }}][qty_produk]" class="quantity-input form-control" value="{{ $productData['qty_produk'] }}">
 
+                
                 <div class="form-group mb-4">
-                    <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Remove</button>
-                </div>
+                <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right" data-index="{{ $index }}">Remove</button>                </div>
             </div>
         @endforeach
 
@@ -140,8 +141,9 @@
                     
                     productsSelect.empty();
                     $.each(data, function(key, produk) {
-                        
-                        productsSelect.append('<option value="' + produk.nama_produk + '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');
+                        productsSelect.append('<option value="'+ produk.nama_produk + '|' + produk.kode_produk + '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');                  
+
+
                     });
                 }
             });
@@ -167,6 +169,17 @@
 productSelect.attr('name', `data_produk[${counter}][nama_produk]`);
             quantityInput.attr('name', `data_produk[${counter}][qty_produk]`);
 
+            
+             // Reset nilai input fields dan select box
+    productSelect.val('');
+    quantityInput.val('');
+
+    // Hapus elemen label dan input fields sebelumnya
+    productItem.find('label').remove();
+    productItem.find('.product-select').remove();
+    productItem.find('.quantity-input').remove();
+    productItem.find('.remove-product').remove();
+
             productItem.append('<label for="quantity">Product:</label>');
             productItem.append(productSelect);
             productItem.append('<label for="quantity">Quantity:</label>');
@@ -181,14 +194,35 @@ productSelect.attr('name', `data_produk[${counter}][nama_produk]`);
         });
 
         $(document).on('click', '.remove-product', function() {
-            var productContainer = $('#product-container');
-            
-            if (productContainer.children('.product-item').length > 1) {
-                $(this).closest('.product-item').remove();
+            var productItem = $(this).closest('.product-item');
+            var packageId = $(this).data('package-id');
+            var productId = $(this).data('product-id');
+
+            if (packageId && productId) {
+                deleteProduct(packageId, productId, productItem);
             } else {
-                alert("You cannot remove the first product.");
+                productItem.remove();
             }
         });
+
+        // Fungsi untuk menghapus data dari database dan menghapus elemen dari tampilan
+        function deleteProduct(packageId, productId, productItem) {
+            $.ajax({
+                url: '/delete-package-product/' + packageId + '/' + productId, // Ganti dengan URL endpoint yang sesuai
+                type: 'DELETE',
+                success: function(data) {
+                    if (data.success) {
+                        productItem.remove();
+                    } else {
+                        console.error('Failed to delete product and related data.');
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
     });
 </script>
 @endsection

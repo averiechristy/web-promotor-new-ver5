@@ -41,10 +41,11 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
+                                    @include('components.alert')
                                         <h1 class="h4 text-gray-900 mb-4">Sign In</h1>
                                         
                                     </div>
-                                    <form action="{{route('login.auth')}}" method="post" class="user">
+                                    <form action="{{route('login')}}" method="post" class="user">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text" name="username" class="form-control form-control-user @error('username') is-invalid @enderror"

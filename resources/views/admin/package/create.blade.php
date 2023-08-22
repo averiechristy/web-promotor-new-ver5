@@ -62,6 +62,8 @@
                 <!-- JavaScript will populate this based on selected role -->
                 <option value="" disabled selected>Select a product</option> <!-- Hidden option -->
             </select>
+            
+                       
             <label for="quantity">Quantity:</label>
             <input type="number" name="data_produk[${counter}][qty_produk]" class="quantity-input form-control">
 
@@ -118,9 +120,10 @@
 
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+        <script>
     $(document).ready(function() {
-        var counter = 0;
+        var counter = 0; // Set counter sesuai dengan jumlah produk yang ada
+
         $('#role').change(function() {
             var roleId = $(this).val();
             $.ajax({
@@ -131,8 +134,9 @@
                     
                     productsSelect.empty();
                     $.each(data, function(key, produk) {
-                        
-                        productsSelect.append('<option value="' + produk.nama_produk + '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');
+                        productsSelect.append('<option value="'+ produk.nama_produk +  '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');                  
+
+
                     });
                 }
             });
@@ -158,8 +162,22 @@
 productSelect.attr('name', `data_produk[${counter}][nama_produk]`);
             quantityInput.attr('name', `data_produk[${counter}][qty_produk]`);
 
+            
+             // Reset nilai input fields dan select box
+    productSelect.val('');
+    quantityInput.val('');
+
+    // Hapus elemen label dan input fields sebelumnya
+    productItem.find('label').remove();
+    productItem.find('.product-select').remove();
+    productItem.find('.quantity-input').remove();
+    productItem.find('.remove-product').remove();
+
             productItem.append('<label for="quantity">Product:</label>');
             productItem.append(productSelect);
+
+            productItem.append('<div style="margin-top: 10px;"></div>');
+
             productItem.append('<label for="quantity">Quantity:</label>');
             productItem.append(quantityInput);
            
@@ -167,6 +185,7 @@ productSelect.attr('name', `data_produk[${counter}][nama_produk]`);
 
 
             productContainer.append(productItem);
+            productItem.append('<div style="margin-top: 40px;"></div>');
 
             counter++;
         });

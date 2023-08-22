@@ -21,6 +21,7 @@
                             <table id="myDataTable" class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
     <thead>
         <tr>
+            <th>Role</th>
             <th>Judul Paket</th>
             <th>Deskripsi Paket</th>
             <th>Produk</th>
@@ -30,6 +31,7 @@
     <tbody>
         @foreach ($dtPackage as $item)
             <tr>
+                <td>{{ $item->Role->kode_role }}</td>
                 <td>{{ $item->judul_paket }}</td>
                 <td>{{ $item->deskripsi_paket }}</td>
                 

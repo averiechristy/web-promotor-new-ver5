@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserRole;
+use Illuminate\Support\Facades\Gate;
 
 class UserRoleController extends Controller
 {
@@ -68,12 +69,23 @@ class UserRoleController extends Controller
      }
 
      public function destroy (Request $request, $id) {
-       $userrole = UserRole::find($id);
-        $userrole->delete();
+        $userrole = UserRole::find($id);
 
-        $request->session()->flash('error', "{$userrole->jenis_role} has been deleted");
+    if (!$userrole) {
+        $request->session()->flash('error', 'Role not found.');
+        return redirect()->route('admin.userrole.index');
+    }
 
-        return redirect(route('admin.userrole.index'))->with('sucess','role has been deleted!');
+    if (Gate::denies('delete', $userrole)) {
+        $request->session()->flash('error', "Cannot delete this role because it has related records");
+        return redirect()->back()->with('error', 'Cannot delete this role because it has related records.');
+    }
+
+    $userrole->delete();
+
+    $request->session()->flash('success', "{$userrole->jenis_role} has been deleted");
+
+    return redirect()->route('admin.userrole.index')->with('success', 'Role has been deleted!');
 
      }
      

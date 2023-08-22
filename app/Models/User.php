@@ -73,12 +73,15 @@ class User extends Authenticatable
     
     return $customID;
 }
-
-public static function boot(){
+public static function boot()
+{
     parent::boot();
     static::creating(function($model){
-        $model->number = Product::where('role_id', $model->role_id)->max('number')+1;
-        $model->kode_user = $model->Role->kode_role . '-' .str_pad($model->number,5,'0',STR_PAD_LEFT);
+        $roleId = UserRole::find($model->role_id)->kode_role; // Ambil kode role dari relasi Role
+        $dateFormatted = now()->format('ym'); // Format tahun dan bulan yymm
+        $model->number = static::where('role_id', $model->role_id)->max('number') + 1;
+        $model->kode_user = $roleId . $dateFormatted . str_pad($model->number, 3, '0', STR_PAD_LEFT);
     });
 }
+
 }
