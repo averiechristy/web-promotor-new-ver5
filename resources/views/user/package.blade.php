@@ -14,11 +14,9 @@
               
               <div class="button-income">
                 <h2>Pilih pendapatan yang ingin kamu capai</h2>
-               <a href="package-income.html"><button class="button-hitung" type="button">Pendapatan 3 Juta</button><br></a>
-               <a href="#"><button class="button-hitung" type="button">Pendapatan 4 Juta</button><br></a>
-               <a href="#"><button class="button-hitung" type="button">Pendapatan 5 Juta</button><br></a>
-               <a href="#"><button class="button-hitung" type="button">Pendapatan 7 Juta</button><br></a>
-
+                @foreach ($paket as $data)
+               <a href="{{ route('tampilincome', $data->id) }}"><button class="button-hitung" type="button">{{ $data->judul_paket}}</button><br></a>
+            @endforeach
             </div>
             </div>
           </div>

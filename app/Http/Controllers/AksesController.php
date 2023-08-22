@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Akses;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AksesController extends Controller
@@ -95,9 +96,24 @@ class AksesController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy (Request $request, $id) {
-        Akses::find($id)->delete();
+        $akses = Akses::find($id);
 
-        return redirect(route('admin.akses.index'))->with('sucess','akses has been deleted!');
+        if (!$akses) {
+            $request->session()->flash('error', 'Role not found.');
+            return redirect()->route('admin.akses.index');
+        }
+        
+        // Cek apakah ada data yang terkait dengan peran dalam tabel user account
+        if (User::where('akses_id', $akses->id)->exists()) {
+            $request->session()->flash('error', "Cannot delete this Akses because it has related records in the user accounts.");
+            return redirect()->route('admin.akses.index');
+        }
+        
+        $akses->delete();
+        
+        $request->session()->flash('success', "{$akses->jenis_role} has been deleted");
+        
+        return redirect()->route('admin.akses.index')->with('success', 'Role has been deleted!');
 
      }
 }

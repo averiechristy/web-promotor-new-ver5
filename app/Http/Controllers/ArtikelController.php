@@ -66,46 +66,51 @@ class ArtikelController extends Controller
         ]);
     }
 
-    public function updateartikel(Request $request, $id){
-       
-
-        $ubah = Artikel::find($id);
-
-        if($request->file != ''){        
-             $path = public_path().'/img';
-   
-             //code for remove old file
-             if($ubah->file != ''  && $ubah->file != null){
-                  $file_old = $path.$ubah->file;
-                  unlink($file_old);
+    public function updateartikel(Request $request, $id)
+     {
+         $ubah = Artikel::findOrFail($id);
+     
+         // Cek apakah ada file gambar yang diunggah
+         if ($request->hasFile('gambar_artikel')) {
+             $path = public_path('img');
+     
+             // Hapus gambar lama jika ada
+             if ($ubah->gambar_artikel != '' && $ubah->gambar_artikel != null) {
+                 $file_old = $path.'/'.$ubah->gambar_artikel;
+                 unlink($file_old);
              }
-   
-             //upload new file
-             $file = $request->gambar_artikel;
+     
+             // Upload gambar baru
+             $file = $request->file('gambar_artikel');
              $filename = $file->getClientOriginalName();
              $file->move($path, $filename);
-   
-             //for update in table
+     
+             // Update nama gambar pada record
              $ubah->update(['gambar_artikel' => $filename]);
-        }
-   
-        // $ubah = Artikel::findorfail($id);
-        // $awal = $ubah->gambar_artikel;
-  
-        $dtArtikel = [
-          'judul_artikel'=>$request->judul_artikel,
-          'isi_artikel'=>$request->isi_artikel,
-        //   'gambar_artikel'=>$awal,
-        ];
-  
-        // $request->gambar_artikel->move(public_path().'/img',$awal);
-        $ubah->update($dtArtikel);
-        
-        $request->session()->flash('success', "Article has been updated");
-
-        return redirect(route('admin.artikel.index'))->with('sucess','Artikel has been updated!');
-  
-       }
+         }
+     
+         // Update informasi lainnya
+         $dtProduk = [
+             
+             'judul_artikel' => $request->judul_artikel,
+             'isi_artikel' => $request->isi_artikel,
+             
+         ];
+     
+         // Jika tidak ada perubahan file gambar, gunakan gambar yang lama
+         if (!$request->hasFile('gambar_artikel')) {
+             $dtProduk['gambar_artikel'] = $ubah->gambar_artikel;
+         }
+     
+         // Update informasi produk
+         $ubah->update($dtProduk);
+     
+         // Flash message
+         $request->session()->flash('success', "Artikel has been updated");
+     
+         // Redirect
+         return redirect(route('admin.artikel.index'))->with('success', 'Product has been updated!');
+     }
   
 
     /**

@@ -6,7 +6,7 @@
    
   <!-- ======= Hero Section ======= -->
   <section id="hero1" class="d-flex flex-column justify-content-center align-items-center">
-    <div class="container text-center text-md-left" data-aos="fade-up">
+    <div class="container text-center text-md-left" >
       <h1>Get started today</h1>
       <h2>Like what you learning</h2>
     </div>
@@ -24,95 +24,26 @@
     
       <div class="row portfolio-container">
 
+      @foreach ($artikel as $artikel)
+
         <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
           <div class="portfolio-wrap">
             <figure>
-              <img src="{{asset('img/Article1.png')}}" class="img-fluid" alt="">
+              <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid"  style="height: 100%;" alt="">
               <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
               <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
             </figure>
 
             <div class="portfolio-info">
-              <h4><a href="article-read.html">Read More</a></h4>
-              <p>Tips Mengelola Keuangan</p>
+              <h4><a href="{{ route('user.artikelread', $artikel->id) }}">Read More</a></h4>
+              <p>{{$artikel->judul_artikel}}</p>
             </div>
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{{asset('img/Article1.png')}}" class="img-fluid" alt="">
-                <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
-              </figure>
-  
-              <div class="portfolio-info">
-                <h4><a href="#">Read More</a></h4>
-                <p>Tips Mengelola Keuangan</p>
-              </div>
-            </div>
-          </div>
+        @endforeach
 
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{{asset('img/Article1.png')}}" class="img-fluid" alt="">
-                <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a> -->
-                <!-- <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
-              </figure>
-  
-              <div class="portfolio-info">
-                <h4><a href="#">Read More</a></h4>
-                <p>Tips Mengelola Keuangan</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{{asset('img/Article1.png')}}" class="img-fluid" alt="">
-                <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
-              </figure>
-  
-              <div class="portfolio-info">
-                <h4><a href="#">Read More</a></h4>
-                <p>Tips Mengelola Keuangan</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
-            <div class="portfolio-wrap">
-              <figure>
-                <img src="{{asset('img/Article1.png')}}" class="img-fluid" alt="">
-                <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-                <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
-              </figure>
-  
-              <div class="portfolio-info">
-                <h4><a href="#">Read More</a></h4>
-                <p>Tips Mengelola Keuangan</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
-          <div class="portfolio-wrap">
-            <figure>
-              <img src="{{asset('img/Article1.png')}}" class="img-fluid" alt="">
-              <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-              <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
-            </figure>
-
-            <div class="portfolio-info">
-              <h4><a href="#">Read More</a></h4>
-              <p>Tips Mengelola Keuangan</p>
-            </div>
-          </div>
-        </div>
+        
 
       </div>
 

@@ -13,9 +13,9 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto active" href="home">Home</a></li>
+          <li ><a class="nav-link scrollto" href="{{route('user.home')}}">Home</a></li>
           <li><a class="nav-link scrollto" href="#about">Income</a></li>
-          <li><a class="" href="artikel">Article</a></li>
+          <li><a class="" href="{{route('user.artikel')}}">Article</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
           
           <li class="dropdown"><a href="#"><span><img src="{{asset('img/profil.png')}}" class="user"></span> <i class="bi bi-chevron-down"></i></a>

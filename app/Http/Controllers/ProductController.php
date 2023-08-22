@@ -85,48 +85,53 @@ class ProductController extends Controller
         ]);
      }
 
-     public function updateproduct(Request $request, $id){
-       
-        $ubah = Product::find($id);
-
-     if($request->file != ''){        
-          $path = public_path().'/img';
-
-          //code for remove old file
-          if($ubah->file != ''  && $ubah->file != null){
-               $file_old = $path.$ubah->file;
-               unlink($file_old);
-          }
-
-          //upload new file
-          $file = $request->gambar_produk;
-          $filename = $file->getClientOriginalName();
-          $file->move($path, $filename);
-
-          //for update in table
-          $ubah->update(['gambar_produk' => $filename]);
+     public function updateproduct(Request $request, $id)
+     {
+         $ubah = Product::findOrFail($id);
+     
+         // Cek apakah ada file gambar yang diunggah
+         if ($request->hasFile('gambar_produk')) {
+             $path = public_path('img');
+     
+             // Hapus gambar lama jika ada
+             if ($ubah->gambar_produk != '' && $ubah->gambar_produk != null) {
+                 $file_old = $path.'/'.$ubah->gambar_produk;
+                 unlink($file_old);
+             }
+     
+             // Upload gambar baru
+             $file = $request->file('gambar_produk');
+             $filename = $file->getClientOriginalName();
+             $file->move($path, $filename);
+     
+             // Update nama gambar pada record
+             $ubah->update(['gambar_produk' => $filename]);
+         }
+     
+         // Update informasi lainnya
+         $dtProduk = [
+             'role_id' => $request->role_id,
+             'nama_produk' => $request->nama_produk,
+             'poin_produk' => $request->poin_produk,
+             'deskripsi_produk' => $request->deskripsi_produk,
+         ];
+     
+         // Jika tidak ada perubahan file gambar, gunakan gambar yang lama
+         if (!$request->hasFile('gambar_produk')) {
+             $dtProduk['gambar_produk'] = $ubah->gambar_produk;
+         }
+     
+         // Update informasi produk
+         $ubah->update($dtProduk);
+     
+         // Flash message
+         $request->session()->flash('success', "Product has been updated");
+     
+         // Redirect
+         return redirect(route('admin.product.index'))->with('success', 'Product has been updated!');
      }
-
-    //   $ubah = Product::findorfail($id);
-    //   $awal = $ubah->gambar_produk;
-
-      $dtProduk = [
-        'role_id'=>$request->role_id,
-        'nama_produk'=>$request->nama_produk,
-        'poin_produk'=>$request->poin_produk,
-        // 'gambar_produk'=>$awal,
-        'deskripsi_produk'=>$request->deskripsi_produk,
-      ];
-
-    //   $request->gambar_produk->move(public_path().'/img',$awal);
-      $ubah->update($dtProduk);
-
-      $request->session()->flash('success', "Product has been updated");
-
-      return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
-
-     }
-
+     
+     
     /**
      * Display the specified resource.
      */

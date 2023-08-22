@@ -19,7 +19,7 @@
                             <div class="table-responsive">
                             @include('components.alert')
 
-                                <table  id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
+                                <table  id= "myDataTable" class="table table-bordered rounded" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                            
@@ -31,8 +31,6 @@
                                     
                                     <tbody>
                                         @foreach ($dtAkses as $item)
-                                            
-                                        
                                         <tr>
                                            
                                             <td>{{$item->id}}</td>
@@ -46,10 +44,9 @@
                             <input name="_method" type="hidden" value="DELETE">
                             <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
                         </form>
-                                                      
+
                                                 </div>
-                                                </td>
-                                            
+                                                </td>  
                                         </tr>
                                         @endforeach
                                         

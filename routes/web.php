@@ -2,7 +2,13 @@
 
 use App\Http\Controllers\AksesController;
 use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\UserController\HomeController;
+use App\Http\Controllers\UserController\UserArtikelController;
+use App\Http\Controllers\UserController\UserArtikelReadController;
+use App\Http\Controllers\UserController\UserIncomeController;
+use App\Http\Controllers\UserController\UserPaketController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
@@ -79,9 +85,10 @@ Route::get('/admin/artikel/create', function () {
     return view('/admin/artikel/');
 });
 
+
 Route::get('/admin/changepassword', function () {
-    return view('/admin/changepassword');
-});
+    return view('admin.changepassword');
+})->name('admin.changepassword');
 
 Route::get('/user/home', function () {
     return view('/user/home');
@@ -208,21 +215,19 @@ Route::resource('products', 'ProductController');
 Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
 
 
-//Login Route
-
-Route::get('login', [LoginController::class, 'index'])->name('login');
-Route::post('login', [LoginController::class, 'login']);
-
-// ...
+//login route
+Route::get('auth/login', [AuthController::class, 'index'])->name('auth.login');
 
 
 
+// User Package
+Route::get('user/package', [UserPaketController::class, 'index'])->name('user.package');
+Route::get('user/income/{id}', [UserPaketController::class, 'show'])->name('tampilincome');
 
 
-// // login
-// Route::get('/login',[LoginController::class, 'index'])->name('login')->middleware('guest');
-// Route::post('/login/auth',[LoginController::class, 'authenticate'])->name('login.auth');
+Route::get('user/income', [UserIncomeController::class, 'index'])->name('user.income');
 
 
-// // dashboard admin route
-// Route::get('admin/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
+// User Artikel
+Route::get('user/artikel', [UserArtikelController::class, 'index'])->name('user.artikel');
+Route::get('user/artikelread/{id}', [UserArtikelReadController::class, 'index'])->name('user.artikelread');

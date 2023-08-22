@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserRole;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
 class UserRoleController extends Controller
@@ -71,21 +72,23 @@ class UserRoleController extends Controller
      public function destroy (Request $request, $id) {
         $userrole = UserRole::find($id);
 
-    if (!$userrole) {
-        $request->session()->flash('error', 'Role not found.');
-        return redirect()->route('admin.userrole.index');
-    }
-
-    if (Gate::denies('delete', $userrole)) {
-        $request->session()->flash('error', "Cannot delete this role because it has related records");
-        return redirect()->back()->with('error', 'Cannot delete this role because it has related records.');
-    }
-
-    $userrole->delete();
-
-    $request->session()->flash('success', "{$userrole->jenis_role} has been deleted");
-
-    return redirect()->route('admin.userrole.index')->with('success', 'Role has been deleted!');
+        if (!$userrole) {
+            $request->session()->flash('error', 'Role not found.');
+            return redirect()->route('admin.userrole.index');
+        }
+        
+        // Cek apakah ada data yang terkait dengan peran dalam tabel user account
+        if (User::where('role_id', $userrole->id)->exists()) {
+            $request->session()->flash('error', "Cannot delete this role because it has related records in the user accounts.");
+            return redirect()->route('admin.userrole.index');
+        }
+        
+        $userrole->delete();
+        
+        $request->session()->flash('success', "{$userrole->jenis_role} has been deleted");
+        
+        return redirect()->route('admin.userrole.index')->with('success', 'Role has been deleted!');
+        
 
      }
      
