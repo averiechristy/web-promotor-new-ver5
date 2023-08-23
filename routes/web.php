@@ -177,6 +177,11 @@ Route::post('admin/package/simpan', [PackageController::class, 'store'])->name('
 
 Route::get('/tampilpackage/{id}',[PackageController::class,'show'])->name('tampilpackage');
 Route::post('/updatepackage/{id}',[PackageController::class,'updatepackage'])->name('updatepackage');
+Route::get('/tampildetail/{id}',[PackageController::class,'tampildetail'])->name('tampildetail');
+
+
+// routes/web.php
+Route::get('/get-package-details/{packageId}', 'PackageController@getPackageDetails');
 
 
 Route::get('admin/package/cobacreate', [PackageController::class, 'create'])->name('admin.package.createcopy');

@@ -42,7 +42,7 @@
                         <td>{{ $item->poin_produk}}</td>
                         <td>
 
-                        <a href="{{asset('img/'.$item->gambar_produk)}}" target="_black" rel="noopener noreferrer">Lihat Gambar</a>
+                        <a href="{{ asset('img/' .$item->gambar_produk) }}" target="_black" rel="noopener noreferrer">Lihat Gambar</a>
                         <!-- {{ $item->gambar_produk}} -->
                         </td>
                         <td>{{ $item->deskripsi_produk }}</td>

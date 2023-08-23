@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PackageDetail;
 use App\Models\PackageIncome;
 use App\Models\Product;
 use App\Models\UserRole;
@@ -17,15 +18,38 @@ class PackageController extends Controller
         $dtPackage = PackageIncome::all();
         $role = UserRole::with('Role');
         $produk = Product::with('Role');
+        $detail = PackageDetail::with('Detail');
+       
         
         return view('admin.package.index', [
             'dtPackage' => $dtPackage,
              'produk' => $produk,
             'role' => $role,
+            'detail' => $detail,
+            
         ]);
     }
   
-   
+    
+  
+    public function tampildetail($id) {
+        // Ambil data dari tabel PackageIncome berdasarkan id
+        $data = PackageIncome::find($id);
+    
+        // Ambil semua data dari tabel PackageDetail
+        $detail = PackageDetail::all();
+    
+        // Ambil data produk yang terhubung dengan tabel PackageDetail
+        $produk = PackageDetail::with('produk')->where('package_id', $id)->get();
+    
+        return view('admin.package.detail', [
+            'data' => $data,
+            'produk' => $produk,
+            'detail' => $detail,
+        ]);
+    }
+    
+
 
     /**
      * Show the form for creating a new resource.
@@ -45,37 +69,39 @@ class PackageController extends Controller
      */
     public function store(Request $request)
 {
-    $dataProduk = $request->input('data_produk');
-    $produkArray = []; // Initialize an empty array
     
+    $dtPackage = new PackageIncome;
+    $dtPackage->judul_paket = $request->judul_paket;
+    $dtPackage->role_id = $request->role_id;
+    $dtPackage->deskripsi_paket = $request->deskripsi_paket;
 
-    // dd($dataProduk);
-    foreach ($dataProduk as $data) {
-       
-        
-        $produkArray[] = [
-        
-            'nama_produk' => $data['nama_produk'],
-            'qty_produk' => $data['qty_produk'],
-            
+
+$dtPackage->save();
+
+
+$packageDetails = [];
+
+if ($request->has('produk') && $request->has('qty_produk')) {
+    foreach ($request->produk as $index => $productId) {
+        $packageDetails[] = [
+            'package_id' => $dtPackage->id,
+            'produk_id' => $productId,
+            'qty_produk' => $request->qty_produk[$index],
         ];
     }
 
-    // dd($produkArray);
-    $jsonData = json_encode($produkArray);
-
-    $package = new PackageIncome();
-    $package->judul_paket = $request->judul_paket;
-    $package->deskripsi_paket = $request->deskripsi_paket;
-    $package->role_id = $request->role_id;
-    $package->produk = $jsonData;
-
-    $package->save();
-    
-    $request->session()->flash('success', 'A new Package has been created');
-    return redirect(route('admin.package.index'))->with('success', 'Package has been created successfully!');
+// dd($packageDetails);
+    PackageDetail::insert($packageDetails); // Simpan array packageDetails secara massal
 }
 
+
+   
+
+    $request->session()->flash('success', 'A new Package has been created');
+    return redirect(route('admin.package.index'))->with('success', 'Package has been created successfully!');
+
+
+}
 
     /**
      * Display the specified resource.
@@ -84,51 +110,62 @@ class PackageController extends Controller
     {
 
         $package = PackageIncome::find($id); // Menggunakan find() untuk menghindari error jika tidak ditemukan
-        
       
 
         $produk = Product::where('role_id', $package->role_id)->get(); // Assuming your model name is Product
         $produk = Product::all();
-        $package->produk = json_decode($package->produk, true); // Decode the JSON data into an array
+
         $role = UserRole::all();
         $selectedRoleId = $package->role_id;
+
+        $detail = PackageDetail::all();
+
+        $nama = PackageDetail::with('produk')->where('package_id', $id)->get();
 
 return view('admin.package.edit')->with([
     'package' => $package,
     'produk' => $produk,
     'role' => $role,
     'selectedRoleId' => $selectedRoleId,
+    'detail' => $detail,
+    'nama'=>$nama,
+
 ]);
 
     }
 
-    public function updatepackage(Request $request, $id){
-        $dataProduk = $request->input('data_produk');
-        $produkArray = []; // Initialize an empty array
-        
-        
-       
-        foreach ($dataProduk as $data) {
-        
-            
-            $produkArray[] = [
-                'nama_produk' => $data['nama_produk'],
-                'qty_produk' => $data['qty_produk'],
+    public function updatepackage(Request $request, $id)
+    {
+       // Ambil data paket berdasarkan ID
+    $dtPackage = PackageIncome::find($id);
+
+    // Update data paket dengan nilai baru dari form
+    $dtPackage->judul_paket = $request->judul_paket;
+    $dtPackage->role_id = $request->role_id;
+    $dtPackage->deskripsi_paket = $request->deskripsi_paket;
+    $dtPackage->save();
+
+    // Hapus detail paket yang ada sebelumnya
+    PackageDetail::where('package_id', $id)->delete();
+
+    // Simpan detail paket yang baru
+    $packageDetails = [];
+
+    if ($request->has('produk') && $request->has('qty_produk')) {
+        foreach ($request->produk as $index => $productId) {
+            $packageDetails[] = [
+                'package_id' => $dtPackage->id,
+                'produk_id' => $productId, // Gunakan $productId langsung sebagai produk_id
+                'qty_produk' => $request->qty_produk[$index],
             ];
         }
+
+        // dd($packageDetails);
     
-       
-        $jsonData = json_encode($produkArray);
+        PackageDetail::insert($packageDetails); // Simpan array packageDetails secara massal
+    }
     
-       
-        $package = PackageIncome::findOrFail($id); // Find the package by ID
-        $package->judul_paket = $request->judul_paket;
-        $package->deskripsi_paket = $request->deskripsi_paket;
-        $package->role_id = $request->role_id;
-        $package->produk = $jsonData;
-        // dd($package);
-        $package->save();
-        
+
         $request->session()->flash('success', 'Package has been updated');
         return redirect(route('admin.package.index'))->with('success', 'Package has been updated successfully!');
     

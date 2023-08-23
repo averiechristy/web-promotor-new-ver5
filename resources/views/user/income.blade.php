@@ -12,7 +12,8 @@
 @foreach (json_decode($data->produk, true) as $produk)
   <div class="col">
     <div class="card">
-    <img src="{{asset('img/produk.png')}}" class="card-img-top"   style="width: 100%;" alt="...">      <div class="card-body">
+    <img src="{{asset('img/produk.png')}}" class="card-img-top"   style="width: 100%;" alt="...">     
+     <div class="card-body">
         <h5 class="card-title">{{ $produk['nama_produk'] }}</h5>
         <p class="card-text">Qty Produk: {{ $produk['qty_produk'] }}</p>
       </div>

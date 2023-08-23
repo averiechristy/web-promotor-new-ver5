@@ -36,15 +36,13 @@
                 <td>{{ $item->deskripsi_paket }}</td>
                 
                     
-                    <td>
-                <ul>
-                @foreach (json_decode($item->produk, true) as $produk)
-    <li>{{ $produk['nama_produk'] }} (Qty Produk: {{ $produk['qty_produk'] }})</li>
-    
-@endforeach
+                    <td>    
+                    <a href="{{ route('tampildetail', $item->id) }}"><button type="button" class="btn btn-link">
+    Lihat Detail Produk
+</button></a>
 
-        </ul>
-                </td>
+    
+</td>
                 <td>
                     <div class="row">
                         <a href="{{ route('tampilpackage', $item->id) }}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white"></i></a>
@@ -89,5 +87,8 @@
 
     </div>
     <!-- End of Page Wrapper -->
+
+   
+
 
 @endsection

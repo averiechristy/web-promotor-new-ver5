@@ -42,9 +42,11 @@ class UserPaketController extends Controller
     {
         
         $data = PackageIncome::find($id);
+        $packageIncome = PackageIncome::find($id);
        
         return view('user.income', [
-            'data' => $data
+            'data' => $data,
+            'packageIncome' => $packageIncome
         ]);
     }
 

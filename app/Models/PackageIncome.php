@@ -12,16 +12,18 @@ class PackageIncome extends Model
     use HasFactory;
 
     protected $fillable = [
-        'role_id',
-        'judul_paket',
-        'deskripsi_paket',
+        'package_id',
+        'produk_id',
+        'qty_produk',
        
         
     ];
 
-    protected $casts = [
-        'produk' => 'array',
-        ];
+    // protected $casts = [
+    //     'produk' => 'array',
+    //     ];
+
+        
 
     public function Role()
     {
@@ -32,6 +34,13 @@ class PackageIncome extends Model
     
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('qty_produk');
+        return $this->belongsToMany(Product::class);
     }
+
+    public function details()
+    {
+        return $this->hasMany(PackageDetail::class);
+    }
+
+    
 }

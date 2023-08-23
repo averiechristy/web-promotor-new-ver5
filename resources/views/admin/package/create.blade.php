@@ -58,14 +58,14 @@
                                             <div id="product-container">
         <div class="product-item">
             <label for="product">Select Product:</label>
-            <select name="data_produk[${counter}][nama_produk]" class="product-select form-control">
+            <select name="produk[]" class="product-select form-control">
                 <!-- JavaScript will populate this based on selected role -->
                 <option value="" disabled selected>Select a product</option> <!-- Hidden option -->
             </select>
             
                        
             <label for="quantity">Quantity:</label>
-            <input type="number" name="data_produk[${counter}][qty_produk]" class="quantity-input form-control">
+            <input type="number"  name="qty_produk[]" class="quantity-input form-control">
 
                    
     <div class="form-group mb-4">
@@ -134,7 +134,7 @@
                     
                     productsSelect.empty();
                     $.each(data, function(key, produk) {
-                        productsSelect.append('<option value="'+ produk.nama_produk +  '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');                  
+                        productsSelect.append('<option value="'+ produk.id +  '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');                  
 
 
                     });
@@ -159,8 +159,8 @@
 
 
 
-productSelect.attr('name', `data_produk[${counter}][nama_produk]`);
-            quantityInput.attr('name', `data_produk[${counter}][qty_produk]`);
+productSelect.attr('name', `produk[]`);
+            quantityInput.attr('name', `qty_produk[]`);
 
             
              // Reset nilai input fields dan select box
