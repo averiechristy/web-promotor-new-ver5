@@ -15,15 +15,33 @@ class KalkulatorController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $userKodeRole = auth()->user()->Role->kode_role;
         $produk= Product::where('role_id', $user->role_id)->get();
-        return view('user.kalkulator',[
-            'produk' => $produk
-        ]);
+
+
+        if ($userKodeRole === 'MR') {
+            return view('user.kalkulator',[
+                'produk' => $produk
+            ]);
+        } elseif ($userKodeRole === 'TM') {
+            return view('user.kalkulatorTM',[
+                'produk' => $produk
+            ]);
+        }elseif  ($userKodeRole === 'MS') {
+            return view('user.kalkulatorMS',[
+                'produk' => $produk
+            ]);
+        }
     }
 
     public function calculate(Request $request)
     {
+        $user = Auth::user();
+
+        $produk= Product::where('role_id', $user->role_id)->get();
+
         $productQuantities = $request->input('product_quantity');
+        
         $products = Product::all();       
         $totalPoints = 0;
       
@@ -40,20 +58,20 @@ class KalkulatorController extends Controller
         } elseif ($totalPoints >72 && $totalPoints < 120 ) {
            $insentif = ($totalPoints - 72) * 40000;
            $hasil = $insentif + 3600000;
-        return view('user.result',  ['hasil' => $hasil, 'totalPoints' => $totalPoints]);
+           return view('user.kalkulator', ['hasil' => $hasil, 'produk' => $produk, 'totalPoints' => $totalPoints]);
     
         }  elseif ($totalPoints == 72) {
             $hasil = 3600000;
-            return view('user.result', ['hasil' => $hasil, 'totalPoints' => $totalPoints]);
+            return view('user.kalkulator', ['hasil' => $hasil, 'produk' => $produk, 'totalPoints' => $totalPoints]);
 
         } elseif ($totalPoints == 120) {
             $hasil = 6000000;
-            return view('user.result',  ['hasil' => $hasil, 'totalPoints' => $totalPoints]);
+            return view('user.kalkulator', ['hasil' => $hasil, 'produk' => $produk, 'totalPoints' => $totalPoints]);
 
         } elseif ($totalPoints > 120) {
             $insentif = ($totalPoints - 120) * 40000;
             $hasil = $insentif + 6000000;
-            return view('user.result',  ['hasil' => $hasil, 'totalPoints' => $totalPoints]);
+            return view('user.kalkulator', ['hasil' => $hasil, 'produk' => $produk, 'totalPoints' => $totalPoints]);
         }
         
         // return view('user.result', ['totalPoints' => $totalPoints]);

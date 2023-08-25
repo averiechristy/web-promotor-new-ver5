@@ -66,10 +66,7 @@
                                                   <input name= "password" type="text" style="border-color: #01004C;" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" value ="{{ $data->password }}" required>
                                                 </div>
 
-                                                <div class="col-auto">
-                                                    <input type="text" style="border-color: #01004C;"  id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" placeholder="Re-type Password" value ="{{ $data->password }}" required>
-
-                                                </div>
+                                               
                                               </div>
 
                                               <div class="form-group mb-4">
