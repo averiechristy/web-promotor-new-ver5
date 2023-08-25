@@ -45,18 +45,22 @@
                                         <h1 class="h4 text-gray-900 mb-4">Sign In</h1>
                                         
                                     </div>
-                                    <form action="#" method="post" class="user">
+                                    <form action="{{ route('login') }}" method="post" class="user">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="text" name="username" class="form-control form-control-user @error('username') is-invalid @enderror"
+                                        <input type="text" name="username" class="form-control form-control-user @error('username') is-invalid @enderror"
                                                 id="username" aria-describedby="emailHelp"
                                                 placeholder="Enter username" autofocus required value="{{old('username')}}">
-                                            @error('username')
-                                            <div class="invalid-feedback">
+                                                @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
-                                            {{$message}}
-                                            </div>
-                                            @enderror
                                             </div>
                                         <div class="form-group">
                                             <input type="password" name="password" class="form-control form-control-user"

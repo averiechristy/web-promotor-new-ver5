@@ -5,6 +5,11 @@
 
 
 <div class="container">
+
+@if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
                     <div class="row">
                        
                             <img src="{{asset('img/undraw_profile.svg')}}" style="height: 100px; width: 100px;">
@@ -14,23 +19,33 @@
                            
                        
                     </div>
-                    <form>
-                        <div class="mb-3">
-                          <label for="exampleInputEmail1" class="form-label">Current Password</label>
-                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="exampleInputPassword1" class="form-label"> New Password</label>
-                          <input type="password" class="form-control" id="exampleInputPassword1" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Re- type Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" required>
-                          </div>
+                    <form method="POST" action="{{ route('change-password') }}">
+        @csrf
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                      </form>
-                </div>
+        <div class="mb-3">
+            <label for="current_password">Current Password</label>
+            <input id="current_password" type="password" name="current_password" class="form-control" required>
+            @error('current_password')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
 
+        <div class="mb-3">
+            <label for="new_password">New Password</label>
+            <input id="new_password" type="password" name="new_password" class="form-control" required>
+            @error('new_password')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="new_password_confirmation">Confirm New Password</label>
+            <input id="new_password_confirmation" type="password" name="new_password_confirmation" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Change Password</button>
+        </div>
+    </form>
 
 @endsection

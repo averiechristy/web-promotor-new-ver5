@@ -10,44 +10,46 @@
             <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
               
                
-                <img src="{{asset('img/password-edit.png')}}" class="img-fluid" alt="">
-              
-           
-                
+                <img src="{{asset('img/password-edit.png')}}" class="img-fluid" alt="">   
             </div>
 
             
             <div class="col-lg-6 pt-5 pt-lg-0">
-              <form action="#" method="post" role="form" class="php-email-form">
+            @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-                <div class="button-income2">
-                   
+    <form method="POST" action="{{ route('change-password') }}">
+        @csrf
+        <div class="button-income2">
+        <div class="mb-3">
+            <label for="current_password"class="form-label-nama" >Current Password</label>
+            <input id="current_password" type="password" name="current_password"class="form-control" style="width: 50%;" required>
+            @error('current_password')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
 
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label-nama">Current Password</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" style="width: 50%;" placeholder="" required>
-                      </div>
+        <div class="mb-3">
+            <label for="current_password"class="form-label-nama" >Current Password</label>
+            <label for="new_password" >New Password</label>
+            <input id="new_password" type="password" name="new_password" class="form-control" style="width: 50%;" required>
+            @error('new_password')
+                <span>{{ $message }}</span>
+            @enderror
+        </div>
 
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label-email">New Password</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" style="width: 50%;" placeholder="" required>
-                      </div>
+        <div class="mb-3">
+            <label for="new_password_confirmation" class="form-label-nama" >Confirm New Password</label>
+            <input id="new_password_confirmation" type="password" name="new_password_confirmation" class="form-control" style="width: 50%;" required>
+        </div>
 
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label-email">Re-type Password</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" style="width: 50%;" placeholder="" required>
-                      </div>
-                </div>
-                <div class="d-grid gap-2 d-md-flex  btn-edit">
-                    <button class="btn-save " type="submit">Save</button>
-                    <button class="btn-cancel" type="button">Cancel</button>
-                  </div>
-             </form>
+        <div class="mb-3">
+            <button class="btn-save" type="submit">Save</button>
+        </div>
+    </form>
             </div>
-  
-            
           </div>
-  
         </div>
       </section><!-- End change passwrod Section -->
 @endsection

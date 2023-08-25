@@ -11,9 +11,7 @@
 
    <!-- ======= Artikel Text Section ======= -->
         <section id="article">
-
-       
-
+          
             <h3>{!!$data->judul_artikel!!} </h3>
 
             <p> {!!$data->isi_artikel!!} </p>

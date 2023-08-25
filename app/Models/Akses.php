@@ -20,4 +20,12 @@ class Akses extends Model
         return $this->hasMany(User::class);
     }
 
+    public function Role()
+    {
+
+        return $this->hasMany(UserRole::class);
+    }
+
+
+
 }

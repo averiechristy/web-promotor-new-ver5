@@ -15,39 +15,35 @@
 
             
             <div class="col-lg-6 pt-5 pt-lg-0">
-              <form action="#" method="post" role="form" class="php-email-form">
+            @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-                <div class="button-income">
-                    <img src="{{asset('img/profil.png')}}" class="img-edit"> Amanda </img>   
-                    <div class="mb-3">
-                        <label for="formFileSm" class="form-label">Upload New Profil Photo</label>
-                        <input  style="width: 80%;" class="form-control form-control-sm" id="formFileSm" type="file" value="profil1.png" required>
-                      </div>
+            <div class="button-income">
+            <form method="POST" action="{{ route('update-profile') }}" enctype="multipart/form-data">
+        @csrf
 
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label-nama">Nama</label>
-                        <input style="width: 80%;" type="text" class="form-control" id="exampleFormControlInput1" value="Amanda" required>
-                      </div>
+          <div class="mb-3">
+            <label for="name">Name</label>
+            <input id="nama" type="text" name="nama" value="{{ $user->nama }}"style="width: 80%;" class="form-control" required>
+        </div>
 
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label-email">Email</label>
-                        <input style="width: 80%;" type="email" class="form-control" id="exampleFormControlInput1" value="amanda@gmail.com" required>
-                      </div>
+          <div class="mb-3">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" value="{{ $user->email }}"style="width: 80%;" class="form-control" required>
+        </div>
 
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label-email">Phone Number</label>
-                        <input style="width: 80%;" type="text" class="form-control" id="exampleFormControlInput1" value="087727123123" required>
-                      </div>
+          <div class="mb-3">
+            <label for="phone_number">Phone Number</label>
+            <input id="phone_number" type="tel" name="phone_number" value="{{ $user->phone_number }}"style="width: 80%;" class="form-control">
+        </div>
 
-                      <div class="d-grid gap-2 d-md-flex  btn-edit">
-                        <button class="btn-save me-md-2" type="submit">Save</button>
-                        <button class="btn-cancel" type="button">Cancel</button>
-                      </div>
-                </div>
-                
+         
 
-              </form>
-             
+          <div class="mb-3">
+            <button type="submit" class="btn-save me-md-2">Update Profile</button>
+        </div>
+    </form>
             </div>
   
             

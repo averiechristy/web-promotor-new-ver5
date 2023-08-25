@@ -18,16 +18,37 @@
           <li><a class="" href="{{route('user.artikel')}}">Article</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
           
-          <li class="dropdown"><a href="#"><span><img src="{{asset('img/profil.png')}}" class="user"></span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="editprofil">Edit Profile</a></li>
-              <li><a href="changepassword">Change Password</a></li>
-              <li><a href="login.html">Logout</a></li>
-             
-            </ul>
-          </li>
+          <li> <a class="nav-link" href="#contact"><span class="ml-8 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span></a></li>
+
+
+        <li class="dropdown">
+    <a href="#">
+    @if(auth()->check() && auth()->user()->avatar)
+    <span> <img src="{{ asset('img/' . auth()->user()->avatar) }}"  class="user"></span>
+@else
+<span> <img src="{{ asset('img/default.jpg') }}"  class="user"> </span>
+@endif
+
+
+        <i class="bi bi-chevron-down"></i>
+    </a>
+    <ul>
+        <li><a href="#" data-toggle="modal" data-target="#changeProfilePhotoModal">Change Profile Photo</a></li>
+        <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
+        <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
+        <li>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                Logout
+            </a>
+        </li>
+    </ul>
+</li>
+
           
         </ul>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 

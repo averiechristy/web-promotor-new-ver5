@@ -84,4 +84,36 @@ public static function boot()
     });
 }
 
+public function isAdmin()
+    {
+        return $this->Akses->jenis_akses === 'Admin';
+    }
+
+// app/Models/User.php
+
+public function setDefaultAvatar()
+{
+    $this->avatar = 'default.jpg'; // Ganti dengan nama file default yang sesuai
+    $this->save();
+}
+
+public function uploadAvatar($avatar)
+{
+    $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
+    $avatar->move(public_path('avatars'), $avatarName);
+    
+    $this->avatar = $avatarName;
+    $this->save();
+}
+
+public function deleteAvatar()
+{
+    if ($this->avatar !== 'default.jpg') {
+        // Hapus foto profil asalkan bukan default
+        unlink(public_path('avatars/' . $this->avatar));
+        $this->setDefaultAvatar();
+    }
+}
+
+
 }

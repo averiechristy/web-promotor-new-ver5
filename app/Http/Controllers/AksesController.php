@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Akses;
 use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
 
 class AksesController extends Controller
@@ -105,7 +106,12 @@ class AksesController extends Controller
         
         // Cek apakah ada data yang terkait dengan peran dalam tabel user account
         if (User::where('akses_id', $akses->id)->exists()) {
-            $request->session()->flash('error', "Cannot delete this Akses because it has related records in the user accounts.");
+            $request->session()->flash('error', "Cannot delete this Akses because it has related records in another tabel.");
+            return redirect()->route('admin.akses.index');
+        }
+
+        if (UserRole::where('akses_id', $akses->id)->exists()) {
+            $request->session()->flash('error', "Cannot delete this Akses because it has related records in another tabel.");
             return redirect()->route('admin.akses.index');
         }
         

@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Akses;
 use App\Models\UserRole;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     public function findForPassport($username)
+     {
+         return $this->where('username', $username)->first();
+     }
     public function index()
     {
         
@@ -51,8 +58,8 @@ class UserController extends Controller
             'nama'=> $request->nama,
             'username'=>$request->username,
             'email'=> $request->email,
-            'password'=> $request->password,
-            'phone_number'=> $request->phone_number,
+            'password' => Hash::make('password'),
+                        'phone_number'=> $request->phone_number,
             'number' => $request->number,
             'kode_user' => $request->kode_user,
             
@@ -139,5 +146,70 @@ class UserController extends Controller
 
         return redirect(route('admin.useraccount.index'))->with('sucess','user has been deleted!');
     }
+    
+
+    public function showChangePasswordForm()
+    {
+        return view('admin.changepassword');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        // dd($request);
+
+        $user = Auth::user();
+
+        if (Hash::check($request->current_password, $user->password)) {
+            $user->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+            return redirect()->route('change-password')->with('success', 'Password changed successfully.');
+        } else {
+            return redirect()->route('change-password')->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+    }
+
+    public function UserChangePasswordForm()
+    {
+        return view('user.changepassword');
+    }
+
+
+    public function editProfileForm()
+    {
+        $user = Auth::user();
+        return view('user.editprofil',[
+            'user' => $user,
+            
+        ]);;
+    }
+
+    public function updateProfile(Request $request)
+    {
+       
+        $request->validate([
+            'nama' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+        ]);
+
+       
+        $user = Auth::user();
+        $user->update([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+        ]);
+
+       
+
+        return redirect()->route('edit-profile')->with('success', 'Profile updated successfully.');
+    }
+
     
 }

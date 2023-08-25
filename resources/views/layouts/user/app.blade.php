@@ -50,10 +50,31 @@
 <script src="{{asset('vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
 <script src="{{asset('vendor/swiper/swiper-bundle.min.js')}}"></script>
 <script src="{{asset('vendor/php-email-form/validate.js')}}"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Template Main JS File -->
 <script src="{{asset('js/main.js')}}"></script>
 
+<!-- Modal -->
+<div class="modal fade" id="changeProfilePhotoModal" tabindex="-1" aria-labelledby="changeProfilePhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form action="{{route('update-avatar')}}" method="post" enctype="multipart/form-data">
+    @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeProfilePhotoModalLabel">Change Profile Photo</h5>
+                </div>
+                <div class="modal-body">
+                <input type="file" name="avatar">
+                </div>
+                <div class="modal-footer">   
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload Photo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
-
 </html>

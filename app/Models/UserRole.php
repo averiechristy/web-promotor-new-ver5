@@ -11,6 +11,7 @@ class UserRole extends Model
     use HasFactory;
 
     protected $fillable = [
+        'akses_id',
         'kode_role',
         'jenis_role',
         
@@ -34,6 +35,11 @@ class UserRole extends Model
         return $this->hasMany(PackageIncome::class);
     }
 
+    public function Akses()
+    {
+
+        return $this->belongsTo(Akses::class);
+    }
 
 
 }

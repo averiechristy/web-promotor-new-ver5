@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Akses;
+use App\Models\PackageIncome;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\UserRole;
 use App\Models\User;
@@ -25,7 +28,12 @@ class UserRoleController extends Controller
      */
     public function create()
     {
-        return view ('admin.userrole.create');
+        $akses = Akses::all();
+
+        return view ('admin.userrole.create',[
+            'akses' => $akses,
+            
+        ]);
     }
 
     /**
@@ -35,6 +43,7 @@ class UserRoleController extends Controller
     {
         // dd($request->all());
         UserRole::create([
+            'akses_id'=> $request->akses_id,
             'kode_role'=> $request->kode_role,
             'jenis_role'=> $request->jenis_role,
         ]);
@@ -79,7 +88,17 @@ class UserRoleController extends Controller
         
         // Cek apakah ada data yang terkait dengan peran dalam tabel user account
         if (User::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Cannot delete this role because it has related records in the user accounts.");
+            $request->session()->flash('error', "Cannot delete this role because it has related records in another table.");
+            return redirect()->route('admin.userrole.index');
+        }
+
+        if (Product::where('role_id', $userrole->id)->exists()) {
+            $request->session()->flash('error', "Cannot delete this role because it has related records in another table.");
+            return redirect()->route('admin.userrole.index');
+        }
+
+        if (PackageIncome::where('role_id', $userrole->id)->exists()) {
+            $request->session()->flash('error', "Cannot delete this role because it has related records in another table.");
             return redirect()->route('admin.userrole.index');
         }
         

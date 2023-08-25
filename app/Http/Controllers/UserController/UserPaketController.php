@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Controller;
+use App\Models\PackageDetail;
 use App\Models\PackageIncome;
 use Illuminate\Http\Request;
 
@@ -42,11 +43,18 @@ class UserPaketController extends Controller
     {
         
         $data = PackageIncome::find($id);
-        $packageIncome = PackageIncome::find($id);
+     
+    
+        // Ambil semua data dari tabel PackageDetail
+        $detail = PackageDetail::all();
+    
+        // Ambil data produk yang terhubung dengan tabel PackageDetail
+        $produk = PackageDetail::with('produk')->where('package_id', $id)->get();
        
         return view('user.income', [
             'data' => $data,
-            'packageIncome' => $packageIncome
+            'detail' => $detail,
+            'produk' => $produk,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PackageDetail;
 use App\Models\Product;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
@@ -162,8 +163,21 @@ class ProductController extends Controller
     public function destroy(Request $request, $id)
     {
         $produk = Product::find($id);
-        $produk->delete();
+        
  
+
+        if (!$produk) {
+            $request->session()->flash('error', 'Produk not found.');
+            return redirect()->route('admin.product.index');
+        }
+        
+        // Cek apakah ada data yang terkait dengan peran dalam tabel user account
+        if (PackageDetail::where('produk_id', $produk->id)->exists()) {
+            $request->session()->flash('error', "Cannot delete this Produk because it has related records in another table.");
+            return redirect()->route('admin.product.index');
+        }
+        $produk->delete();
+
          $request->session()->flash('error', "{$produk->nama_produk} has been deleted");
  
          return redirect(route('admin.product.index'))->with('sucess','user has been deleted!');

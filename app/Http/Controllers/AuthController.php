@@ -2,67 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
 
-
-  
-    public function index()
+    public function showLoginForm()
     {
         return view('auth.login');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function login(Request $request)
     {
-        //
+        $credentials = $request->only('username', 'password');
+
+        if (Auth::attempt($credentials)) {
+            if (auth()->user()->isAdmin()) {
+                return redirect()->route('admin.dashboard.index');
+            } else {
+                return redirect()->route('user.home');
+            }
+        }
+
+
+        $request->session()->flash('error', "Username atau Password tidak sesuai, silahkan coba lagi");
+        return redirect()->route('login');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function logout()
     {
-        //
+        Auth::logout();
+        return redirect()->route('login');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('kode_user')->nullable();
             $table->string('nama');
             $table->string('username');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->binary('avatar')->nullable();

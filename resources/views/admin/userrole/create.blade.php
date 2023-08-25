@@ -14,6 +14,20 @@
                                     <div class="card-body">
                                        <form action="{{route('admin.userrole.simpan')}}" method="post">
                                              @csrf
+                                             <div class="form-group mb-4">
+                                                <label for="" class="form-label">User Akses</label>
+
+                                                <select name = "akses_id" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
+                                                    <option selected>-- Pilih Akses --</option>
+                                                   @foreach ($akses as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->jenis_akses }}</option>
+                                                @endforeach
+                                                  
+                                                  </select>
+                                                <!-- @if ($errors->has('name'))
+                                                    <p class="text-danger">{{$errors->first('name')}}</p>
+                                                @endif -->
+                                            </div>
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Role</label>
                                                 <input name="kode_role" type="text" class="form-control {{$errors->has('name') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="" required />

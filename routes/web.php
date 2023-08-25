@@ -2,19 +2,21 @@
 
 use App\Http\Controllers\AksesController;
 use App\Http\Controllers\ArtikelController;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
 use App\Http\Controllers\UserController\UserIncomeController;
 use App\Http\Controllers\UserController\UserPaketController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -203,7 +205,7 @@ Route::delete('/deleteartikel/{id}', [ArtikelController::class, 'destroy'])->nam
 
 
 //Dashboard Route
-Route::get('admin/dashboard/index', [PackageController::class, 'index'])->name('admin.dashboard.index');
+Route::get('admin/dashboard/index', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
 
 Route::get('getProduct/{id}', function ($id) {
@@ -221,7 +223,6 @@ Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
 
 
 //login route
-Route::get('auth/login', [AuthController::class, 'index'])->name('auth.login');
 
 
 
@@ -236,3 +237,44 @@ Route::get('user/income', [UserIncomeController::class, 'index'])->name('user.in
 // User Artikel
 Route::get('user/artikel', [UserArtikelController::class, 'index'])->name('user.artikel');
 Route::get('user/artikelread/{id}', [UserArtikelReadController::class, 'index'])->name('user.artikelread');
+
+
+// Login
+// routes/web.php
+Route::get('/login', [AuthController::class,'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class,'login']);
+Route::post('/logout', [AuthController::class,'logout'])->name('logout');
+
+
+// routes/web.php
+Route::middleware('auth')->group(function () {
+    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
+});
+
+// Change Password
+// routes/web.php
+Route::middleware('auth')->group(function () {
+    Route::get('admin/changepassword', [UserController::class,'showChangePasswordForm'])->name('password');
+    Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('user/changepassword', [UserController::class,'UserChangePasswordForm'])->name('password-change-user');
+    Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [UserController::class,'editProfileForm'])->name('edit-profile');
+    Route::post('/profile/update', [UserController::class,'updateProfile'])->name('update-profile');
+    Route::post('/avatar/update',[ProfileController::class,'updateAvatar'])->name('update-avatar');
+    Route::get('/profile/delete-photo', [ProfileController::class,'deletePhoto'])->name('profile.delete-photo');
+
+});
+
+
+
+
+
+
+
