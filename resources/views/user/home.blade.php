@@ -32,8 +32,8 @@
           <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
             <div class="button-income">
               <h2>Pilih cara untuk atur penghasilanmu!</h2>
-             <a href="kalkulator"><button class="button-hitung" type="button">Hitung Sendiri</button><br></a>
-              <a href="package"><button class="button-package" type="button">Lihat Paket yang tersedia</button></a>
+             <a href="{{route ('user.kalkulator')}}"><button class="button-hitung" type="button">Hitung Sendiri</button><br></a>
+              <a href="{{route ('user.package')}}"><button class="button-package" type="button">Lihat Paket yang tersedia</button></a>
           </div>
           </div>
           <div class="col-lg-6 pt-5 pt-lg-0">

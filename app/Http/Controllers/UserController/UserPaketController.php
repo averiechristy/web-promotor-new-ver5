@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UserController;
 use App\Http\Controllers\Controller;
 use App\Models\PackageDetail;
 use App\Models\PackageIncome;
+use Auth;
 use Illuminate\Http\Request;
 
 class UserPaketController extends Controller
@@ -14,7 +15,8 @@ class UserPaketController extends Controller
      */
     public function index()
     {
-        $paket = PackageIncome::all();
+        $user = Auth::user();
+        $paket= PackageIncome::where('role_id', $user->role_id)->get();
         return view('user.package',[
             'paket' => $paket
         ]);

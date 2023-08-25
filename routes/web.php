@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController\HomeController;
+use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
 use App\Http\Controllers\UserController\UserIncomeController;
@@ -227,8 +228,20 @@ Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
 
 
 // User Package
-Route::get('user/package', [UserPaketController::class, 'index'])->name('user.package');
-Route::get('user/income/{id}', [UserPaketController::class, 'show'])->name('tampilincome');
+
+Route::middleware('auth')->group(function () {
+    Route::get('user/package', [UserPaketController::class, 'index'])->name('user.package');
+    Route::get('user/income/{id}', [UserPaketController::class, 'show'])->name('tampilincome');
+});
+
+// Kalkulator
+Route::middleware('auth')->group(function () {
+Route::get('user/kalkulator', [KalkulatorController::class,'index'])->name('user.kalkulator');
+Route::post('/calculate', [KalkulatorController::class,'calculate'])->name('calculate');
+
+
+});
+
 
 
 Route::get('user/income', [UserIncomeController::class, 'index'])->name('user.income');
@@ -253,7 +266,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Change Password
-// routes/web.php
+
 Route::middleware('auth')->group(function () {
     Route::get('admin/changepassword', [UserController::class,'showChangePasswordForm'])->name('password');
     Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
@@ -271,6 +284,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/delete-photo', [ProfileController::class,'deletePhoto'])->name('profile.delete-photo');
 
 });
+
+
+
 
 
 

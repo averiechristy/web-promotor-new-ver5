@@ -43,7 +43,7 @@
                                                     <label for="inputPassword6" class="col-form-label">Poin</label>
                                                   </div>
                                                 <div class="col-auto">
-                                                    <input name="poin_produk" type="text" style="border-color: #01004C;"  id="" class="form-control" aria-describedby="passwordHelpInline" required>
+                                                    <input name="poin_produk" type="number" style="border-color: #01004C;"  id="" class="form-control" aria-describedby="passwordHelpInline" required>
 
                                                 </div>
                                               </div>
