@@ -79,6 +79,17 @@
         </a>
         
     </li>
+
+    <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.contact-us.index') }}" data-toggle="" data-target="#collapseContact"
+                aria-expanded="true" aria-controls="collapseContact">
+                <i class="fas fa-envelope" style="color: #01004C"></i>
+                <span style="color: #01004C">Contact Us</span>
+                @if ($unreadContacts > 0)
+                    <span class="badge badge-danger">{{ $unreadContacts }}</span>
+                @endif
+            </a>
+        </li>
     <!-- Nav Item - Utilities Collapse Menu -->
   
 
@@ -154,6 +165,7 @@
                         <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span>
                         <img class="img-profile rounded-circle"
                             src="{{asset('img/undraw_profile.svg')}}">
+                            
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

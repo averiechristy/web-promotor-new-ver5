@@ -62,10 +62,18 @@
 @endif
 
                                             </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-control-user"
-                                                id="password" placeholder="Password" required>
-                                        </div>
+                                     
+                                            <div class="form-group mb-4">
+                                        <div class="password-container" style="position: relative;">
+    <input type="password" id="password" name="password"  class="form-control form-control-user" placeholder=" Enter Password">
+    <i class="toggle-password fas fa-eye" style=" position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    cursor: pointer;"></i>
+</div>
+</div>
+
                                         
                                         
                                         <div class="form-group mb-4">
@@ -95,6 +103,26 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const togglePasswordIcon = document.querySelector('.toggle-password');
+
+    togglePasswordIcon.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            togglePasswordIcon.classList.remove('fa-eye');
+            togglePasswordIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            togglePasswordIcon.classList.remove('fa-eye-slash');
+            togglePasswordIcon.classList.add('fa-eye');
+        }
+    });
+});
+</script>
+
 
 </body>
 

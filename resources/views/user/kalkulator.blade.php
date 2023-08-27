@@ -19,32 +19,34 @@
                     <form action="{{ route('calculate') }}" method="post" role="form" class="php-email-form1" id="calculator-form">
                     @csrf
                       <p> Silahkan masukan jumlah produk yang ingin kamu jual</p>
-                      @if(session('error'))
+                      @if ($error)
     <div class="alert alert-danger">
-        {{ session('error') }}
+        {{ $error }}
     </div>
 @endif
-                 
+
                       <div class="row">
                         <div class="form-group col-md-6">
                      
                         @foreach ($produk as $produk)
-                      <div class="form-group mt-3">
-                      <label>{{ $produk->nama_produk }}</label>
-        <input type="number" name="product_quantity[{{ $produk->id }}]" min="0" style="width:50vh;" id="input-expression"value="{{ old('product_quantity.' . $produk->id) }}">
+    <div class="form-group mt-3">
+        <label>{{ $produk->nama_produk }}</label>
+        <input type="number" name="product_quantity[{{ $produk->id }}]" min="0" style="width: 50vh;" id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}">
         <br>
-                      </div>
-                      @endforeach
-                     
+    </div>
+@endforeach
+
                     </div>
                     <div class="text-center"><button type="submit" id="calculate-button" class="button-hitung">Hitung</button></div>
                     <div class="row g-3">
-
                     @isset($hasil)
-                    
   <div class="col">
   <label for="name">Hasil yang kamu dapat</label>
-                            <input class="form-control" type="text" value=" Rp. {{ $hasil }},- " aria-label="Rp. 0,-" disabled readonly>  </div>
+  <?php
+    $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
+    ?>
+
+                            <input class="form-control" type="text" value=" {{ $formattedHasil }}" aria-label="Rp. 0,-" disabled readonly>  </div>
   <div class="col">
   <label for="name">Jumlah Poin</label>
                             <input class="form-control" type="text" value="{{$totalPoints}} poin" aria-label="0 poin" disabled readonly>  </div>

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\ContactUs;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,22 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        // app/Providers/AppServiceProvider.php
+
+        view()->composer(['admin.contact-us.index', 'admin.contact-us.show'], function ($view) {
+            $unreadContacts = ContactUs::where('read', false)->get();
+            $unreadCount = $unreadContacts->count();
+            $view->with(compact('unreadContacts', 'unreadCount'));
+        });
+
+        view()->composer('components.admin.navbar', function ($view) {
+            $unreadContacts = ContactUs::where('read', false)->count();
+            $view->with('unreadContacts', $unreadContacts);
+        });
+
+
 
     }
+
+    
 }

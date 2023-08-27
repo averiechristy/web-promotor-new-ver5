@@ -61,8 +61,14 @@
           </div>
 
           <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch" >
-            <form action="#" method="post" role="form" class="php-email-form">
-              
+        
+            <form action="{{ route('contact.store') }}" method="post" role="form" class="php-email-form">
+              @csrf
+              @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
               <h4> Any Questions?</h4>
                 <p>Get in touch with us</p>
               <div class="row">

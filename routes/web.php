@@ -5,6 +5,7 @@ use App\Http\Controllers\ArtikelController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
@@ -285,6 +286,16 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::middleware('auth')->group(function (){
+    Route::post('/contact-us', [ContactController::class,'store'])->name('contact.store');
+
+// routes/web.php
+
+Route::get('/contact-us', [ContactController::class,'index'])->name('admin.contact-us.index');
+Route::get('/contact-us/{id}', [ContactController::class,'show'])->name('contact-us.show');
+Route::post('/contact-us/mark-as-read/{id}', [ContactController::class,'markAsRead'])->name('contact-us.mark-as-read');
+
+ });
 
 
 

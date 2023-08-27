@@ -63,7 +63,7 @@
                                                   <label for="inputPassword6" class="col-form-label">Password</label>
                                                 </div>
                                                 <div class="col-auto">
-                                                  <input name= "password" type="text" style="border-color: #01004C;" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" required>
+                                                  <input name= "password" type="text" style="border-color: #01004C;" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"  value="12345678" readonly required>
                                                 </div>
 
                                                

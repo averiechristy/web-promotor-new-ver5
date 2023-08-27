@@ -58,8 +58,8 @@ class UserController extends Controller
             'nama'=> $request->nama,
             'username'=>$request->username,
             'email'=> $request->email,
-            'password' => Hash::make('password'),
-                        'phone_number'=> $request->phone_number,
+            'password' => Hash::make('12345678'),
+                                    'phone_number'=> $request->phone_number,
             'number' => $request->number,
             'kode_user' => $request->kode_user,
             
