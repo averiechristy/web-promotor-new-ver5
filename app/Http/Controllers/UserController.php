@@ -139,14 +139,30 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-       $useraccount = User::find($id);
-       $useraccount->delete();
+        $useraccount = User::find($id);
+
+        if ($useraccount->Akses->jenis_akses === 'Admin') {
+            if ($useraccount->id === Auth::id()) {
+                return redirect()->route('admin.useraccount.index')->with('error', 'You cannot delete your own admin account.');
+            }
+
+            $adminCount = User::whereHas('Akses', function ($query) {
+                $query->where('jenis_akses', 'Admin');
+            })->count();
+
+            if ($adminCount <= 1) {
+                return redirect()->route('admin.useraccount.index')->with('error', 'Cannot delete the last admin user.');
+            }
+        }
+
+        $useraccount->delete();
 
         $request->session()->flash('error', "{$useraccount->nama} has been deleted");
 
-        return redirect(route('admin.useraccount.index'))->with('sucess','user has been deleted!');
+        return redirect()->route('admin.useraccount.index')->with('success', 'User has been deleted!');
     }
-    
+
+
 
     public function showChangePasswordForm()
     {

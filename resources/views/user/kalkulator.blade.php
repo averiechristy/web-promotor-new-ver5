@@ -19,11 +19,7 @@
                     <form action="{{ route('calculate') }}" method="post" role="form" class="php-email-form1" id="calculator-form">
                     @csrf
                       <p> Silahkan masukan jumlah produk yang ingin kamu jual</p>
-                      @if ($error)
-    <div class="alert alert-danger">
-        {{ $error }}
-    </div>
-@endif
+                      @include('components.alert')
 
                       <div class="row">
                         <div class="form-group col-md-6">

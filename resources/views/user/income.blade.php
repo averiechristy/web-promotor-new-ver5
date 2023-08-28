@@ -14,6 +14,7 @@
   <div class="col">
     <div class="card">
     <img src="{{ asset('img/' .$detail->produk->gambar_produk) }}" class="card-img-top"   style="width: 100%;" alt="...">     
+    <hr>
      <div class="card-body">
         <h5 class="card-title">{{ $detail->produk->nama_produk }}</h5>
         <p class="card-text">Qty Produk: {{ $detail->qty_produk }}</p>
