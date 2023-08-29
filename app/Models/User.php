@@ -85,9 +85,11 @@ public static function boot()
 }
 
 public function isAdmin()
-    {
-        return $this->Akses->jenis_akses === 'Admin';
-    }
+{
+    $jenis_akses = $this->Akses->jenis_akses;
+    return strtoupper($jenis_akses) === 'ADMIN';
+}
+
 
 // app/Models/User.php
 

@@ -17,25 +17,24 @@ class KalkulatorController extends Controller
         $user = Auth::user();
         $userKodeRole = auth()->user()->Role->kode_role;
         $produk= Product::where('role_id', $user->role_id)->get();
-
-
-        if ($userKodeRole === 'MR') {
-            return view('user.kalkulator',[
+        
+        if (strtolower($userKodeRole) === 'mr') {
+            return view('user.kalkulator', [
                 'produk' => $produk
             ]);
-        } elseif ($userKodeRole === 'TM') {
-            return view('user.kalkulatorTM',[
+        } elseif (strtolower($userKodeRole) === 'tm') {
+            return view('user.kalkulatorTM', [
                 'produk' => $produk
             ]);
-        }elseif  ($userKodeRole === 'MS') {
-            return view('user.kalkulatorMS',[
+        } elseif (strtolower($userKodeRole) === 'ms') {
+            return view('user.kalkulatorMS', [
                 'produk' => $produk
             ]);
         } else {
-            return view('user.kalkulatorMS',[
+            return view('user.kalkulatorMS', [
                 'produk' => $produk
             ]);
-        }
+        }  
     }
 
     public function calculate(Request $request)
@@ -76,23 +75,23 @@ class KalkulatorController extends Controller
                     } elseif ($totalPoints >72 && $totalPoints < 120 ) {
            $insentif = ($totalPoints - 72) * 40000;
            $hasil = $insentif + 3600000;
-           $error = ($totalPoints < 72) ? "Poin anda kurang dari 72, silahkan input ulang jumlah produk" : null;
+           $error = ($totalPoints < 72) ? : null;
             
            return view('user.kalkulator', compact('hasil', 'produk', 'totalPoints', 'error'));    
         }  elseif ($totalPoints == 72) {
             $hasil = 3600000;
-            $error = ($totalPoints < 72) ? "Poin anda kurang dari 72, silahkan input ulang jumlah produk" : null;
+            $error = ($totalPoints < 72) ? : null;
             
             return view('user.kalkulator', compact('hasil', 'produk', 'totalPoints', 'error'));
         } elseif ($totalPoints == 120) {
             $hasil = 6000000;
-            $error = ($totalPoints < 72) ? "Poin anda kurang dari 72, silahkan input ulang jumlah produk" : null;
+            $error = ($totalPoints < 72) ? : null;
             
             return view('user.kalkulator', compact('hasil', 'produk', 'totalPoints', 'error'));
         } elseif ($totalPoints > 120) {
             $insentif = ($totalPoints - 120) * 40000;
             $hasil = $insentif + 6000000;
-            $error = ($totalPoints < 72) ? "Poin anda kurang dari 72, silahkan input ulang jumlah produk" : null;
+            $error = ($totalPoints < 72) ? : null;
             
             return view('user.kalkulator', compact('hasil', 'produk', 'totalPoints', 'error'));        }
         

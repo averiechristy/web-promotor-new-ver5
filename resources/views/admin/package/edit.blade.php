@@ -57,7 +57,7 @@
                                            
                                             <div class="form-group mb-4">
                                             <div id="product-container">
-                                            @foreach ($detail as $detailData)
+                                            @foreach ($nama as $detailData)
                                             
     <div class="product-item">
         <label for="product">Select Product:</label>

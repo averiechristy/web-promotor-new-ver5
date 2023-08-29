@@ -48,14 +48,14 @@ class UserPaketController extends Controller
      
     
         // Ambil semua data dari tabel PackageDetail
-        $detail = PackageDetail::all();
+        // $detail = PackageDetail::all();
     
         // Ambil data produk yang terhubung dengan tabel PackageDetail
         $produk = PackageDetail::with('produk')->where('package_id', $id)->get();
        
         return view('user.income', [
             'data' => $data,
-            'detail' => $detail,
+            // 'detail' => $detail,
             'produk' => $produk,
         ]);
     }

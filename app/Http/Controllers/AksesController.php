@@ -37,7 +37,7 @@ class AksesController extends Controller
             'jenis_akses'=> $request->jenis_akses,
             
         ]);
-        $request->session()->flash('success', 'A new  Akses has been created');
+        $request->session()->flash('success', 'Akses baru berhasil dibuat');
 
         return redirect(route('admin.akses.index'));
 

@@ -5,7 +5,7 @@
       <div class="logo">
         <h1 class="text-light"><a href="index.html"><span>
 
-          <img src="{{asset('img/logoexa.png')}}" alt=""  class="logo">
+        <a class="nav-link scrollto" href="{{route('user.home')}}"><img src="{{asset('img/logoexa.png')}}" alt=""  class="logo"></a>
         </span></a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
@@ -13,12 +13,12 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li ><a class="nav-link scrollto" href="{{route('user.home')}}">Home</a></li>
+          <!-- <li ><a class="nav-link scrollto" href="{{route('user.home')}}">Home</a></li> -->
           <li><a class="nav-link scrollto" href="#about">Income</a></li>
-          <li><a class="" href="{{route('user.artikel')}}">Article</a></li>
+          <li><a class="nav-link scrollto" href="#article">Article</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
           
-          <li> <a class="nav-link" href="#contact"><span class="ml-8 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span></a></li>
+          <li> <a class="nav-link" href=""><span class="ml-8 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span></a></li>
 
 
         <li class="dropdown">

@@ -71,14 +71,7 @@
         
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link " href="{{route('admin.akses.index')}}" data-toggle="" data-target="#collapseTwo"
-            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-key" style="color: #01004C"></i>
-            <span style="color: #01004C">Akses</span>
-        </a>
-        
-    </li>
+  
 
     <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.contact-us.index') }}" data-toggle="" data-target="#collapseContact"

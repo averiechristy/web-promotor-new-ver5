@@ -19,6 +19,7 @@ class PackageController extends Controller
         $role = UserRole::with('Role');
         $produk = Product::with('Role');
         $detail = PackageDetail::with('Detail');
+        
        
         
         return view('admin.package.index', [
@@ -37,7 +38,7 @@ class PackageController extends Controller
         $data = PackageIncome::find($id);
     
         // Ambil semua data dari tabel PackageDetail
-        $detail = PackageDetail::all();
+        // $detail = PackageDetail::all();
     
         // Ambil data produk yang terhubung dengan tabel PackageDetail
         $produk = PackageDetail::with('produk')->where('package_id', $id)->get();
@@ -45,7 +46,7 @@ class PackageController extends Controller
         return view('admin.package.detail', [
             'data' => $data,
             'produk' => $produk,
-            'detail' => $detail,
+            // 'detail' => $detail,
         ]);
     }
     
@@ -68,41 +69,49 @@ class PackageController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
+    {
+        $this->validate($request, [
+            'role_id' => 'required',
+            'judul_paket' => 'required',
+            'deskripsi_paket' => 'required',
+            'produk' => 'required|array', // Minimal satu produk harus dipilih
+            'qty_produk.*' => 'required|integer|min:1',
+        
+        ], [
+            'role_id.required' => 'Pilih role terlebih dahulu.', 
+            'judul_paket.required' => 'Input judul terlebih dahulu',
+            'deskripsi_paket.required' => 'Input deskripsi paket terlebih dahulu',
+            'produk.required' => 'Pilih minimal satu produk.',
+            'qty_produk.required' => 'Isi qty produk.',
+        ]);
+        
     
-    $dtPackage = new PackageIncome;
-    $dtPackage->judul_paket = $request->judul_paket;
-    $dtPackage->role_id = $request->role_id;
-    $dtPackage->deskripsi_paket = $request->deskripsi_paket;
+        $dtPackage = new PackageIncome;
+        $dtPackage->judul_paket = $request->judul_paket;
+        $dtPackage->role_id = $request->role_id;
+        $dtPackage->deskripsi_paket = $request->deskripsi_paket;
+        $dtPackage->save();
+    
+        $packageDetails = [];
 
-
-$dtPackage->save();
-
-
-$packageDetails = [];
-
-if ($request->has('produk') && $request->has('qty_produk')) {
-    foreach ($request->produk as $index => $productId) {
-        $packageDetails[] = [
-            'package_id' => $dtPackage->id,
-            'produk_id' => $productId,
-            'qty_produk' => $request->qty_produk[$index],
-        ];
-    }
-
-// dd($packageDetails);
-    PackageDetail::insert($packageDetails); // Simpan array packageDetails secara massal
-}
-
-
-   
-
-    $request->session()->flash('success', 'A new Package has been created');
+        
+    
+        if ($request->has('produk') && $request->has('qty_produk')) {
+            foreach ($request->produk as $index => $productId) {
+                $packageDetails[] = [
+                    'package_id' => $dtPackage->id,
+                    'produk_id' => $productId,
+                    'qty_produk' => $request->qty_produk[$index],
+                ];
+            }
+    
+            PackageDetail::insert($packageDetails); // Simpan array packageDetails secara massal
+        }
+        
+    $request->session()->flash('success', 'Paket baru berhasil di buat!');
     return redirect(route('admin.package.index'))->with('success', 'Package has been created successfully!');
-
-
-}
-
+    }
+    
     /**
      * Display the specified resource.
      */
@@ -118,7 +127,7 @@ if ($request->has('produk') && $request->has('qty_produk')) {
         $role = UserRole::all();
         $selectedRoleId = $package->role_id;
 
-        $detail = PackageDetail::all();
+        // $detail = PackageDetail::all();
 
         $nama = PackageDetail::with('produk')->where('package_id', $id)->get();
 
@@ -127,7 +136,7 @@ return view('admin.package.edit')->with([
     'produk' => $produk,
     'role' => $role,
     'selectedRoleId' => $selectedRoleId,
-    'detail' => $detail,
+    // 'detail' => $detail,
     'nama'=>$nama,
 
 ]);
@@ -166,7 +175,7 @@ return view('admin.package.edit')->with([
     }
     
 
-        $request->session()->flash('success', 'Package has been updated');
+        $request->session()->flash('success', 'Paket berhasil di update');
         return redirect(route('admin.package.index'))->with('success', 'Package has been updated successfully!');
     
     }
@@ -196,7 +205,7 @@ return view('admin.package.edit')->with([
         $package = PackageIncome::find($id);
         $package->delete();
 
-        $request->session()->flash('error', "{$package->judul_paket} has been deleted");
+        $request->session()->flash('error', "{$package->judul_paket} berhasil di hapus");
 
         return redirect(route('admin.package.index'))->with('sucess','user has been deleted!');
     }
@@ -206,12 +215,12 @@ return view('admin.package.edit')->with([
     $product = PackageIncome::find('produk');
 
     if (!$product) {
-        return response()->json(['message' => 'Product not found.'], 404);
+        return response()->json(['message' => 'Product tidak ditemukan.'], 404);
     }
 
     $product->delete();
 
-    return response()->json(['message' => 'Product deleted successfully.']);
+    return response()->json(['message' => 'Product berhasil di hapus.']);
    }
 
 

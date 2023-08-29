@@ -11,9 +11,17 @@ class ProfileController extends Controller
 {
     public function updateAvatar(Request $request)
 {
-    $request->validate([
-        'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    $this->validate($request, [
+        'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+
+    ], [
+        'avatar.required' => 'Pilih gambar profil untuk diunggah.',
+        'avatar.image' => 'File harus berupa gambar.',
+        'avatar.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+        'avatar.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
+
     ]);
+
 
     $user = Auth::user();
 

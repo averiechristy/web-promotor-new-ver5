@@ -20,15 +20,15 @@
                                                 <label for="" class="form-label">Kode Role</label>
 
                                               
-                                                <select name = "role_id" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="border-color: #01004C; margin-left: 5px; width: 30%; border-radius: 5px;" required>
-                                                    <option selected>-- Pilih Kode Role--</option>
+                                                <select name = "role_id" class="form-control" aria-label=".form-select-lg example" required>
+                                                    <option disabled selected>-- Pilih Kode Role--</option>
                                                     @foreach ($role as $item)
                                                     <option value="{{ $item->id }}">{{ $item->kode_role }} - {{$item->jenis_role}}</option>
                                                 @endforeach
                                                   </select>
-                                                <!-- @if ($errors->has('name'))
-                                                    <p class="text-danger">{{$errors->first('name')}}</p>
-                                                @endif -->
+                                                @if ($errors->has('role_id'))
+                                                    <p class="text-danger">{{$errors->first('role_id')}}</p>
+                                                @endif
                                             </div>
         
 
@@ -37,29 +37,37 @@
                                                   <label for="inputPassword6" class="col-form-label">Nama Produk</label>
                                                 </div>
                                                 <div class="col-auto">
-                                                  <input name ="nama_produk" type="text" style="border-color: #01004C;" id="" class="form-control" aria-describedby="passwordHelpInline" required>
+                                                  <input name ="nama_produk" type="text" style="border-color: #01004C;" id="" class="form-control" aria-describedby="passwordHelpInline" >
+                                                  @if ($errors->has('nama_produk'))
+                                                    <p class="text-danger">{{$errors->first('nama_produk')}}</p>
+                                                @endif
                                                 </div>
                                                 <div class="col-auto">
                                                     <label for="inputPassword6" class="col-form-label">Poin</label>
                                                   </div>
                                                 <div class="col-auto">
-                                                    <input name="poin_produk" type="number" style="border-color: #01004C;"  id="" class="form-control" aria-describedby="passwordHelpInline" required>
-
+                                                    <input name="poin_produk" type="number" style="border-color: #01004C;"  id="" class="form-control" aria-describedby="passwordHelpInline" >
+                                                    @if ($errors->has('poin_produk'))
+                                                    <p class="text-danger">{{$errors->first('poin_produk')}}</p>
+                                                @endif
                                                 </div>
                                               </div>
                                               <form>
                                                 <div class="form-group">
                                                   <label for="exampleFormControlFile1">Upload Gambar Produk</label>
                                                   <input  name="gambar_produk" type="file" class="form-control-file">
+                                                  @if ($errors->has('gambar_produk'))
+                                                    <p class="text-danger">{{$errors->first('gambar_produk')}}</p>
+                                                @endif
                                                 </div>
                                               
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Product</label>
-                                                <textarea name="deskripsi_produk" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required > </textarea>
-                                                <!-- @if ($errors->has('code'))
-                                                    <p class="text-danger">{{$errors->first('code')}}</p>
-                                                @endif -->
+                                                <textarea name="deskripsi_produk" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value=""  > </textarea>
+                                                @if ($errors->has('deskripsi_produk'))
+                                                    <p class="text-danger">{{$errors->first('deskripsi_produk')}}</p>
+                                                @endif
                                             </div>
 
                                             <div class="form-group mb-4">

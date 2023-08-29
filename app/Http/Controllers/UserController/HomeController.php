@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Controller;
+use App\Models\Artikel;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,7 +13,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('user.home');
+        $artikel = Artikel::all();
+
+        return view('user.home',[
+            'artikel' => $artikel
+
+        ]);
     }
 
     /**

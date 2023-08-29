@@ -35,11 +35,35 @@
                                       
                                             <td>{{$item->judul_artikel}}</td>
                                             <td>
-                                            <a href="{{asset('img/'.$item->gambar_artikel)}}" target="_black" rel="noopener noreferrer">Lihat Gambar</a>
+                                            <a href="#" data-toggle="modal" data-target="#gambarModal{{ $item->id }}">Lihat Gambar</a>
+
+
+    <!-- Kode lainnya -->
+
+    <!-- Modal untuk gambar artikel -->
+    <div class="modal fade" id="gambarModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="gambarModalLabel{{ $item->id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="gambarModalLabel{{ $item->id }}">Gambar Artikel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ asset('img/'.$item->gambar_artikel) }}" alt="Gambar Artikel" class="img-fluid">
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
                                             </td>
                                             <td>
-                                            {!!$item->isi_artikel!!}
-                                           
+                                            <a href="{{ route('detailartikel', $item->id) }}"><button type="button" class="btn btn-link">
+    Lihat Isi Artikel
+</button></a>
                                             <td> 
                                                <div class="row">
                                                <a href="{{route('tampilartikel', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 

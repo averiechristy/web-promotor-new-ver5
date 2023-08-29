@@ -7,6 +7,21 @@ use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
 {
+
+
+    public function detailartikel($id) {
+        // Ambil data dari tabel PackageIncome berdasarkan id
+        $data = Artikel::find($id);
+    
+        // Ambil semua data dari tabel PackageDetail
+    
+        // Ambil data produk yang terhubung dengan tabel PackageDetail
+    
+        return view('admin.artikel.detail', [
+            'data' => $data,
+            
+        ]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,6 +48,22 @@ class ArtikelController extends Controller
     {
         //   dd($request->all());
 
+        $this->validate($request, [
+            'judul_artikel' => 'required',
+            'isi_artikel' => 'required',
+            'gambar_artikel' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+
+        ], [
+           
+            'judul_artikel.required' => 'Input judul terlebih dahulu',
+            'gambar_artikel.required' => 'Pilih gambar artikel untuk diunggah.',
+            'gambar_artikel.image' => 'File harus berupa gambar.',
+            'gambar_artikel.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'gambar_artikel.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
+            'isi_artikel.required' => 'Input Isi Artikel terlebih dahulu',
+
+        ]);
+
           $nm = $request->gambar_artikel;
         $namaFile = $nm->getClientOriginalName();
 
@@ -45,7 +76,7 @@ class ArtikelController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtArtikel->save();
 
-        $request->session()->flash('success', 'A new Article has been created');
+        $request->session()->flash('success', 'Artikel baru berhasil dibuat');
 
         return redirect(route('admin.artikel.index'))->with('sucess','Artikel has been Added!');
     }
@@ -68,7 +99,21 @@ class ArtikelController extends Controller
 
     public function updateartikel(Request $request, $id)
      {
-         $ubah = Artikel::findOrFail($id);
+        $ubah = Artikel::findOrFail($id);
+
+        $this->validate($request, [
+            'judul_artikel' => 'required',
+            'isi_artikel' => 'required',
+            'gambar_artikel' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+
+        ], [
+           
+            'gambar_artikel.image' => 'File harus berupa gambar.',
+            'gambar_artikel.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'gambar_artikel.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
+            'isi_artikel.required' => 'Input Isi Artikel terlebih dahulu',
+
+        ]);
      
          // Cek apakah ada file gambar yang diunggah
          if ($request->hasFile('gambar_artikel')) {
@@ -106,7 +151,7 @@ class ArtikelController extends Controller
          $ubah->update($dtProduk);
      
          // Flash message
-         $request->session()->flash('success', "Artikel has been updated");
+         $request->session()->flash('success', "Artikel berhasil di update");
      
          // Redirect
          return redirect(route('admin.artikel.index'))->with('success', 'Product has been updated!');
@@ -137,7 +182,7 @@ class ArtikelController extends Controller
        $artikel = Artikel::find($id);
        $artikel->delete();
 
-        $request->session()->flash('error', "{$artikel->judul_artikel} has been deleted");
+        $request->session()->flash('error', "{$artikel->judul_artikel} berhasil di hapus");
 
         return redirect(route('admin.artikel.index'))->with('sucess','user has been deleted!');
     }

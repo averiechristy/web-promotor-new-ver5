@@ -52,6 +52,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        
+        $this->validate($request, [
+            'akses_id' => 'required',
+            'role_id' => 'required',
+            'nama' => 'required',
+            'username' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+            'phone_number' => 'required',
+
+        ], [
+            'akses_id.required' => 'Pilih akses terlebih dahulu.', 
+            'role_id.required' => 'Pilih role terlebih dahulu.', 
+            'nama.required' => 'Input nama terlebih dahulu',
+            'username.required' => 'Input Username terlebih dahulu',
+            'email.required' => 'Input email terlebih dahulu',
+            'phone_number.required' => 'Input no hp terlebih dahulu',
+            'email.email' => 'Format email tidak valid.',
+
+        ]);
         User::create([
             'akses_id'=> $request->akses_id,
             'role_id'=> $request->role_id,
@@ -59,19 +79,20 @@ class UserController extends Controller
             'username'=>$request->username,
             'email'=> $request->email,
             'password' => Hash::make('12345678'),
-                                    'phone_number'=> $request->phone_number,
+           'phone_number'=> $request->phone_number,
             'number' => $request->number,
             'kode_user' => $request->kode_user,
             
 
         ]);
-        $request->session()->flash('success', 'A new User Account has been created');
+        $request->session()->flash('success', 'Akun User baru sudah ditambahkan!');
 
         return redirect(route('admin.useraccount.index'));
     }
 
 
     public function tampiluser ($id){
+
         $data = User::find($id);
         $akses = Akses::all();
         $role = UserRole::all();
@@ -88,21 +109,55 @@ class UserController extends Controller
         ]);
      }
 
+     // Di dalam controller admin
+public function resetPassword(User $user, Request $request)
+{
+    $user->update([
+        'password' => Hash::make('12345678'), // Ganti 'password_awal' dengan password yang Anda inginkan
+    ]);
+
+    $request->session()->flash('success', 'Password berhasil di reset');
+
+    return redirect()->route('admin.useraccount.index')->with('success', 'Password reset successfully!');
+}
+
+
      public function updateuser(Request $request, $id){
+
+
+        $this->validate($request, [
+            'akses_id' => 'required',
+            'role_id' => 'required',
+            'nama' => 'required',
+            'username' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+
+        ], [
+            'akses_id.required' => 'Pilih akses terlebih dahulu.', 
+            'role_id.required' => 'Pilih role terlebih dahulu.', 
+            'nama.required' => 'Input nama terlebih dahulu',
+            'username.required' => 'Input Username terlebih dahulu',
+            'email.required' => 'Input email terlebih dahulu',
+            'phone_number.required' => 'Input no handphone terlebih dahulu',
+            'email.email' => 'Format email tidak valid.',
+
+        ]);
        
         $data = User::find($id);
+     
        $data->akses_id    = $request->akses_id;
        $data->role_id  = $request->role_id;
        $data->nama  = $request->nama;
        $data->username  = $request->username;
        $data->email = $request->email;
-       $data->password = $request->password;
        $data->phone_number  = $request->phone_number;
       
 
        $data->save();
+     
 
-       $request->session()->flash('success', "User Account has been updated");
+       $request->session()->flash('success', "Akun user berhasil di update");
 
         return redirect(route('admin.useraccount.index'))->with('sucess','role has been updated!');
 
@@ -143,7 +198,7 @@ class UserController extends Controller
 
         if ($useraccount->Akses->jenis_akses === 'Admin') {
             if ($useraccount->id === Auth::id()) {
-                return redirect()->route('admin.useraccount.index')->with('error', 'You cannot delete your own admin account.');
+                return redirect()->route('admin.useraccount.index')->with('error', 'Tidak dapat menghapus akun anda sendiri!.');
             }
 
             $adminCount = User::whereHas('Akses', function ($query) {
@@ -151,15 +206,15 @@ class UserController extends Controller
             })->count();
 
             if ($adminCount <= 1) {
-                return redirect()->route('admin.useraccount.index')->with('error', 'Cannot delete the last admin user.');
+                return redirect()->route('admin.useraccount.index')->with('error', 'Tidak dapat menghapus akun admin terakhir.');
             }
         }
 
         $useraccount->delete();
 
-        $request->session()->flash('error', "{$useraccount->nama} has been deleted");
+        $request->session()->flash('error', "{$useraccount->nama} berhasil dihapus!");
 
-        return redirect()->route('admin.useraccount.index')->with('success', 'User has been deleted!');
+        return redirect()->route('admin.useraccount.index');
     }
 
 
@@ -169,11 +224,26 @@ class UserController extends Controller
         return view('admin.changepassword');
     }
 
-    public function changePassword(Request $request)
+   
+
+    public function adminchangePassword(Request $request)
     {
         $request->validate([
-            'current_password' => 'required',
+            'current_password' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, auth()->user()->password)) {
+                        return $fail(__('Current Password Salah.'));
+                    }
+                },
+            ],         
+            
             'new_password' => 'required|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Masukan current password terlebih dahulu.', 
+            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
+            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
+            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
         ]);
 
         // dd($request);
@@ -184,9 +254,9 @@ class UserController extends Controller
             $user->update([
                 'password' => Hash::make($request->new_password),
             ]);
-            return redirect()->route('change-password')->with('success', 'Password changed successfully.');
+            return redirect()->route('password')->with('success', 'Password berhasil diubah.');
         } else {
-            return redirect()->route('change-password')->withErrors(['current_password' => 'Current password is incorrect.']);
+            return redirect()->route('password');
         }
     }
 
@@ -205,13 +275,51 @@ class UserController extends Controller
         ]);;
     }
 
+     public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, auth()->user()->password)) {
+                        return $fail(__('Current Password Salah.'));
+                    }
+                },
+            ],         
+            
+            'new_password' => 'required|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Masukan current password terlebih dahulu.', 
+            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
+            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
+            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+        ]);
+
+        // dd($request);
+
+        $user = Auth::user();
+
+        if (Hash::check($request->current_password, $user->password)) {
+            $user->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+            return redirect()->route('change-password')->with('success', 'Password berhasil diubah.');
+        } else {
+            return redirect()->route('change-password');
+        }
+    }
     public function updateProfile(Request $request)
     {
-       
-        $request->validate([
+        $this->validate($request, [
             'nama' => 'required',
             'email' => 'required|email',
-            'phone_number' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'phone_number' => 'required',
+
+        ], [
+            'nama.required' => 'Input nama terlebih dahulu',
+            'email.required' => 'Input email terlebih dahulu',
+            'phone_number.required' => 'Input no handphone terlebih dahulu',
+
         ]);
 
        
@@ -224,7 +332,7 @@ class UserController extends Controller
 
        
 
-        return redirect()->route('edit-profile')->with('success', 'Profile updated successfully.');
+        return redirect()->route('edit-profile')->with('success', 'Profil berhasil di update!.');
     }
 
     

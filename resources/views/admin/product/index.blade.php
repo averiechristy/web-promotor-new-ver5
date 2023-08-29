@@ -42,8 +42,30 @@
                         <td>{{ $item->poin_produk}}</td>
                         <td>
 
-                        <a href="{{ asset('img/' .$item->gambar_produk) }}" target="_black" rel="noopener noreferrer">Lihat Gambar</a>
-                        <!-- {{ $item->gambar_produk}} -->
+                        <a href="#" data-toggle="modal" data-target="#gambarModal{{ $item->id }}">Lihat Gambar</a>
+
+
+    <!-- Kode lainnya -->
+
+    <!-- Modal untuk gambar artikel -->
+    <div class="modal fade" id="gambarModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="gambarModalLabel{{ $item->id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="gambarModalLabel{{ $item->id }}">Gambar Produk</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ asset('img/'.$item->gambar_produk) }}" alt="Gambar Artikel" class="img-fluid">
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+                    <!-- {{ $item->gambar_produk}} -->
                         </td>
                         <td>{{ $item->deskripsi_produk }}</td>
                         <td>{{ $item->Role->jenis_role }}</td>

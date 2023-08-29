@@ -57,16 +57,22 @@
 <script src="{{asset('js/main.js')}}"></script>
 
 <!-- Modal -->
-<div class="modal fade" id="changeProfilePhotoModal" tabindex="-1" aria-labelledby="changeProfilePhotoModalLabel" aria-hidden="true">
+<div class="modal" id="changeProfilePhotoModal" tabindex="-1" aria-labelledby="changeProfilePhotoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-        <form action="{{route('update-avatar')}}" method="post" enctype="multipart/form-data">
-    @csrf
+            <form action="{{ route('update-avatar') }}" method="post" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="changeProfilePhotoModalLabel">Change Profile Photo</h5>
                 </div>
                 <div class="modal-body">
-                <input type="file" name="avatar">
+                    <input type="file" name="avatar" id="avatar-input">
+                    <div class="mt-2">
+                        <img id="avatar-preview" src="#" alt="Preview" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                    @if($errors->has('avatar'))
+                        <p class="text-danger">{{ $errors->first('avatar') }}</p>
+                    @endif
                 </div>
                 <div class="modal-footer">   
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -76,6 +82,37 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarPreview = document.getElementById('avatar-preview');
+
+        avatarInput.addEventListener('change', function() {
+            const file = avatarInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                avatarPreview.src = '#';
+            }
+        });
+    });
+</script>
+
+
+<script>
+    @if($errors->has('avatar'))
+        $(document).ready(function() {
+            $('#changeProfilePhotoModal').modal('show');
+        });
+    @endif
+</script>
 
 </body>
 </html>

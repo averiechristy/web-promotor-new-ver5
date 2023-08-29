@@ -50,7 +50,7 @@
                                         <div class="form-group">
                                         <input type="text" name="username" class="form-control form-control-user @error('username') is-invalid @enderror"
                                                 id="username" aria-describedby="emailHelp"
-                                                placeholder="Enter username" autofocus required value="{{old('username')}}">
+                                                placeholder="Masukan Kode Sales" autofocus required value="{{old('username')}}">
                                                 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -65,17 +65,14 @@
                                      
                                             <div class="form-group mb-4">
                                         <div class="password-container" style="position: relative;">
-    <input type="password" id="password" name="password"  class="form-control form-control-user" placeholder=" Enter Password">
+    <input type="password" id="password" name="password"  class="form-control form-control-user" placeholder="Masukan Password" required>
     <i class="toggle-password fas fa-eye" style=" position: absolute;
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
     cursor: pointer;"></i>
 </div>
-</div>
-
-                                        
-                                        
+</div>         
                                         <div class="form-group mb-4">
                                                 <button type="submit" class="btn btn-primary btn-user btn-block " style="background-color: #01004C; color: white;">Sign In</button>
                                             </div>

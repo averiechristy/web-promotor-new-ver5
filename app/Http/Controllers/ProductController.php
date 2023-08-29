@@ -41,6 +41,28 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
+        
+        
+        $this->validate($request, [
+            'role_id' => 'required',
+            'nama_produk' => 'required|unique_per_role:nama_produk,role_id,' . $request->role_id,
+                        'poin_produk' => 'required',
+            'gambar_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+                        'deskripsi_produk' => 'required',
+
+        ], [
+            'role_id.required' => 'Pilih role terlebih dahulu.', 
+            'nama_produk.required' => 'Input nama produk dahulu',
+            'nama_produk.unique_per_role' =>'Nama Produk tidak boleh sama',
+            'poin_produk.required' => 'Input poin produk dahulu',
+            'gambar_produk.required' => 'Pilih gambar produk untuk diunggah.',
+            'gambar_produk.image' => 'File harus berupa gambar.',
+            'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'gambar_produk.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
+            'deskripsi_produk.required' => 'Input Deskripsi produk terlebih dahulu',
+
+        ]);
         $nm = $request->gambar_produk;
         $namaFile = $nm->getClientOriginalName();
 
@@ -60,7 +82,7 @@ class ProductController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtProduk->save();
 
-        $request->session()->flash('success', 'A new Product has been created');
+        $request->session()->flash('success', 'Produk baru berhasil dibuat');
 
         return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
 
@@ -88,7 +110,27 @@ class ProductController extends Controller
 
      public function updateproduct(Request $request, $id)
      {
-         $ubah = Product::findOrFail($id);
+        $ubah = Product::find($id);
+      
+
+        $this->validate($request, [
+            'role_id' => 'required',
+            'nama_produk' => 'required',
+            'poin_produk' => 'required',
+            'gambar_produk' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+                        'deskripsi_produk' => 'required',
+
+        ], [
+            'role_id.required' => 'Pilih role terlebih dahulu.', 
+            'nama_produk.required' => 'Input nama produk dahulu',
+            'poin_produk.required' => 'Input poin produk dahulu',
+            'gambar_produk.image' => 'File harus berupa gambar.',
+            'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'gambar_produk.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
+            'deskripsi_produk.required' => 'Input Deskripsi produk terlebih dahulu',
+
+        ]);
+
      
          // Cek apakah ada file gambar yang diunggah
          if ($request->hasFile('gambar_produk')) {
@@ -116,7 +158,9 @@ class ProductController extends Controller
              'poin_produk' => $request->poin_produk,
              'deskripsi_produk' => $request->deskripsi_produk,
          ];
+
      
+        
          // Jika tidak ada perubahan file gambar, gunakan gambar yang lama
          if (!$request->hasFile('gambar_produk')) {
              $dtProduk['gambar_produk'] = $ubah->gambar_produk;
@@ -124,9 +168,10 @@ class ProductController extends Controller
      
          // Update informasi produk
          $ubah->update($dtProduk);
+        
      
          // Flash message
-         $request->session()->flash('success', "Product has been updated");
+         $request->session()->flash('success', "Product sudah di update");
      
          // Redirect
          return redirect(route('admin.product.index'))->with('success', 'Product has been updated!');
@@ -173,12 +218,12 @@ class ProductController extends Controller
         
         // Cek apakah ada data yang terkait dengan peran dalam tabel user account
         if (PackageDetail::where('produk_id', $produk->id)->exists()) {
-            $request->session()->flash('error', "Cannot delete this Produk because it has related records in another table.");
+            $request->session()->flash('error', "Tidak bisa menghapus data produk karena masih ada pada package income.");
             return redirect()->route('admin.product.index');
         }
         $produk->delete();
 
-         $request->session()->flash('error', "{$produk->nama_produk} has been deleted");
+         $request->session()->flash('error', "{$produk->nama_produk} sudah berhasil di hapus");
  
          return redirect(route('admin.product.index'))->with('sucess','user has been deleted!');
     }

@@ -41,6 +41,18 @@ class UserRoleController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'akses_id' => 'required',
+            'kode_role' => 'required',
+            'jenis_role' => 'required', // Validasi bahwa akses_id harus dipilih
+            // Tambahkan validasi lainnya sesuai kebutuhan
+        ], [
+            'akses_id.required' => 'Pilih akses terlebih dahulu.', 
+            'kode_role.required' => 'Masukan Kode Role terlebih dahulu.', 
+
+            'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
+
+        ]);
         // dd($request->all());
         UserRole::create([
             'akses_id'=> $request->akses_id,
@@ -48,9 +60,9 @@ class UserRoleController extends Controller
             'jenis_role'=> $request->jenis_role,
         ]);
 
-        $request->session()->flash('success', 'A new User Role has been created');
+        $request->session()->flash('success', 'User Role baru sudah dibuat');
 
-        return redirect(route('admin.userrole.index'))->with('sucess','new role has been added!');
+        return redirect(route('admin.userrole.index'))->with('sucess','Role baru sudah ditambahkan!');
     }
 
     /**
@@ -59,21 +71,41 @@ class UserRoleController extends Controller
 
      public function tampildata ($id){
         $data = UserRole::find($id);
-        
+        $akses = Akses::all();
+
         // return view('tampildata',[
         //     'data'->$data
         // ]);
 
         return view('admin.userrole.edit', [
-            'data' => $data
+            'data' => $data,
+            'akses' => $akses
         ]);
      }
 
      public function updatedata(Request $request, $id){
-        $data = UserRole::find($id);
-        $data->update($request->all());
 
-        $request->session()->flash('success', "{$data->jenis_role} has been updated");
+        $this->validate($request, [
+            'akses_id' => 'required',
+            'kode_role' => 'required',
+            'jenis_role' => 'required', // Validasi bahwa akses_id harus dipilih
+            // Tambahkan validasi lainnya sesuai kebutuhan
+        ], [
+            'akses_id.required' => 'Pilih akses terlebih dahulu.', 
+            'kode_role.required' => 'Masukan Kode Role terlebih dahulu.', 
+
+            'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
+
+        ]);
+        
+        $data = UserRole::find($id);
+        $data->akses_id    = $request->akses_id;
+        $data->kode_role = $request->kode_role;
+        $data->jenis_role  = $request->jenis_role;
+       
+ 
+        $data->save();
+        $request->session()->flash('success', "{$data->jenis_role} sudah di update");
         return redirect(route('admin.userrole.index'))->with('sucess','role has been updated!');
 
      }
@@ -88,23 +120,23 @@ class UserRoleController extends Controller
         
         // Cek apakah ada data yang terkait dengan peran dalam tabel user account
         if (User::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Cannot delete this role because it has related records in another table.");
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data user accout yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
 
         if (Product::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Cannot delete this role because it has related records in another table.");
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data user accout yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
 
         if (PackageIncome::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Cannot delete this role because it has related records in another table.");
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data user accout yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
         
         $userrole->delete();
         
-        $request->session()->flash('success', "{$userrole->jenis_role} has been deleted");
+        $request->session()->flash('success', "{$userrole->jenis_role} sudah di hapus");
         
         return redirect()->route('admin.userrole.index')->with('success', 'Role has been deleted!');
         

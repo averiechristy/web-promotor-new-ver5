@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\ContactUs;
+use App\Models\Product;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Validator;
 use View;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,7 +38,19 @@ class AppServiceProvider extends ServiceProvider
             $view->with('unreadContacts', $unreadContacts);
         });
 
+       
+Validator::extend('unique_per_role', function ($attribute, $value, $parameters, $validator) {
+    [$nameColumn, $roleColumn, $roleValue] = $parameters;
 
+    $count = Product::where($nameColumn, $value)
+        ->where($roleColumn, $roleValue)
+        ->count();
+
+    return $count === 0;
+});
+
+        
+        
 
     }
 

@@ -27,13 +27,15 @@
                             
                             <div class="table-responsive">
                             @include('components.alert')
-                                <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="border-radius: 10px;">
+                                <table id= "myDataTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0" >
                                     <thead>
                                         <tr>
                                            
                                             <th>Kode Role</th>
                                             <th>Jenis Role</th>
+                                            <th>Akses</th>
                                             <th>Action</th>
+                                           
                                         </tr>
                                     </thead>
                                     
@@ -45,9 +47,10 @@
                                            
                                             <td>{{$item->kode_role}}</td>
                                             <td>{{$item->jenis_role}}</td>
+                                            <td>{{ $item->Akses->jenis_akses }}</td>
                                             <td> 
                                                <div class="row">
-                                               <a href="{{route('tampildata', $item->id)}}" class="btn btn-warning icon-circle"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
+                                               <a href="{{route('tampildata', $item->id)}}" class="btn btn-warning icon-circle "><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
                                                   
                                                
                                                <form method="POST" action="{{ route('delete', $item->id) }}">

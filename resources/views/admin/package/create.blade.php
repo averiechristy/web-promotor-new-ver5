@@ -33,6 +33,9 @@
         @endif
     @endforeach
     </select>
+    @if ($errors->has('role_id'))
+                                                    <p class="text-danger">{{$errors->first('role_id')}}</p>
+                                                @endif
 
                                                
                                             </div>
@@ -40,16 +43,18 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
-                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required />
-                                               
+                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value=""  />
+                                                @if ($errors->has('judul_paket'))
+                                                    <p class="text-danger">{{$errors->first('judul_paket')}}</p>
+                                                @endif
                                             </div>
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Paket</label>
-                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required > </textarea>
-                                                <!-- @if ($errors->has('code'))
-                                                    <p class="text-danger">{{$errors->first('code')}}</p>
-                                                @endif -->
+                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" > </textarea>
+                                                @if ($errors->has('deskripsi_paket'))
+                                                    <p class="text-danger">{{$errors->first('deskripsi_paket')}}</p>
+                                                @endif
                                             </div>
                                             
 
@@ -62,21 +67,26 @@
                 <!-- JavaScript will populate this based on selected role -->
                 <option value="" disabled selected>Select a product</option> <!-- Hidden option -->
             </select>
-            
+            @if ($errors->has('produk'))
+                                                    <p class="text-danger">{{$errors->first('produk')}}</p>
+                                                @endif
                        
             <label for="quantity">Quantity:</label>
-            <input type="number"  name="qty_produk[]" class="quantity-input form-control">
+            <input type="number"  name="qty_produk[]" class="quantity-input form-control" required>
+            @if ($errors->has('qty_produk'))
+    <p class="text-danger">{{ $errors->first('qty_produk') }}</p>
+@endif
 
                    
     <div class="form-group mb-4">
-            <button type="button " class="remove-product btn btn-danger  btn-sm mt-2 mb-2" style="float: right">Remove</button> <!-- Tombol Remove -->
+            <button type="button " class="remove-product btn btn-danger  btn-sm mt-2 mb-2" style="float: right">Hapus</button> <!-- Tombol Remove -->
             </div>
         </div>
     </div>
     </div>
             
     <div class="form-group mb-4">
-    <button type="button" class="add-product btn btn-success">Add More Product</button>
+    <button type="button" class="add-product btn btn-success">Tambah Product</button>
 
     </div>                                       
 
@@ -200,5 +210,25 @@ productSelect.attr('name', `produk[]`);
             }
         });
     });
+
+      $('#form-id').submit(function(event) {
+            var valid = true;
+            
+            $('.product-item').each(function(index) {
+                var productSelect = $(this).find('.product-select');
+                var quantityInput = $(this).find('.quantity-input');
+
+                if (productSelect.val() === '' || quantityInput.val() === '') {
+                    valid = false;
+                    return false; // Keluar dari loop jika salah satu tidak valid
+                }
+            });
+
+            if (!valid) {
+                event.preventDefault(); // Mencegah form disubmit jika ada input yang tidak valid
+                alert("Silahkan masukan produk dan quantity nya.");
+            }
+        });
+    
 </script>
 @endsection

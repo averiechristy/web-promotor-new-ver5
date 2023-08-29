@@ -35,8 +35,9 @@
             </figure>
 
             <div class="portfolio-info">
-              <h4><a href="{{ route('user.artikelread', $artikel->id) }}">Read More</a></h4>
-              <p>{{$artikel->judul_artikel}}</p>
+              <h4>{{$artikel->judul_artikel}}</h4>
+              <p><a href="{{ route('user.artikelread', $artikel->id) }}">Read More</a></p>
+
             </div>
           </div>
         </div>

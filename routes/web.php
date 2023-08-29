@@ -130,15 +130,15 @@ Route::get('/user/income', function () {
 
 
 //akses route
-Route::get('admin/akses/index', [AksesController::class, 'index'])->name('admin.akses.index');
-Route::get('admin/akses/create', [AksesController::class, 'create'])->name('admin.akses.create');
-Route::post('admin/akses/simpan', [AksesController::class, 'store'])->name('admin.akses.simpan');
+// Route::get('admin/akses/index', [AksesController::class, 'index'])->name('admin.akses.index');
+// Route::get('admin/akses/create', [AksesController::class, 'create'])->name('admin.akses.create');
+// Route::post('admin/akses/simpan', [AksesController::class, 'store'])->name('admin.akses.simpan');
 
-Route::get('/tampilakses/{id}',[AksesController::class,'tampilakses'])->name('tampilakses');
-Route::post('/updateakses/{id}',[AksesController::class,'updateakses'])->name('updateakses');
+// Route::get('/tampilakses/{id}',[AksesController::class,'tampilakses'])->name('tampilakses');
+// Route::post('/updateakses/{id}',[AksesController::class,'updateakses'])->name('updateakses');
 
 
-Route::delete('/deleteakses/{id}', [AksesController::class, 'destroy'])->name('deleteakses');
+// Route::delete('/deleteakses/{id}', [AksesController::class, 'destroy'])->name('deleteakses');
 
 
 // user role route
@@ -203,6 +203,7 @@ Route::get('/tampilartikel/{id}',[ArtikelController::class,'show'])->name('tampi
 Route::post('/updateartikel/{id}',[ArtikelController::class,'updateartikel'])->name('updateartikel');
 Route::delete('/deleteartikel/{id}', [ArtikelController::class, 'destroy'])->name('deleteartikel');
 
+Route::get('/detailartikel/{id}',[ArtikelController::class,'detailartikel'])->name('detailartikel');
 
 
 
@@ -270,7 +271,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('admin/changepassword', [UserController::class,'showChangePasswordForm'])->name('password');
-    Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
+    Route::post('admin/changepassword', [UserController::class,'adminchangePassword'])->name('admin-change-password');
 });
 
 Route::middleware('auth')->group(function () {
@@ -294,10 +295,12 @@ Route::middleware('auth')->group(function (){
 Route::get('/contact-us', [ContactController::class,'index'])->name('admin.contact-us.index');
 Route::get('/contact-us/{id}', [ContactController::class,'show'])->name('contact-us.show');
 Route::post('/contact-us/mark-as-read/{id}', [ContactController::class,'markAsRead'])->name('contact-us.mark-as-read');
+Route::delete('/contact-us/delete/{id}', [ContactController::class,'delete'])->name('contact-us.delete');
+
 
  });
 
-
+ Route::post('/user/{user}/reset-password', [UserController::class,'resetPassword'])->name('admin.reset-password');
 
 
 

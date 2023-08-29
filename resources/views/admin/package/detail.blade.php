@@ -6,7 +6,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Detail Produk</h1>
+                    <h1 class="h3 mb-2 text-gray-800"><a href="{{ route('admin.package.index') }}">Package Income</a> / Detail Produk</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -25,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-    @foreach ($detail as $detail)
+    @foreach ($produk as $detail)
             <tr>
               
                 <td>{{ $detail->produk->nama_produk }}</td>

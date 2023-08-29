@@ -13,7 +13,8 @@ class ContactController extends Controller
 
      public function index()
 {
-    $contacts = ContactUs::orderBy('created_at', 'desc')->get();
+
+    $contacts = ContactUs::orderBy('created_at', 'desc')->paginate(3); // Ubah 10 dengan jumlah data per halaman yang Anda inginkan
     return view('admin.contact-us.index', compact('contacts'));
 }
 
@@ -45,15 +46,41 @@ public function markAsRead($id)
      */
     public function store(Request $request)
     {
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
+
+        ], [
+            'name.required' => 'Input nama terlebih dahulu',
+            'email.required' => 'Input email terlebih dahulu',
+            'email.email' => 'Format email tidak sesuai',
+            'message.required' => 'Input pesan terlebih dahulu',
+            'subject.required' => 'Input subject terlebih dahulu',
+
+        ]);
+
         $data = $request->all();
         $data['read'] = false; // Set 'read' to false when creating a new message
 
         // Simpan data dalam basis data
         ContactUs::create($data);
 
-        return redirect()->back()->with('success', 'Message sent successfully!');
+        return redirect()->route('user.home', ['#contact'])->with('success', 'Pesan berhasil terkirim!');
 
     }
+
+    public function delete(Request $request, $id)
+{
+    $contact = ContactUs::findOrFail($id);
+    $contact->delete();
+
+    $request->session()->flash('success', "Pesan sudah di hapus");
+
+    return redirect()->route('admin.contact-us.index')->with('success', 'Contact message berhasil dihapus!');
+}
 
     /**
      * Display the specified resource.
