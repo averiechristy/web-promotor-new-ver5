@@ -55,7 +55,7 @@ class ArtikelController extends Controller
 
         ], [
            
-            'judul_artikel.required' => 'Input judul terlebih dahulu',
+            'judul_artikel.required' => 'Input Judul Artikel terlebih dahulu',
             'gambar_artikel.required' => 'Pilih gambar artikel untuk diunggah.',
             'gambar_artikel.image' => 'File harus berupa gambar.',
             'gambar_artikel.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
@@ -76,9 +76,9 @@ class ArtikelController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtArtikel->save();
 
-        $request->session()->flash('success', 'Artikel baru berhasil dibuat');
+        $request->session()->flash('success', 'Artikel berhasil ditambahkan.');
 
-        return redirect(route('admin.artikel.index'))->with('sucess','Artikel has been Added!');
+        return redirect(route('admin.artikel.index'));
     }
 
     /**
@@ -107,7 +107,7 @@ class ArtikelController extends Controller
             'gambar_artikel' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
 
         ], [
-           
+           'judul_artikel.required' => 'Input Judul Artikel terlebih dahulu',
             'gambar_artikel.image' => 'File harus berupa gambar.',
             'gambar_artikel.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
             'gambar_artikel.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
@@ -151,10 +151,10 @@ class ArtikelController extends Controller
          $ubah->update($dtProduk);
      
          // Flash message
-         $request->session()->flash('success', "Artikel berhasil di update");
+         $request->session()->flash('success', "Artikel berhasil di update.");
      
          // Redirect
-         return redirect(route('admin.artikel.index'))->with('success', 'Product has been updated!');
+         return redirect(route('admin.artikel.index'));
      }
   
 
@@ -182,8 +182,8 @@ class ArtikelController extends Controller
        $artikel = Artikel::find($id);
        $artikel->delete();
 
-        $request->session()->flash('error', "{$artikel->judul_artikel} berhasil di hapus");
+        $request->session()->flash('error', "Artikel berhasil di hapus.");
 
-        return redirect(route('admin.artikel.index'))->with('sucess','user has been deleted!');
+        return redirect(route('admin.artikel.index'));
     }
 }

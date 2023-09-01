@@ -34,7 +34,19 @@ class Product extends Model
             $model->number = static::where('role_id', $model->role_id)->max('number') + 1;
             $model->kode_produk = $model->Role->kode_role . '-' . str_pad($model->number, 5, '0', STR_PAD_LEFT);
         });
+    
+        static::updating(function($model){
+            if ($model->isDirty('role_id')) {
+                $model->number = static::where('role_id', $model->role_id)->max('number') + 1;
+                $model->kode_produk = $model->Role->kode_role . '-' . str_pad($model->number, 5, '0', STR_PAD_LEFT);
+            }
+        });
     }
+    
 
+    public function paket()
+    {
+        return $this->belongsTo(PackageDetail::class);
+    }
  
 }

@@ -13,7 +13,7 @@
                     <div class="row">
                        
                             <img src="{{asset('img/undraw_profile.svg')}}" style="height: 100px; width: 100px;">
-                            <h3 style="margin-top: 34px; margin-left: 12px;">Admin</h3>
+                            <h3 style="margin-top: 34px; margin-left: 12px;"> {{ Auth::user()->nama }}</h3>
                             
 
                            
@@ -23,44 +23,41 @@
         @csrf
 
             <hr>
-        <div class="form-group mb-4">
-                                        <div class="password-container" style="position: relative;">
-            <input id="current_password" type="password" name="current_password" class="form-control" placeholder="Current Password">
-            @if($errors->has('current_password'))
-    <p class="text-danger">{{ $errors->first('current_password') }}</p>
-@endif    <i class="toggle-password fas fa-eye" style=" position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    cursor: pointer;"></i>
-</div>
+            <div class="form-group mb-4">
+    <div class="password-container position-relative">
+        <input id="current_password" type="password" name="current_password" class="form-control" placeholder="Current Password">
+       
+        <i class="toggle-password fas fa-eye eye-toggle"></i>
+    </div>
+    @if($errors->has('current_password'))
+        <p class="text-danger">{{ $errors->first('current_password') }}</p>
+    @endif
 </div>
 
 <div class="form-group mb-4">
-                                        <div class="password-container" style="position: relative;">
-                                        <input id="new_password" type="password" name="new_password" class="form-control" placeholder="New Password">
-            @if($errors->has('new_password'))
-    <p class="text-danger">{{ $errors->first('new_password') }}</p>
-@endif
-  <i class="toggle-password1 fas fa-eye" style=" position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    cursor: pointer;"></i>
-</div>
+    <div class="password-container position-relative">
+        <input id="new_password" type="password" name="new_password" class="form-control" placeholder="New Password">
+      
+        <i class="toggle-password1 fas fa-eye eye-toggle"></i>
+        
+    </div>
+    @if($errors->has('new_password'))
+        <p class="text-danger">{{ $errors->first('new_password') }}</p>
+    @endif
 </div>
 
 <div class="form-group mb-4">
-                                        <div class="password-container" style="position: relative;">
-                                        <input id="new_password_confirmation" type="password" name="new_password_confirmation" class="form-control" placeholder="Confirm New Password">
-          
-  <i class="toggle-password2 fas fa-eye" style=" position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    cursor: pointer;"></i>
+    <div class="password-container position-relative">
+        <input id="new_password_confirmation" type="password" name="new_password_confirmation" class="form-control" placeholder="Confirm New Password">
+        <i class="toggle-password2 fas fa-eye eye-toggle"></i>
+    </div>
+    @if($errors->has('new_password_confirmation'))
+        <p class="text-danger">{{ $errors->first('new_password_confirmation') }}</p>
+    @elseif($errors->has('new_password'))
+        <p class="text-danger">{{ $errors->first('new_password') }}</p>
+    @endif
 </div>
-</div>
+
 
        
 

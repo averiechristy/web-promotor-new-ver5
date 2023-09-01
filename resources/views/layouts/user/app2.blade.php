@@ -37,9 +37,9 @@
 
 <body>
 
-@include('components.user.header') 
+@include('components.user.header2') 
    
-@yield('content')
+@yield('content2')
 
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -78,6 +78,7 @@
         </div>
     </div>
 <!-- Modal -->
+
 <div class="modal" id="changeProfilePhotoModal" tabindex="-1" aria-labelledby="changeProfilePhotoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -138,6 +139,7 @@
         }
     });
 </script>
+
 
 
 <script>

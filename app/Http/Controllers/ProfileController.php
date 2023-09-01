@@ -38,10 +38,9 @@ class ProfileController extends Controller
         // Update nama gambar pada record
         $user->update(['avatar' => $filename]);
 
-        return redirect()->back()->with('success', 'Profil berhasil disimpan.');
     }
 
-    return redirect()->back()->with('error', 'No image uploaded.');
+    return redirect()->back()->with('error', 'Tidak ada gambar yang diupload');
 }
 
 

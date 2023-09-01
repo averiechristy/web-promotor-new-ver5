@@ -13,7 +13,7 @@
                     <div class="card shadow mb-4">
                         
                         <div class="card-header py-3">
-                            <a href="{{route ('admin.userrole.create')}}" class="btn btn-warning btn-sm">Add Data</a>
+                            <a href="{{route ('admin.userrole.create')}}" class="btn btn-warning btn-sm">Tambah Data</a>
                             
                         </div>
 
@@ -49,30 +49,23 @@
                                             <td>{{$item->jenis_role}}</td>
                                             <td>{{ $item->Akses->jenis_akses }}</td>
                                             <td> 
-                                               <div class="row">
-                                               <a href="{{route('tampildata', $item->id)}}" class="btn btn-warning icon-circle "><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
+                                            <div class="row">
+                                                               <a href="{{route('tampildata', $item->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
                                                   
                                                
                                                <form method="POST" action="{{ route('delete', $item->id) }}">
                             @csrf
                             <input name="_method" type="hidden" value="DELETE">
-                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
-                        </form>
-
-                                                      
-                                                </div>
-                                                </td>
-                                            
-                                        </tr>
-                                        @endforeach
-                                        
-                                    </tbody>
-                                    
-                                </table>
-                                <nav aria-label="Page navigation example">
-
-
-</nav>
+                            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red"></i></button>
+                        </form>             
+                      </div>
+                     </td>
+                     </tr>
+                     @endforeach
+                     </tbody>
+                      </table>
+                      <nav aria-label="Page navigation example">
+                    </nav>
                                
 
                             </div>

@@ -8,17 +8,17 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Insert a new Package Income
+                                        Tambah Paket Baru
                                     </div>
                                     <div class="card-body">
                                         
-                                       <form action="{{route('admin.package.simpan')}}" method="post">
+                                       <form id ="form-id" action="{{route('admin.package.simpan')}}" method="post">
                                        @csrf
                                             
                                             <div class="form-group mb-4 " id="koderole">
-                                            <label for="role">Select Role:</label>
-    <select name = "role_id" id="role" class="form-control">
-    <option value="" disabled selected>Select a role</option> <!-- Hidden option -->
+                                            <label for="role">Kode Role</label>
+    <select name = "role_id" id="role" class="form-control {{$errors->has('role_id') ? 'is-invalid' : ''}}"  style="border-color: #01004C;">
+    <option value="" disabled selected>Pilih Kode Role</option> <!-- Hidden option -->
         <!-- Render options from database -->
         @php
         $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
@@ -29,6 +29,7 @@
             @php
                 $selectedRoleIds[] = $item->role_id;
             @endphp
+            
             <option value="{{ $item->role_id }}">{{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}</option>
         @endif
     @endforeach
@@ -43,7 +44,7 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
-                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value=""  />
+                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('judul_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('judul_paket')}}"  />
                                                 @if ($errors->has('judul_paket'))
                                                     <p class="text-danger">{{$errors->first('judul_paket')}}</p>
                                                 @endif
@@ -51,7 +52,7 @@
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Paket</label>
-                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" > </textarea>
+                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('deskripsi_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" > {{old('deskripsi_paket')}} </textarea>
                                                 @if ($errors->has('deskripsi_paket'))
                                                     <p class="text-danger">{{$errors->first('deskripsi_paket')}}</p>
                                                 @endif
@@ -62,16 +63,16 @@
                                             <div class="form-group mb-4">
                                             <div id="product-container">
         <div class="product-item">
-            <label for="product">Select Product:</label>
-            <select name="produk[]" class="product-select form-control">
+            <label for="product">Pilih Produk</label>
+            <select name="produk[]" class="product-select form-control {{$errors->has('produk') ? 'is-invalid' : ''}}"  style="border-color: #01004C;">
                 <!-- JavaScript will populate this based on selected role -->
-                <option value="" disabled selected>Select a product</option> <!-- Hidden option -->
+                <option value="" disabled selected>Pilih Produk</option> <!-- Hidden option -->
             </select>
             @if ($errors->has('produk'))
                                                     <p class="text-danger">{{$errors->first('produk')}}</p>
                                                 @endif
                        
-            <label for="quantity">Quantity:</label>
+            <label for="quantity">Quantity</label>
             <input type="number"  name="qty_produk[]" class="quantity-input form-control" required>
             @if ($errors->has('qty_produk'))
     <p class="text-danger">{{ $errors->first('qty_produk') }}</p>
@@ -86,7 +87,7 @@
     </div>
             
     <div class="form-group mb-4">
-    <button type="button" class="add-product btn btn-success">Tambah Product</button>
+    <button type="button" class="add-product btn btn-success">Tambah Produk</button>
 
     </div>                                       
 
@@ -97,7 +98,7 @@
     
 
                                             <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Submit</button>
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Simpan</button>
                                             </div>
                                         </form>
                                     </div>
@@ -183,12 +184,12 @@ productSelect.attr('name', `produk[]`);
     productItem.find('.quantity-input').remove();
     productItem.find('.remove-product').remove();
 
-            productItem.append('<label for="quantity">Product:</label>');
+            productItem.append('<label for="quantity">Pilih Produk</label>');
             productItem.append(productSelect);
 
             productItem.append('<div style="margin-top: 10px;"></div>');
 
-            productItem.append('<label for="quantity">Quantity:</label>');
+            productItem.append('<label for="quantity">Quantity</label>');
             productItem.append(quantityInput);
            
             productItem.append( removeProduct);
@@ -209,26 +210,37 @@ productSelect.attr('name', `produk[]`);
                 alert("You cannot remove the first product.");
             }
         });
-    });
+    
 
-      $('#form-id').submit(function(event) {
-            var valid = true;
-            
-            $('.product-item').each(function(index) {
-                var productSelect = $(this).find('.product-select');
-                var quantityInput = $(this).find('.quantity-input');
+    $('#form-id').submit(function(event) {
+        var valid = true;
+        var selectedProducts = []; // Array untuk menyimpan produk yang sudah dipilih
+        
+        $('.product-item').each(function(index) {
+            var productSelect = $(this).find('.product-select');
+            var quantityInput = $(this).find('.quantity-input');
 
-                if (productSelect.val() === '' || quantityInput.val() === '') {
-                    valid = false;
-                    return false; // Keluar dari loop jika salah satu tidak valid
-                }
-            });
+            if (productSelect.val() === '' || quantityInput.val() === '') {
+                valid = false;
+                return false; // Keluar dari loop jika salah satu tidak valid
+            }
 
-            if (!valid) {
-                event.preventDefault(); // Mencegah form disubmit jika ada input yang tidak valid
-                alert("Silahkan masukan produk dan quantity nya.");
+            var selectedProductId = productSelect.val();
+            if (selectedProducts.includes(selectedProductId)) {
+                valid = false;
+                alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
+                return false; // Keluar dari loop jika produk sudah dipilih sebelumnya
+            } else {
+                selectedProducts.push(selectedProductId);
             }
         });
+
+        if (!valid) {
+            event.preventDefault(); // Mencegah form disubmit jika ada input yang tidak valid
+            // alert("Silahkan masukan produk dan quantity nya.");
+        }
+    });
+});
     
 </script>
 @endsection

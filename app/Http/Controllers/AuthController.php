@@ -25,7 +25,7 @@ class AuthController extends Controller
         }
 
 
-        $request->session()->flash('error', "Kode Sales atau Password tidak sesuai, silahkan coba lagi");
+        $request->session()->flash('error', "Kode Sales (username) atau Password tidak sesuai, silakan coba lagi");
         return redirect()->route('login');
     }
 

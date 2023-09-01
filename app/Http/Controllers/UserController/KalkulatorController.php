@@ -68,7 +68,6 @@ class KalkulatorController extends Controller
             $hasil = 0;
             $error = ($totalPoints < 72) ? "Poin anda kurang dari 72, silahkan input ulang jumlah produk" : null;
             
-            $request->session()->flash('error', "{$error}");
 
             return view('user.kalkulator', compact('hasil', 'produk', 'totalPoints', 'error'));
             

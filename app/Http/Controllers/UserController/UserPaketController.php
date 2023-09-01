@@ -16,7 +16,9 @@ class UserPaketController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $paket= PackageIncome::where('role_id', $user->role_id)->get();
+        $paket = PackageIncome::where('role_id', $user->role_id)->paginate(6);
+
+     
         return view('user.package',[
             'paket' => $paket
         ]);

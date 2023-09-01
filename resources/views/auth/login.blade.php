@@ -42,7 +42,7 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                     @include('components.alert')
-                                        <h1 class="h4 text-gray-900 mb-4">Sign In</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Login</h1>
                                         
                                     </div>
                                     <form action="{{ route('login') }}" method="post" class="user">
@@ -50,7 +50,7 @@
                                         <div class="form-group">
                                         <input type="text" name="username" class="form-control form-control-user @error('username') is-invalid @enderror"
                                                 id="username" aria-describedby="emailHelp"
-                                                placeholder="Masukan Kode Sales" autofocus required value="{{old('username')}}">
+                                                placeholder="Masukan Kode Sales / Username" autofocus required value="{{old('username')}}">
                                                 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -74,7 +74,7 @@
 </div>
 </div>         
                                         <div class="form-group mb-4">
-                                                <button type="submit" class="btn btn-primary btn-user btn-block " style="background-color: #01004C; color: white;">Sign In</button>
+                                                <button type="submit" class="btn btn-primary btn-user btn-block " style="background-color: #01004C; color: white;">Login</button>
                                             </div>
                                        
                                     </form>

@@ -14,16 +14,23 @@
       <nav id="navbar" class="navbar">
         <ul>
           <!-- <li ><a class="nav-link scrollto" href="{{route('user.home')}}">Home</a></li> -->
-          <li><a class="nav-link scrollto" href="#about">Income</a></li>
-          <li><a class="nav-link scrollto" href="#artikel">Article</a></li>
-          <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
-
-
+          <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Income
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><a class="dropdown-item" href="{{route ('user.kalkulator')}}">Hitung Sendiri</a></li>
+      
+      <li><a class="dropdown-item" href="{{route ('user.package')}}">Lihat Paket Tersedia</a></li>
+     
+    </ul>
+  </li>          <li><a class="nav-link scrollto" href="{{route('user.artikel')}}">Article</a></li>
+          <li><a class="nav-link scrollto" href="{{route('user.contact')}}">Contact Us</a></li>
+          
           <li> <a class="nav-link" href=""><span class="ml-8 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span></a></li>
 
 
         <li class="dropdown">
-          
     <a href="#">
     @if(auth()->check() && auth()->user()->avatar)
     <span> <img src="{{ asset('img/' . auth()->user()->avatar) }}"  class="user"></span>

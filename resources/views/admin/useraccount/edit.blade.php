@@ -9,56 +9,94 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Edit User Account
+                                        Edit User Akun
                                     </div>
                                     <div class="card-body">
                                        <form action="/updateuser/{{$data->id}}" method="post">
                                             @csrf
 
                                             <div class="form-group mb-4">
-                                                <label for="" class="form-label">User Akses</label>
-                                                <select name="akses_id" class="form-control" aria-label=".form-select-lg example" required>
-    <option value="{{ $data->Akses->id }}">{{ $data->Akses->jenis_akses }}</option>
-    @foreach ($akses as $item)
-        @if ($data->akses_id != $item->id)
-            <option value="{{ $item->id }}">{{ $item->jenis_akses }}</option>
-        @endif
-    @endforeach
-</select>
-@if($errors->has('akses_id'))
-    <p class="text-danger">{{ $errors->first('akses_id') }}</p>
-@endif
-
-                                                @if ($errors->has('akses_id'))
-                                                    <p class="text-danger">{{$errors->first('akses_id')}}</p>
-                                                @endif
-                                            </div>
-                                            <div class="form-group mb-4">
-                                                <label for="" class="form-label">Kode Role</label>
-
-                                                <select name="role_id" class="form-control" aria-label=".form-select-lg example" required>
-                                                <option value="{{ $data->Role->id }}">{{ $data->Role->kode_role}} - {{ $data->Role->jenis_role}}</option>
-        @foreach ($role as $item)
-            @if ($data->role_id != $item->id)
-                <option value="{{ $item->id }}">{{ $item->kode_role}} - {{ $item->jenis_role}}</option>
-            @endif
+    <label for="" class="form-label">Pilih Akses</label>
+    <select name="akses_id" class="form-control {{ $errors->has('akses_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example">
+        <option selected disabled>-- Pilih Akses --</option>
+        @foreach ($akses as $item)
+            <option value="{{ $item->id }}" {{ old('akses_id', $data->akses_id) == $item->id ? 'selected' : '' }}>
+                {{ $item->jenis_akses }}
+            </option>
         @endforeach
     </select>
-                                                @if ($errors->has('role_id'))
-                                                    <p class="text-danger">{{$errors->first('role_id')}}</p>
-                                                @endif
-                                            </div>
+    @if($errors->has('akses_id'))
+        <p class="text-danger">{{ $errors->first('akses_id') }}</p>
+    @endif
+</div>
+<div class="form-group mb-4">
+    <label for="" class="form-label">Kode Role</label>
+    <select name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example" required>
+        <option selected disabled>-- Pilih Kode Role --</option>
+        @if($data->akses_id) {{-- Pastikan ada akses yang terpilih --}}
+            @foreach ($roles[$data->akses_id] as $role) {{-- Menggunakan $data->akses_id --}}
+                <option value="{{ $role->id }}" {{ old('role_id', $data->role_id) == $role->id ? 'selected' : '' }}>
+                    {{ $role->kode_role }} - {{ $role->jenis_role }}
+                </option>
+            @endforeach
+        @endif
+    </select>
+    @if($errors->has('role_id'))
+        <p class="text-danger">{{ $errors->first('role_id') }}</p>
+    @endif
+</div>
 
+
+<script>
+    const roles = {!! json_encode($roles) !!};
+    const selectedAksesId = {!! json_encode(old('akses_id')) !!};
+    const selectedRoleId = {!! json_encode(old('role_id')) !!};
+
+    const aksesDropdown = document.querySelector('select[name="akses_id"]');
+    const roleDropdown = document.querySelector('select[name="role_id"]');
+    
+    aksesDropdown.addEventListener('change', function() {
+        const selectedAksesId = this.value;
+        roleDropdown.innerHTML = '<option selected disabled>-- Pilih Kode Role --</option>';
+        
+        if (roles[selectedAksesId]) {
+            roles[selectedAksesId].forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.id;
+                option.textContent = `${role.kode_role} - ${role.jenis_role}`;
+                if (role.id === selectedRoleId) {
+                    option.selected = true;
+                }
+                roleDropdown.appendChild(option);
+            });
+        }
+    });
+
+    // Set selected options on initial page load
+    // if (selectedAksesId && roles[selectedAksesId]) {
+    //     roles[selectedAksesId].forEach(role => {
+    //         const option = document.createElement('option');
+    //         option.value = role.id;
+    //         option.textContent = `${role.kode_role} - ${role.jenis_role}`;
+    //         if (role.id === selectedRoleId) {
+    //             option.selected = true;
+    //         }
+    //         roleDropdown.appendChild(option);
+    //     });
+    // }
+</script>
+
+             
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Nama</label>
-                                                <input name="nama" type="text" class="form-control {{$errors->has('name') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ $data->nama }}"  />
+                                                <input name="nama" type="text" class="form-control {{$errors->has('nama') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ old('nama', $data->nama) }}"  />
                                                 @if ($errors->has('nama'))
                                                     <p class="text-danger">{{$errors->first('nama')}}</p>
                                                 @endif
                                             </div>
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Sales</label>
-                                                <input name="username" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ $data->username }}"  />
+                                                <input name="username" type="text" class="form-control {{$errors->has('username') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('username', $data->username) }}"  />
                                                 @if ($errors->has('username'))
                                                     <p class="text-danger">{{$errors->first('username')}}</p>
                                                 @endif
@@ -68,7 +106,7 @@
 
                                               <div class="form-group mb-4">
                                                 <label for="" class="form-label">Email</label>
-                                                <input name="email" type="email" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ $data->email }}" />
+                                                <input name="email" type="email" class="form-control {{$errors->has('email') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('email', $data->email) }}" />
                                                 @if ($errors->has('email'))
                                                     <p class="text-danger">{{$errors->first('email')}}</p>
                                                 @endif
@@ -76,7 +114,7 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">No Handphone</label>
-                                                <input name="phone_number" type="number" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ $data->phone_number }}" />
+                                                <input name="phone_number" type="number" class="form-control {{$errors->has('phone_number') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('phone_number', $data->phone_number) }}" />
                                                 @if ($errors->has('phone_number'))
                                                     <p class="text-danger">{{$errors->first('phone_number')}}</p>
                                                 @endif

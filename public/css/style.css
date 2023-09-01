@@ -426,14 +426,36 @@ h6,
   font-weight: 700;
   line-height: 56px;
   color: var(--orange-1, #FF9029);
+}
+
+#hero h2 {
+  color: var(--primary-1, #01004C);
+  margin: 15px 0 0 0;
+  font-size: 24px;
+}
+
+/* 
+#hero h1 {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 700;
+ 
+  color: var(--orange-1, #FF9029);
   font-family: Nunito;
 }
 
 #hero h2 {
   color: var(--primary-1, #01004C);
 font-family: Nunito;
-  margin: 250px 0 0 0;
+ 
   font-size: 24px;
+} */
+
+#about h3 {
+  color: var(--primary-1, #01004C);
+ 
+  font-size: 24px;
+  margin-top: 50px;
 }
 
 #hero .btn-get-started {
@@ -448,6 +470,19 @@ font-family: Nunito;
   margin-top: 30px;
   color: #fff;
   background: #eb5d1e;
+}
+
+
+.password-container {
+  position: relative;
+}
+
+.eye-toggle {
+  position: absolute;
+  top: 50%;
+left:280px;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 #hero .btn-get-started:hover {
@@ -472,7 +507,27 @@ font-family: Nunito;
   }
 
   #hero .hero-img img {
-    width: 50%;
+    width: 30%;
+  }
+
+
+}
+
+@media (max-width: 991px) {
+  #hero {
+    height: calc(100vh - 72px);
+  }
+
+  #hero .animated {
+    animation: none;
+  }
+
+  #hero .hero-img {
+    text-align: center;
+  }
+
+  #hero .hero-img img {
+    width: 30%;
   }
 }
 
@@ -488,13 +543,13 @@ font-family: Nunito;
   }
 
   #hero .hero-img img {
-    width: 70%;
+    width: 50%;
   }
 }
 
 @media (max-width: 575px) {
   #hero .hero-img img {
-    width: 80%;
+    width: 60%;
   }
 }
 
@@ -503,6 +558,7 @@ font-family: Nunito;
     height: 120vh;
   }
 }
+
 
 @keyframes up-down {
   0% {
@@ -513,6 +569,18 @@ font-family: Nunito;
     transform: translateY(-10px);
   }
 }
+
+/* Responsive styles */
+@media (max-width: 767px) {
+  .portfolio-item {
+    flex-basis: 100%;
+  }
+
+}
+
+/* Additional styling */
+/* ... (your existing styles) */
+
 
 /*--------------------------------------------------------------
 # Sections General
@@ -611,6 +679,9 @@ section {
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
+
+
+
 .button-hitung:hover{
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
 }
@@ -690,9 +761,38 @@ line-height: normal;
   color: #5a6570;
 }
 
+@media (max-width: 768px) {
+  #about .col-md-6 {
+    text-align: center;
+  }
+  #about h3 {
+    text-align: center;
+  }
+  #about .button-hitung{
+    width: 50%;
+  }
+  #about .button-package{
+    width: 50%;
+  }
+}
+
 @media (max-width: 991px) {
   .about .about-img img {
     max-width: 70%;
+  }
+
+  
+  #about .col-md-6 {
+    text-align: center;
+  }
+  #about h3 {
+    text-align: center;
+  }
+  #about .button-hitung{
+    width: 50%;
+  }
+  #about .button-package{
+    width: 50%;
   }
 }
 
@@ -700,8 +800,39 @@ line-height: normal;
   .about .about-img img {
     max-width: 90%;
   }
+ 
+  #about .col-md-6 {
+    text-align: center;
+  }
+  #about h3 {
+    text-align: center;
+  }
+  #about .button-hitung{
+    width: 50%;
+  }
+  #about .button-package{
+    width: 50%;
+  }
 }
 
+@media (max-width: 280px) {
+  .about .about-img img {
+    max-width: 90%;
+  }
+ 
+  #about .col-md-6 {
+    text-align: center;
+  }
+  #about h3 {
+    text-align: center;
+  }
+  #about .button-hitung{
+    width: 50%;
+  }
+  #about .button-package{
+    width: 50%;
+  }
+}
 
 /*--------------------------------------------------------------
 # Contact Us
@@ -1083,6 +1214,19 @@ text-align: center;
   #hero1 {
     height: calc(100vh - 70px);
   }
+  .contact .php-email-form button[type=submit] {
+    background: #01004C;
+    border: 0;
+    padding: 10px 24px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 100px;
+    width: 100px;
+  }
+  
+  .contact .php-email-form button[type=submit]:hover {
+    background: #ef7f4d;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1095,6 +1239,19 @@ text-align: center;
     font-size: 18px;
     line-height: 24px;
     margin-bottom: 30px;
+  }
+  .contact .php-email-form button[type=submit] {
+    background: #01004C;
+    border: 0;
+    padding: 10px 24px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 100px;
+    width: 100px;
+  }
+  
+  .contact .php-email-form button[type=submit]:hover {
+    background: #ef7f4d;
   }
 }
 
@@ -1366,6 +1523,10 @@ text-align: center;
  
 }
 
+#article {
+  align-items: center;
+}
+
 #article p {
   margin-left: 50px;
   margin-right: 50px;
@@ -1552,6 +1713,11 @@ line-height: normal;
 .income p {
   font-size: 15px;
   color: #5a6570;
+}
+
+.button-income h2{
+  text-align: center;
+  margin-bottom: 25px;
 }
 
 @media (max-width: 991px) {
@@ -1841,3 +2007,202 @@ border: none;
 .button-income2 {
   margin-top: 150px;
 }
+
+/* Responsive Artikel */
+
+
+
+ body, ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#artikel .portfolio-wrap img {
+  height: 100%;
+  width: 100%;
+}
+
+/* Container for the articles */
+.article-container {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 0;
+}
+
+/* Styling for each article */
+.article {
+  flex: 0 0 auto;
+  width: 300px;
+  margin-right: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.article img {
+  width: 100%;
+  height: auto;
+}
+
+.article h4 {
+  margin: 10px;
+}
+
+/* Button for 'Lainnya' */
+.more-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-lain a  {
+  color: #000;
+}
+
+.centered-image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+
+/* CSS untuk tampilan umum */
+/* ... */
+
+/* Media query untuk tampilan yang lebih kecil, misalnya ponsel */
+@media (max-width: 768px) {
+  /* Mengatur ukuran font lebih kecil */
+  #articleread h3 {
+    font-size: 18px;
+  }
+
+  #articleread p {
+    font-size: 14px;
+    line-height: 1.5; /* Atur jarak antar baris agar lebih mudah dibaca */
+  }
+
+  /* Mengatur padding atau margin jika diperlukan untuk menghindari konten terpotong */
+  .article-container {
+    padding: 20px;
+  }
+}
+
+#articleread{
+  align-items: center;
+}
+
+
+#articleread p {
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 20px;
+}
+
+#articleread h3{
+  text-align: center;
+  color: #01004C;
+  font-family: Nunito;
+  margin-top: -30px;
+ 
+}
+
+#articleread {
+  align-items: center;
+}
+
+#articleread p {
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 20px;
+}
+
+
+/* Stil untuk tampilan umum */
+/* ... */
+
+/* Stil untuk tampilan lebih kecil (ponsel) */
+@media (max-width: 768px) {
+  #edit-profil {
+    padding: 80px 0; /* Atur padding agar konten tidak terlalu dekat dengan pinggiran */
+  }
+
+  #edit-profil .about-img {
+    text-align: center;
+    margin-bottom: 30px; /* Berikan sedikit jarak antara gambar dan form */
+  }
+
+  #edit-profil .pt-lg-0 {
+    padding-top: 0 !important; /* Hapus padding atas pada layar kecil */
+  }
+
+  #edit-profil .form-control {
+    width: 100%; /* Lebar formulir menjadi 100% pada layar kecil */
+  }
+
+  #edit-profil .btn-save {
+    margin-top: 20px;
+  }
+}
+
+.services .icon-box {
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 40px 0;
+  background: #fff;
+  box-shadow: 0 10px 29px 0 rgba(68, 88, 144, 0.1);
+  transition: all 0.3s ease-in-out;
+  border-radius: 15px;
+  text-align: center;
+  border-bottom: 3px solid #fff;
+}
+
+.services .icon-box:hover {
+  transform: translateY(-5px);
+  border-color: #ef7f4d;
+}
+
+.services .icon img {
+  line-height: 1;
+  margin-bottom: 15px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.services .title {
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.services .title a {
+  color: #111;
+}
+
+.services .description {
+  font-size: 15px;
+  line-height: 28px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+ #artikel  .portfolio-item {
+    margin-bottom: 20px;
+  }
+}
+
+#edit-profil .form-edit{
+  margin-top: 100px;
+}
+
+@media (max-width: 768px) {
+  #edit-profil  .form-edit {
+    align-items: center;
+   }
+ }

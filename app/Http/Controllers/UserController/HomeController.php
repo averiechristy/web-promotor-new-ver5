@@ -13,7 +13,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $artikel = Artikel::all();
+        // $artikel = Artikel::all();
+
+        $artikel= Artikel::orderBy('created_at', 'desc')->paginate(6); // Ubah 10 dengan jumlah data per halaman yang Anda inginkan
+
 
         return view('user.home',[
             'artikel' => $artikel

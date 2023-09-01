@@ -35,7 +35,7 @@
 @include('components.admin.navbar') 
    
 @yield('content')
-
+@stack('scripts')
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -99,8 +99,30 @@
           var name = $(this).data("name");
           event.preventDefault();
           swal({
-              title: `Are you sure you want to delete this record?`,
-              text: "If you delete this, it will be gone forever.",
+              title: `Apakah anda yakin untuk menghapus data ini?`,
+              text: "Jika anda menghapus data ini, data ini akan hilang selamanya.",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              form.submit();
+            }
+          });
+      });
+  
+</script>
+
+<script type="text/javascript">
+ 
+     $('.show_confirm2').click(function(event) {
+          var form =  $(this).closest("form");
+          var name = $(this).data("name");
+          event.preventDefault();
+          swal({
+              title: `Apakah anda yakin melakukan reset password?`,
+              text: "Jika anda melakukan reset, maka password akan berubah menjadi default password.",
               icon: "warning",
               buttons: true,
               dangerMode: true,

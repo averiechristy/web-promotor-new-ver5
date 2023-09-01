@@ -8,49 +8,56 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Insert a new Package Income
+                                        Edit Paket Pendapatan
                                     </div>
                                     <div class="card-body">
                                         
-                                       <form action="/updatepackage/{{$package->id}}" method="post">
+                                       <form id="form-id" action="/updatepackage/{{$package->id}}" method="post">
                                        @csrf
                                             
                                        <div class="form-group mb-4" id="koderole">
-    <label for="role">Select Role:</label>
-    <select name="role_id" id="role" class="form-control">
-        <option value="" disabled>Select a role</option> <!-- Hidden option -->
-        <!-- Render unique role options from database -->
-        @php
-        $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
-        @endphp
+    <label for="role">Kode Role</label>
+    <select name="role_id" id="role" class="form-control {{$errors->has('role_id') ? 'is-invalid' : ''}}" style="border-color: #01004C;">
+    <option value="" disabled>Pilih Kode Role</option> <!-- Hidden option -->
+    <!-- Render unique role options from database -->
+    @php
+    $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
+    @endphp
 
-        @foreach ($produk as $item)
-            @if (!in_array($item->Role->id, $selectedRoleIds))
-                @php
-                    $selectedRoleIds[] = $item->Role->id;
-                @endphp
-                <option value="{{ $item->Role->id }}" @if ($item->Role->id == $selectedRoleId) selected @endif>
-                    {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
-                </option>
-            @endif
-        @endforeach
-    </select>
+    @foreach ($produk as $item)
+        @if (!in_array($item->Role->id, $selectedRoleIds))
+            @php
+                $selectedRoleIds[] = $item->Role->id;
+            @endphp
+            
+            <option value="{{ $item->Role->id }}" @if (old('role_id') == $item->Role->id) selected @endif>
+                {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
+            </option>
+        @endif
+    @endforeach
+</select>
+
+    @if ($errors->has('role_id'))
+                                                    <p class="text-danger">{{$errors->first('role_id')}}</p>
+                                                @endif
 </div>
 
         
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
-                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{$package->judul_paket}}" required />
-                                               
+                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('judul_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('judul_paket',$package->judul_paket) }}" />
+                                                @if ($errors->has('judul_paket'))
+                                                    <p class="text-danger">{{$errors->first('judul_paket')}}</p>
+                                                @endif
                                             </div>
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Paket</label>
-                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('code') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" required >{{$package->deskripsi_paket}}</textarea>
-                                                <!-- @if ($errors->has('code'))
-                                                    <p class="text-danger">{{$errors->first('code')}}</p>
-                                                @endif -->
+                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('deskripsi_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="">{{ old('deskripsi_paket',$package->deskripsi_paket) }}</textarea>
+                                                @if ($errors->has('deskripsi_paket'))
+                                                    <p class="text-danger">{{$errors->first('deskripsi_paket')}}</p>
+                                                @endif
                                             </div>
                                             
 
@@ -60,8 +67,8 @@
                                             @foreach ($nama as $detailData)
                                             
     <div class="product-item">
-        <label for="product">Select Product:</label>
-        <select name="produk[]" class="product-select form-control">
+        <label for="product">Pilih Produk</label>
+        <select name="produk[]" class="product-select form-control {{$errors->has('produk') ? 'is-invalid' : ''}}"  style="border-color: #01004C;">
             @foreach ($produk as $product)
                 @if ($product->role_id == $selectedRoleId)
                 <option value="{{ $product->id }}" {{ $detailData->produk_id == $product->id ? 'selected' : '' }}>
@@ -71,12 +78,17 @@
                 @endif
             @endforeach
         </select>
+        @if ($errors->has('produk'))
+                                                    <p class="text-danger">{{$errors->first('produk')}}</p>
+                                                @endif
 
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="qty_produk[]" class="quantity-input form-control" value="{{ $detailData->qty_produk }}">
-
+        <label for="quantity">Quantity</label>
+        <input type="number" name="qty_produk[]" class="quantity-input form-control {{$errors->has('qty_produk') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('qty_produk', $detailData->qty_produk) }}" required>
+        @if ($errors->has('qty_produk'))
+                                                    <p class="text-danger">{{$errors->first('qty_produk')}}</p>
+                                                @endif
         <div class="form-group mb-4">
-            <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Remove</button>
+            <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Hapus</button>
         </div>
     </div>
 @endforeach
@@ -89,12 +101,12 @@
     </div>
             
     <div class="form-group mb-4 ml-3">
-    <button type="button" class="add-product btn btn-success">Add More Product</button>
+    <button type="button" class="add-product btn btn-success">Tambah Produk</button>
 
     </div>                                       
 
                                             <div class="form-group mb-4  ml-3">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Save</button>
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Simpan</button>
                                             </div>
                                         </form>
                                     </div>
@@ -127,7 +139,7 @@
 
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+        <script>
     $(document).ready(function() {
         var counter = 0; // Set counter sesuai dengan jumlah produk yang ada
 
@@ -139,6 +151,13 @@
                 success: function(data) {
                     var productsSelect = $('.product-select');
                     
+                    var selectedProducts = [];
+                
+                // Simpan produk yang telah dipilih sebelumnya
+                productsSelect.each(function() {
+                    selectedProducts.push($(this).val());
+                });
+
                     productsSelect.empty();
                     $.each(data, function(key, produk) {
                         productsSelect.append('<option value="'+ produk.id +  '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');                  
@@ -155,7 +174,17 @@
             
             var existingSelect = $('.product-select').eq(0);
             var productSelect = existingSelect.clone();
-            
+            var selectedProducts = [];
+        
+        // Simpan produk yang telah dipilih sebelumnya
+        $('.product-select').each(function() {
+            selectedProducts.push($(this).val());
+        });
+
+        // Menghapus opsi produk yang telah dipilih sebelumnya dari pilihan di baris produk baru
+        $.each(selectedProducts, function(index, selectedProduct) {
+            productSelect.find(`option[value="${selectedProduct}"]`).remove();
+        });
             var existingQuantityInput = $('.quantity-input').eq(0);
             var quantityInput = existingQuantityInput.clone();
 
@@ -180,56 +209,62 @@ productSelect.attr('name', `produk[]`);
     productItem.find('.quantity-input').remove();
     productItem.find('.remove-product').remove();
 
-            productItem.append('<label for="quantity">Product:</label>');
+            productItem.append('<label for="quantity">Pilih Produk</label>');
             productItem.append(productSelect);
-            productItem.append('<label for="quantity">Quantity:</label>');
+
+            productItem.append('<div style="margin-top: 10px;"></div>');
+
+            productItem.append('<label for="quantity">Quantity</label>');
             productItem.append(quantityInput);
            
             productItem.append( removeProduct);
 
 
             productContainer.append(productItem);
+            productItem.append('<div style="margin-top: 40px;"></div>');
 
             counter++;
         });
 
         $(document).on('click', '.remove-product', function() {
-    var productItem = $(this).closest('.product-item');
-    var packageId = $(this).data('package-id');
-    var productId = $(this).data('product-id');
-
-    var productItemsCount = $('.product-item').length; // Menghitung jumlah elemen dengan kelas 'product-item'
-
-    if (productItemsCount > 1) { // Memeriksa apakah ada lebih dari 1 formulir produk
-        if (packageId && productId) {
-            deleteProduct(packageId, productId, productItem);
-        } else {
-            productItem.remove();
-        }
-    } else {
-        alert('Tidak dapat menghapus produk. Minimal harus ada satu produk.');
-    }
-});
-
-// Fungsi untuk menghapus data dari database dan menghapus elemen dari tampilan
-function deleteProduct(packageId, productId, productItem) {
-    $.ajax({
-        url: '/delete-package-product/' + packageId + '/' + productId, // Ganti dengan URL endpoint yang sesuai
-        type: 'DELETE',
-        success: function(data) {
-            if (data.success) {
-                productItem.remove();
+            var productContainer = $('#product-container');
+            
+            if (productContainer.children('.product-item').length > 1) {
+                $(this).closest('.product-item').remove();
             } else {
-                console.error('Failed to delete product and related data.');
+                alert("You cannot remove the first product.");
             }
-        },
-        error: function(error) {
-            console.error('Error:', error);
+        });
+        $('#form-id').submit(function(event) {
+        var valid = true;
+        var selectedProducts = []; // Array untuk menyimpan produk yang sudah dipilih
+        
+        $('.product-item').each(function(index) {
+            var productSelect = $(this).find('.product-select');
+            var quantityInput = $(this).find('.quantity-input');
+
+            if (productSelect.val() === '' || quantityInput.val() === '') {
+                valid = false;
+                return false; // Keluar dari loop jika salah satu tidak valid
+            }
+
+            var selectedProductId = productSelect.val();
+            if (selectedProducts.includes(selectedProductId)) {
+                valid = false;
+                alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
+                return false; // Keluar dari loop jika produk sudah dipilih sebelumnya
+            } else {
+                selectedProducts.push(selectedProductId);
+            }
+        });
+
+        if (!valid) {
+            event.preventDefault(); // Mencegah form disubmit jika ada input yang tidak valid
+            // alert("Silahkan masukan produk dan quantity nya.");
         }
     });
-}
-
-
     });
+
+     
 </script>
 @endsection

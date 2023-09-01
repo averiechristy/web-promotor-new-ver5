@@ -55,7 +55,7 @@ class ProductController extends Controller
             'role_id.required' => 'Pilih role terlebih dahulu.', 
             'nama_produk.required' => 'Input nama produk dahulu',
             'nama_produk.unique_per_role' =>'Nama Produk tidak boleh sama',
-            'poin_produk.required' => 'Input poin produk dahulu',
+            'poin_produk.required' => 'Input poin terlebih dahulu',
             'gambar_produk.required' => 'Pilih gambar produk untuk diunggah.',
             'gambar_produk.image' => 'File harus berupa gambar.',
             'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
@@ -82,9 +82,9 @@ class ProductController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtProduk->save();
 
-        $request->session()->flash('success', 'Produk baru berhasil dibuat');
+        $request->session()->flash('success', 'Produk berhasil ditambahkan.');
 
-        return redirect(route('admin.product.index'))->with('sucess','product has been updated!');
+        return redirect(route('admin.product.index'));
 
         // dd($request->all());
 
@@ -129,9 +129,7 @@ class ProductController extends Controller
             'gambar_produk.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
             'deskripsi_produk.required' => 'Input Deskripsi produk terlebih dahulu',
 
-        ]);
-
-     
+        ]);     
          // Cek apakah ada file gambar yang diunggah
          if ($request->hasFile('gambar_produk')) {
              $path = public_path('img');
@@ -158,23 +156,29 @@ class ProductController extends Controller
              'poin_produk' => $request->poin_produk,
              'deskripsi_produk' => $request->deskripsi_produk,
          ];
-
-     
-        
+         
          // Jika tidak ada perubahan file gambar, gunakan gambar yang lama
          if (!$request->hasFile('gambar_produk')) {
              $dtProduk['gambar_produk'] = $ubah->gambar_produk;
          }
-     
+
+
+         if ($request->role_id != $ubah->role_id) {
+            $relatedPackages = PackageDetail::where('produk_id', $id)->exists();
+            if ($relatedPackages) {
+                $request->session()->flash('error', "Tidak dapat mengubah kode role karena produk memiliki data terkait di tabel paket detail.");
+                return redirect()->route('admin.product.index');            }
+        }
+      
+
          // Update informasi produk
          $ubah->update($dtProduk);
-        
-     
+
          // Flash message
-         $request->session()->flash('success', "Product sudah di update");
+         $request->session()->flash('success', "Produk berhasil diupdate.");
      
          // Redirect
-         return redirect(route('admin.product.index'))->with('success', 'Product has been updated!');
+         return redirect(route('admin.product.index'));
      }
      
      
@@ -184,6 +188,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
        
+
     }
 
     /**
@@ -212,7 +217,7 @@ class ProductController extends Controller
  
 
         if (!$produk) {
-            $request->session()->flash('error', 'Produk not found.');
+            $request->session()->flash('error', 'Produk tidak ditemukan.');
             return redirect()->route('admin.product.index');
         }
         
@@ -223,9 +228,9 @@ class ProductController extends Controller
         }
         $produk->delete();
 
-         $request->session()->flash('error', "{$produk->nama_produk} sudah berhasil di hapus");
+         $request->session()->flash('error', "Produk berhasil dihapus.");
  
-         return redirect(route('admin.product.index'))->with('sucess','user has been deleted!');
+         return redirect(route('admin.product.index'));
     }
 
     

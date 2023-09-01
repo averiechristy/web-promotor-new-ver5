@@ -7,12 +7,12 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">User Account</h1>
+                    <h1 class="h3 mb-2 text-gray-800">User Akun</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="{{route('admin.useraccount.create')}}" class="btn btn-warning btn-sm">Add Data</a>
+                            <a href="{{route('admin.useraccount.create')}}" class="btn btn-warning btn-sm">Tambah Data</a>
                         </div>
                         <div class="card-body">
                             
@@ -25,10 +25,10 @@
                                           
                                             <th>Id User</th>
                                             <th>Nama</th>
-                                            <th>Username</th>
+                                            <th>Kode Sales (Username)</th>
                                             <!-- <th>Password</th> -->
                                             <th>Email</th>
-                                            <th>Phone Number</th>
+                                            <th>No. Handhpone</th>
                                             <th>Akses</th>
                                             <th>Role</th>
                                             <th>Action</th>
@@ -47,21 +47,22 @@
                                             <td>{{ $item->phone_number }}</td>
                                             <td>{{ $item->Akses->jenis_akses }}</td>
                                             <td>{{ $item->Role->jenis_role }}</td>
-                                            <td> 
+                                           <td> 
 
-                                               <div class="row">
+                                              
                                                <form action="{{ route('admin.reset-password', ['user' => $item->id]) }}" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-primary btn-sm">Reset Password</button>
+                <button type="submit" class="btn show_confirm2" data-toggle="tooltip" title='Reset Password'><i class="fas fa-fw fa-redo"  style="color:#06234F" ></i></button>
             </form>
-                                               <a href="{{route('tampiluser', $item->id)}}" class="btn btn-warning icon-circle btn-sm"><i class="fas fa-fw fa-edit" style="color:white" ></i></a>                 
+            
+                                               <a href="{{route('tampiluser', $item->id)}}" data-toggle="tooltip" title='Edit' class="btn"><i class="fas fa-fw fa-edit"  style="color:orange;" ></i></a>                 
                                                <form method="POST" action="{{ route('deleteuser', $item->id) }}">
                             @csrf
                             <input name="_method" type="hidden" value="DELETE">
-                            <button type="submit" class="btn btn-xs btn-sm btn-danger btn-flat show_confirm icon-circle" data-toggle="tooltip" title='Delete'><i class="fas fa-fw fa-trash" style="color:white" ></i></button>
+                            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red;" ></i></button>
                         </form>                                            
-                                                </div>
-                                                </td>
+                                               
+                                                </td> 
                                             
                                         </tr>
 

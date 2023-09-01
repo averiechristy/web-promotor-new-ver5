@@ -40,30 +40,28 @@ class UserRoleController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $this->validate($request, [
-            'akses_id' => 'required',
-            'kode_role' => 'required',
-            'jenis_role' => 'required', // Validasi bahwa akses_id harus dipilih
-            // Tambahkan validasi lainnya sesuai kebutuhan
-        ], [
-            'akses_id.required' => 'Pilih akses terlebih dahulu.', 
-            'kode_role.required' => 'Masukan Kode Role terlebih dahulu.', 
+{
+    $this->validate($request, [
+        'akses_id' => 'required',
+        'kode_role' => 'required|unique:user_roles', // Tambah aturan unique di sini
+        'jenis_role' => 'required', 
+    ], [
+        'akses_id.required' => 'Pilih akses terlebih dahulu.', 
+        'kode_role.required' => 'Masukan Kode Role terlebih dahulu.',
+        'kode_role.unique' => 'Kode Role sudah digunakan.',
+        'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
+    ]);
 
-            'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
+    UserRole::create([
+        'akses_id'=> $request->akses_id,
+        'kode_role'=> $request->kode_role,
+        'jenis_role'=> $request->jenis_role,
+    ]);
 
-        ]);
-        // dd($request->all());
-        UserRole::create([
-            'akses_id'=> $request->akses_id,
-            'kode_role'=> $request->kode_role,
-            'jenis_role'=> $request->jenis_role,
-        ]);
+    $request->session()->flash('success', 'User Role berhasil ditambahkan.');
 
-        $request->session()->flash('success', 'User Role baru sudah dibuat');
-
-        return redirect(route('admin.userrole.index'))->with('sucess','Role baru sudah ditambahkan!');
-    }
+    return redirect(route('admin.userrole.index'));
+}
 
     /**
      * Display the specified resource.
@@ -87,15 +85,13 @@ class UserRoleController extends Controller
 
         $this->validate($request, [
             'akses_id' => 'required',
-            'kode_role' => 'required',
-            'jenis_role' => 'required', // Validasi bahwa akses_id harus dipilih
-            // Tambahkan validasi lainnya sesuai kebutuhan
+            'kode_role' => 'required|unique:user_roles', // Tambah aturan unique di sini
+            'jenis_role' => 'required', 
         ], [
             'akses_id.required' => 'Pilih akses terlebih dahulu.', 
-            'kode_role.required' => 'Masukan Kode Role terlebih dahulu.', 
-
+            'kode_role.required' => 'Masukan Kode Role terlebih dahulu.',
+            'kode_role.unique' => 'Kode Role sudah digunakan.',
             'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
-
         ]);
         
         $data = UserRole::find($id);
@@ -105,8 +101,8 @@ class UserRoleController extends Controller
        
  
         $data->save();
-        $request->session()->flash('success', "{$data->jenis_role} sudah di update");
-        return redirect(route('admin.userrole.index'))->with('sucess','role has been updated!');
+        $request->session()->flash('success', "User Role berhasil diupdate.");
+        return redirect(route('admin.userrole.index'));
 
      }
 
@@ -136,9 +132,9 @@ class UserRoleController extends Controller
         
         $userrole->delete();
         
-        $request->session()->flash('success', "{$userrole->jenis_role} sudah di hapus");
+        $request->session()->flash('error', "User Role berhasil dihapus.");
         
-        return redirect()->route('admin.userrole.index')->with('success', 'Role has been deleted!');
+        return redirect()->route('admin.userrole.index');
         
 
      }

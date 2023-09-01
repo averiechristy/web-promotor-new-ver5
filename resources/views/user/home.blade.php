@@ -2,93 +2,92 @@
 
 @section('content')
 
-  <!-- ======= Hero Section ======= -->
+ 
+
   <section id="hero" class="d-flex align-items-center">
 
-    <div class="container">
-      <div class="row gy-4">
-        <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          
-          <img src="{{asset('img/banner.png')}}" class="img-fluid animated" alt="">
-          
-        </div>
-        <div class="col-lg-6 order-1 order-lg-2 hero-img">
-          <h2>Penghasilan, Atur Sendiri!</h2>
-          <h1>Catch Your Dream</h1>
-          
+<div class="container">
+  <div class="row gy-4">
+    <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+      <h1>Penghasilan, Atur Sendiri!</h1>
+      <h2>Catch Your Dream</h2>
+      
+    </div>
+    <div class="col-lg-6 order-1 order-lg-2 hero-img">
+    <img src="{{asset('img/banner.png')}}" class="img-fluid animated" alt="">
+    </div>
+  </div>
+</div>
+
+</section><!-- End Hero -->
+
+
+<main id="main">
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about ">
+  <div class="container">
+
+    <div class="row justify-content-between">
+      <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
+      <img src="{{asset('img/income.png')}}" class="img-fluid" alt="" >
+          </div>
+      <div class="col-lg-6 pt-5 pt-lg-0">
+        <h3>Pilih cara untuk atur penghasilanmu!</h3>
+      
+     
+        <div class="col-md-6" >
+        <a href="{{route ('user.kalkulator')}}"><button class="button-hitung" type="button">Hitung Sendiri</button><br></a>
+
+          </div>
+          <div class="col-md-6" >
+           
+            <a href="{{route ('user.package')}}"><button class="button-package" type="button">Lihat Paket yang tersedia</button></a>
+          </div>
+         
         </div>
       </div>
     </div>
 
-  </section><!-- End Hero -->
-
-  <main id="main">
-
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about">
-      <div class="container">
-
-        <div class="row justify-content-between">
-          <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
-            <div class="button-income">
-              <h2>Pilih cara untuk atur penghasilanmu!</h2>
-             <a href="{{route ('user.kalkulator')}}"><button class="button-hitung" type="button">Hitung Sendiri</button><br></a>
-              <a href="{{route ('user.package')}}"><button class="button-package" type="button">Lihat Paket yang tersedia</button></a>
-          </div>
-          </div>
-          <div class="col-lg-6 pt-5 pt-lg-0">
-            <img src="{{asset('img/income.png')}}" class="img-fluid" alt="" >
-          </div>
-
-          
-        </div>
-
-      </div>
-    </section><!-- End About Section -->
-
-    <hr>
-
-    <section id="article" class="portfolio">
-    <div class="container">
-
-      <div class="section-title">
-        <h2>Article</h2>
-      </div>
-
-    
-      <div class="row portfolio-container">
-
+  </div>
+</section>
+<!-- End About Section -->
+<section id="artikel" class="portfolio">
+  <div class="container">
+    <div class="section-title">
+      <p>Artikel</p>
+    </div>
+    <div class="article-container row">
+      @php
+        $latestArtikel = $artikel->take(6); // Mengambil 6 artikel terbaru
+      @endphp
       @foreach ($artikel as $artikel)
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app wow fadeInUp">
+        <!-- Repeat this block for each article -->
+        <div class="col-lg-4 col-md-6 col-sm-12 portfolio-item filter-card">
           <div class="portfolio-wrap">
             <figure>
-              <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid"  style="height: 100%;" alt="">
-              <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-              <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
+              <a href="{{ route('user.artikelread', $artikel->id) }}">
+                <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid" alt="">
+              </a>
             </figure>
-
             <div class="portfolio-info">
               <h4>{{$artikel->judul_artikel}}</h4>
               <p><a href="{{ route('user.artikelread', $artikel->id) }}">Read More</a></p>
-
             </div>
           </div>
         </div>
-
-        @endforeach
-
-        
-
-      </div>
-
+      @endforeach
+      <!-- Repeat for other articles -->
     </div>
-    <hr>
-  </section><!-- End Portfolio Section -->
-  
+    <div class="more-button">
+      <button class="btn btn-warning btn-lain"><a href="{{route('user.artikel')}}">Lihat artikel lebih banyak</a></button>
+    </div>
+  </div>
+</section>
+
 
     <!-- ======= Contact Us Section ======= -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact d-flex align-items-center">
       <div class="container">
         <div class="row">
 
@@ -115,18 +114,18 @@
                 <p>Get in touch with us</p>
               <div class="row">
                 <div class="form-group col-md-6">
-                  <label for="name">Nama</label>
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Masukan Nama Anda" >
-                  @if ($errors->has('name'))
+                <label for="name">Nama</label>
+                  <input type="text" name="name" class="form-control" id="name" value=" {{ Auth::user()->nama }}" disabled >
+                  <!-- @if ($errors->has('name'))
                                                     <p class="text-danger">{{$errors->first('name')}}</p>
-                                                @endif
+                                                @endif -->
                 </div>
                 <div class="form-group col-md-6 mt-3 mt-md-0">
                   <label for="name">Email</label>
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Masukan Email Anda">
-                  @if ($errors->has('email'))
+                  <input type="email" class="form-control" name="email" id="email" value=" {{ Auth::user()->email}}" disabled>
+                  <!-- @if ($errors->has('email'))
                                                     <p class="text-danger">{{$errors->first('email')}}</p>
-                                                @endif
+                                                @endif -->
                 </div>
               </div>
               <div class="form-group mt-3">
@@ -144,7 +143,8 @@
                                                 @endif
               </div>
               
-              <div class="text-center"><button type="submit">Send</button></div>
+              <div class="text-center">
+                <button type="submit" >Send</button></div>
             </form>
           </div>
         </div>
@@ -155,9 +155,9 @@
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  <footer id="footer">
+  <footer id="footer" style="height:5px;" class ="d-flex align-items-center">
     <div class="container py-4">
-      <div class="copyright">
+      <div class="copyright mt-5">
         &copy; 2023 by <strong><span>PT. Exa Mitra Solusi</span></strong>. 
       </div>
       

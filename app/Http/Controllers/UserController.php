@@ -36,16 +36,16 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $akses = Akses::all();
-        $role = UserRole::all();
+{
+    $akses = Akses::all();
+    $roles = UserRole::all()->groupBy('akses_id');
 
-        
-        return view ('admin.useraccount.create',[
-            'akses' => $akses,
-            'role' => $role,
-        ]);
-    }
+    return view('admin.useraccount.create', [
+        'akses' => $akses,
+        'roles' => $roles,
+    ]);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -85,7 +85,7 @@ class UserController extends Controller
             
 
         ]);
-        $request->session()->flash('success', 'Akun User baru sudah ditambahkan!');
+        $request->session()->flash('success', 'Akun User berhasil ditambahkan');
 
         return redirect(route('admin.useraccount.index'));
     }
@@ -96,7 +96,8 @@ class UserController extends Controller
         $data = User::find($id);
         $akses = Akses::all();
         $role = UserRole::all();
-       
+        $roles = UserRole::all()->groupBy('akses_id');
+
         
         // return view('tampildata',[
         //     'data'->$data
@@ -106,6 +107,7 @@ class UserController extends Controller
             'data' => $data,
             'akses' => $akses,
             'role' => $role,
+            'roles'=>$roles,
         ]);
      }
 
@@ -116,54 +118,51 @@ public function resetPassword(User $user, Request $request)
         'password' => Hash::make('12345678'), // Ganti 'password_awal' dengan password yang Anda inginkan
     ]);
 
-    $request->session()->flash('success', 'Password berhasil di reset');
+    $request->session()->flash('success', 'Password berhasil direset');
 
-    return redirect()->route('admin.useraccount.index')->with('success', 'Password reset successfully!');
+    return redirect()->route('admin.useraccount.index');
 }
 
 
-     public function updateuser(Request $request, $id){
+    public function updateuser(Request $request, $id) {
+    $loggedInUserId = Auth::id(); // Mendapatkan ID pengguna yang sedang login
 
+    if ($id == $loggedInUserId) {
+        return redirect()->back()->with('error', 'Tidak diizinkan untuk mengubah akun yang sedang login.');
+    }
 
-        $this->validate($request, [
-            'akses_id' => 'required',
-            'role_id' => 'required',
-            'nama' => 'required',
-            'username' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
+    $this->validate($request, [
+        'akses_id' => 'required',
+        'role_id' => 'required',
+        'nama' => 'required',
+        'username' => 'required',
+        'email' => 'required|email',
+        'phone_number' => 'required',
+    ], [
+        'akses_id.required' => 'Pilih akses terlebih dahulu.', 
+        'role_id.required' => 'Pilih role terlebih dahulu.', 
+        'nama.required' => 'Input nama terlebih dahulu',
+        'username.required' => 'Input Username terlebih dahulu',
+        'email.required' => 'Input email terlebih dahulu',
+        'phone_number.required' => 'Input no handphone terlebih dahulu',
+        'email.email' => 'Format email tidak valid.',
+    ]);
 
-        ], [
-            'akses_id.required' => 'Pilih akses terlebih dahulu.', 
-            'role_id.required' => 'Pilih role terlebih dahulu.', 
-            'nama.required' => 'Input nama terlebih dahulu',
-            'username.required' => 'Input Username terlebih dahulu',
-            'email.required' => 'Input email terlebih dahulu',
-            'phone_number.required' => 'Input no handphone terlebih dahulu',
-            'email.email' => 'Format email tidak valid.',
+    $data = User::find($id);
 
-        ]);
-       
-        $data = User::find($id);
-     
-       $data->akses_id    = $request->akses_id;
-       $data->role_id  = $request->role_id;
-       $data->nama  = $request->nama;
-       $data->username  = $request->username;
-       $data->email = $request->email;
-       $data->phone_number  = $request->phone_number;
-      
+    $data->akses_id = $request->akses_id;
+    $data->role_id = $request->role_id;
+    $data->nama = $request->nama;
+    $data->username = $request->username;
+    $data->email = $request->email;
+    $data->phone_number = $request->phone_number;
 
-       $data->save();
-     
+    $data->save();
 
-       $request->session()->flash('success', "Akun user berhasil di update");
+    $request->session()->flash('success', "Akun User berhasil diupdate");
 
-        return redirect(route('admin.useraccount.index'))->with('sucess','role has been updated!');
-
-        
-
-     }
+    return redirect(route('admin.useraccount.index'));
+}
 
     /**
      * Display the specified resource.
@@ -198,7 +197,7 @@ public function resetPassword(User $user, Request $request)
 
         if ($useraccount->Akses->jenis_akses === 'Admin') {
             if ($useraccount->id === Auth::id()) {
-                return redirect()->route('admin.useraccount.index')->with('error', 'Tidak dapat menghapus akun anda sendiri!.');
+                return redirect()->route('admin.useraccount.index')->with('error', 'Tidak dapat menghapus akun anda sendiri.');
             }
 
             $adminCount = User::whereHas('Akses', function ($query) {
@@ -212,7 +211,7 @@ public function resetPassword(User $user, Request $request)
 
         $useraccount->delete();
 
-        $request->session()->flash('error', "{$useraccount->nama} berhasil dihapus!");
+        $request->session()->flash('error', "Akun User Berhasil di hapus.");
 
         return redirect()->route('admin.useraccount.index');
     }
@@ -237,14 +236,15 @@ public function resetPassword(User $user, Request $request)
                     }
                 },
             ],         
-            
-            'new_password' => 'required|min:8|confirmed',
+            'new_password' => 'required|min:8|different:current_password|confirmed',
         ], [
             'current_password.required' => 'Masukan current password terlebih dahulu.', 
             'new_password.required' => 'Masukan password baru terlebih dahulu.', 
             'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
+            'new_password.different' => 'Password baru harus berbeda dengan current password.',
             'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
         ]);
+    
 
         // dd($request);
 
@@ -277,6 +277,7 @@ public function resetPassword(User $user, Request $request)
 
      public function changePassword(Request $request)
     {
+       
         $request->validate([
             'current_password' => [
                 'required',
@@ -286,14 +287,15 @@ public function resetPassword(User $user, Request $request)
                     }
                 },
             ],         
-            
-            'new_password' => 'required|min:8|confirmed',
+            'new_password' => 'required|min:8|different:current_password|confirmed',
         ], [
             'current_password.required' => 'Masukan current password terlebih dahulu.', 
             'new_password.required' => 'Masukan password baru terlebih dahulu.', 
             'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
+            'new_password.different' => 'Password baru harus berbeda dengan current password.',
             'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
         ]);
+    
 
         // dd($request);
 
@@ -332,7 +334,7 @@ public function resetPassword(User $user, Request $request)
 
        
 
-        return redirect()->route('edit-profile')->with('success', 'Profil berhasil di update!.');
+        return redirect()->route('edit-profile')->with('success', 'Profil berhasil diupdate.');
     }
 
     

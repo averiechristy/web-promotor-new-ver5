@@ -39,7 +39,7 @@
         <a class="nav-link " href="{{route('admin.useraccount.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-address-card" style="color: #01004C"></i>
-            <span style="color: #01004C">User Account</span>
+            <span style="color: #01004C">User Akun</span>
         </a>
         
     </li>
@@ -48,7 +48,7 @@
         <a class="nav-link " href="{{route('admin.product.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-box" style="color: #01004C"></i>
-            <span style="color: #01004C">Product</span>
+            <span style="color: #01004C">Produk</span>
         </a>
         
     </li>
@@ -57,7 +57,7 @@
         <a class="nav-link " href="{{route('admin.package.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-money-bill-wave-alt" style="color: #01004C"></i>
-            <span style="color: #01004C">Package Income</span>
+            <span style="color: #01004C">Paket Pendapatan</span>
         </a>
         
     </li>
@@ -66,7 +66,7 @@
         <a class="nav-link " href="{{route('admin.artikel.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="far fa-newspaper" style="color: #01004C"></i>
-            <span style="color: #01004C">Article</span>
+            <span style="color: #01004C">Artikel</span>
         </a>
         
     </li>
@@ -77,7 +77,7 @@
             <a class="nav-link" href="{{ route('admin.contact-us.index') }}" data-toggle="" data-target="#collapseContact"
                 aria-expanded="true" aria-controls="collapseContact">
                 <i class="fas fa-envelope" style="color: #01004C"></i>
-                <span style="color: #01004C">Contact Us</span>
+                <span style="color: #01004C">Kontak Kami</span>
                 @if ($unreadContacts > 0)
                     <span class="badge badge-danger">{{ $unreadContacts }}</span>
                 @endif
@@ -97,9 +97,6 @@
     
     </button>
     </div>
-
-  
-
 </ul>
 <!-- End of Sidebar -->
 
@@ -125,10 +122,7 @@
 
                 <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                 <li class="nav-item dropdown no-arrow d-sm-none">
-                    <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-search fa-fw"></i>
-                    </a>
+                    
                     <!-- Dropdown - Messages -->
                     <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                         aria-labelledby="searchDropdown">
@@ -155,7 +149,7 @@
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span>
+                        <span class="mr-2 d-none d-lg-inline text-white-100 ">Welcome,  {{ Auth::user()->nama }}!</span>
                         <img class="img-profile rounded-circle"
                             src="{{asset('img/undraw_profile.svg')}}">
                             
@@ -165,7 +159,7 @@
                         aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="{{ route('password') }}">
                             <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
+                            Ubah Password
                         </a>
                        
                         <div class="dropdown-divider"></div>

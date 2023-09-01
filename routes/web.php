@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KontakController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\UserArtikelController;
@@ -288,6 +289,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function (){
+    Route::get('user/contact-us', [ContactController::class,'user'])->name('user.contact');
+
     Route::post('/contact-us', [ContactController::class,'store'])->name('contact.store');
 
 // routes/web.php
@@ -297,6 +300,8 @@ Route::get('/contact-us/{id}', [ContactController::class,'show'])->name('contact
 Route::post('/contact-us/mark-as-read/{id}', [ContactController::class,'markAsRead'])->name('contact-us.mark-as-read');
 Route::delete('/contact-us/delete/{id}', [ContactController::class,'delete'])->name('contact-us.delete');
 
+
+Route::post('user/contact-us', [KontakController::class,'store'])->name('contact.simpan');
 
  });
 

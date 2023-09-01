@@ -6,6 +6,7 @@ use App\Models\PackageDetail;
 use App\Models\PackageIncome;
 use App\Models\Product;
 use App\Models\UserRole;
+use App\Rules\UniqueSelectedProducts;
 use Illuminate\Http\Request;
 
 class PackageController extends Controller
@@ -42,6 +43,7 @@ class PackageController extends Controller
     
         // Ambil data produk yang terhubung dengan tabel PackageDetail
         $produk = PackageDetail::with('produk')->where('package_id', $id)->get();
+        
     
         return view('admin.package.detail', [
             'data' => $data,
@@ -70,22 +72,25 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
+        
         $this->validate($request, [
             'role_id' => 'required',
             'judul_paket' => 'required',
             'deskripsi_paket' => 'required',
-            'produk' => 'required|array', // Minimal satu produk harus dipilih
-            'qty_produk.*' => 'required|integer|min:1',
-        
+            'produk' => ['required', 'array', new UniqueSelectedProducts],
+            'qty_produk' => 'required',
         ], [
-            'role_id.required' => 'Pilih role terlebih dahulu.', 
+            'role_id.required' => 'Pilih role terlebih dahulu.',
             'judul_paket.required' => 'Input judul terlebih dahulu',
             'deskripsi_paket.required' => 'Input deskripsi paket terlebih dahulu',
             'produk.required' => 'Pilih minimal satu produk.',
             'qty_produk.required' => 'Isi qty produk.',
+            'produk.unique_selected_products' => 'Produk yang dipilih tidak boleh sama.',
         ]);
         
-    
+        
+        
+      
         $dtPackage = new PackageIncome;
         $dtPackage->judul_paket = $request->judul_paket;
         $dtPackage->role_id = $request->role_id;
@@ -108,8 +113,8 @@ class PackageController extends Controller
             PackageDetail::insert($packageDetails); // Simpan array packageDetails secara massal
         }
         
-    $request->session()->flash('success', 'Paket baru berhasil di buat!');
-    return redirect(route('admin.package.index'))->with('success', 'Package has been created successfully!');
+    $request->session()->flash('success', 'Paket Pendapatan berhasil ditambahkan.');
+    return redirect(route('admin.package.index'));
     }
     
     /**
@@ -145,6 +150,21 @@ return view('admin.package.edit')->with([
 
     public function updatepackage(Request $request, $id)
     {
+
+        $this->validate($request, [
+            'role_id' => 'required',
+            'judul_paket' => 'required',
+            'deskripsi_paket' => 'required',
+            'produk' => ['required', 'array', new UniqueSelectedProducts],
+            'qty_produk' => 'required',
+        ], [
+            'role_id.required' => 'Pilih role terlebih dahulu.',
+            'judul_paket.required' => 'Input judul terlebih dahulu',
+            'deskripsi_paket.required' => 'Input deskripsi paket terlebih dahulu',
+            'produk.required' => 'Pilih minimal satu produk.',
+            'qty_produk.required' => 'Isi qty produk.',
+            'produk.unique_selected_products' => 'Produk yang dipilih tidak boleh sama.',
+        ]);
        // Ambil data paket berdasarkan ID
     $dtPackage = PackageIncome::find($id);
 
@@ -175,8 +195,8 @@ return view('admin.package.edit')->with([
     }
     
 
-        $request->session()->flash('success', 'Paket berhasil di update');
-        return redirect(route('admin.package.index'))->with('success', 'Package has been updated successfully!');
+        $request->session()->flash('success', 'Paket Pendapatan berhasil diupdate.');
+        return redirect(route('admin.package.index'));
     
     }
 
@@ -205,9 +225,9 @@ return view('admin.package.edit')->with([
         $package = PackageIncome::find($id);
         $package->delete();
 
-        $request->session()->flash('error', "{$package->judul_paket} berhasil di hapus");
+        $request->session()->flash('error', "Paket Pendapatan berhasil dihapus.");
 
-        return redirect(route('admin.package.index'))->with('sucess','user has been deleted!');
+        return redirect(route('admin.package.index'));
     }
 
    
@@ -215,12 +235,12 @@ return view('admin.package.edit')->with([
     $product = PackageIncome::find('produk');
 
     if (!$product) {
-        return response()->json(['message' => 'Product tidak ditemukan.'], 404);
+        return response()->json(['message' => 'Produk tidak ditemukan.'], 404);
     }
 
     $product->delete();
 
-    return response()->json(['message' => 'Product berhasil di hapus.']);
+    return response()->json(['message' => 'Produk berhasil di hapus.']);
    }
 
 
