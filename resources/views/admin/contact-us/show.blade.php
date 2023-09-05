@@ -15,20 +15,10 @@
                     <p class="card-text">Email : {{ $kontak->email }}</p>
                     <p class="card-text">Message: {!! nl2br(e($kontak->message)) !!}</p>
                     
-                    @if (!$kontak->read)
-                        <form action="{{ route('contact-us.mark-as-read', $kontak->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-primary">Tandai sebagai Sudah Dibaca</button>
-                        </form>
-                    @else
-                        <p class="text-success mt-3">Pesan ini telah dibaca.</p>
-                    @endif
-                @else
-                    <p>Pilih kontak untuk melihat detailnya</p>
+                   
                 @endif      
      </div>
     </div>
-    
 @endsection
 
 @push('scripts')

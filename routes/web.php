@@ -141,6 +141,7 @@ Route::get('/user/income', function () {
 
 // Route::delete('/deleteakses/{id}', [AksesController::class, 'destroy'])->name('deleteakses');
 
+Route::middleware('auth')->middleware('ensureUserRole:ADMIN')->group(function () {
 
 // user role route
 Route::get('admin/userrole/index', [UserRoleController::class, 'index'])->name('admin.userrole.index');
@@ -211,6 +212,7 @@ Route::get('/detailartikel/{id}',[ArtikelController::class,'detailartikel'])->na
 //Dashboard Route
 Route::get('admin/dashboard/index', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
+});
 
 Route::get('getProduct/{id}', function ($id) {
     $produk = App\Models\Product::where('role_id',$id)->get();
@@ -223,7 +225,7 @@ Route::resource('products', 'ProductController');
 
 
 // // home route
-Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
+Route::get('user/home', [HomeController::class, 'index'])->name('user.home')->middleware('ensureUserRole:USER');
 
 
 //login route
@@ -232,28 +234,30 @@ Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
 
 // User Package
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
     Route::get('user/package', [UserPaketController::class, 'index'])->name('user.package');
     Route::get('user/income/{id}', [UserPaketController::class, 'show'])->name('tampilincome');
 });
 
 // Kalkulator
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
 Route::get('user/kalkulator', [KalkulatorController::class,'index'])->name('user.kalkulator');
 Route::post('/calculate', [KalkulatorController::class,'calculate'])->name('calculate');
 
 
 });
 
+Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
 
 
-Route::get('user/income', [UserIncomeController::class, 'index'])->name('user.income');
+Route::get('user/income', [UserIncomeController::class, 'index'])->name('user.income')->middleware('ensureUserRole:USER');
 
 
 // User Artikel
 Route::get('user/artikel', [UserArtikelController::class, 'index'])->name('user.artikel');
 Route::get('user/artikelread/{id}', [UserArtikelReadController::class, 'index'])->name('user.artikelread');
 
+});
 
 // Login
 // routes/web.php
@@ -264,23 +268,23 @@ Route::post('/logout', [AuthController::class,'logout'])->name('logout');
 
 // routes/web.php
 Route::middleware('auth')->group(function () {
-    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('user/home', [HomeController::class, 'index'])->name('user.home');
+    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard')->middleware('ensureUserRole:ADMIN');
+    Route::get('user/home', [HomeController::class, 'index'])->name('user.home')->middleware('ensureUserRole:USER');
 });
 
 // Change Password
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->middleware('ensureUserRole:ADMIN')->group(function () {
     Route::get('admin/changepassword', [UserController::class,'showChangePasswordForm'])->name('password');
     Route::post('admin/changepassword', [UserController::class,'adminchangePassword'])->name('admin-change-password');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
     Route::get('user/changepassword', [UserController::class,'UserChangePasswordForm'])->name('password-change-user');
     Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
     Route::get('/profile/edit', [UserController::class,'editProfileForm'])->name('edit-profile');
     Route::post('/profile/update', [UserController::class,'updateProfile'])->name('update-profile');
     Route::post('/avatar/update',[ProfileController::class,'updateAvatar'])->name('update-avatar');
@@ -295,6 +299,7 @@ Route::middleware('auth')->group(function (){
 
 // routes/web.php
 
+
 Route::get('/contact-us', [ContactController::class,'index'])->name('admin.contact-us.index');
 Route::get('/contact-us/{id}', [ContactController::class,'show'])->name('contact-us.show');
 Route::post('/contact-us/mark-as-read/{id}', [ContactController::class,'markAsRead'])->name('contact-us.mark-as-read');
@@ -305,7 +310,7 @@ Route::post('user/contact-us', [KontakController::class,'store'])->name('contact
 
  });
 
- Route::post('/user/{user}/reset-password', [UserController::class,'resetPassword'])->name('admin.reset-password');
+ Route::post('/user/{user}/reset-password', [UserController::class,'resetPassword'])->name('admin.reset-password')->middleware('ensureUserRole:ADMIN');
 
 
 

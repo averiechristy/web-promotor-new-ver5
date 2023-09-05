@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -23,16 +24,25 @@ class ProductController extends Controller
        
     }
 
+    public function getProductsByRole($roleId)
+{
+    $products = Product::where('role_id', $roleId)->get();
+
+    return response()->json($products);
+}
+
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         $role = UserRole::all();
-        
+        $data = Product::all();
 
         return view ('admin.product.create',[
             'role' => $role,
+            'data' => $data,
         ]);
     }
 
@@ -44,10 +54,11 @@ class ProductController extends Controller
 
         
         
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'role_id' => 'required',
             'nama_produk' => 'required|unique_per_role:nama_produk,role_id,' . $request->role_id,
-                        'poin_produk' => 'required',
+            'poin_produk' => 'required|numeric|min:0',
+            
             'gambar_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
                         'deskripsi_produk' => 'required',
 
@@ -56,13 +67,23 @@ class ProductController extends Controller
             'nama_produk.required' => 'Input nama produk dahulu',
             'nama_produk.unique_per_role' =>'Nama Produk tidak boleh sama',
             'poin_produk.required' => 'Input poin terlebih dahulu',
-            'gambar_produk.required' => 'Pilih gambar produk untuk diunggah.',
+            'poin_produk.min' => 'Poin Produk tidak boleh bilangan negatif',
+                        'gambar_produk.required' => 'Pilih gambar produk untuk diunggah.',
             'gambar_produk.image' => 'File harus berupa gambar.',
             'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
             'gambar_produk.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
             'deskripsi_produk.required' => 'Input Deskripsi produk terlebih dahulu',
 
         ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->route('admin.product.create')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('gambar_produk_path', $request->file('gambar_produk')->store('public/products'));
+            }
+
         $nm = $request->gambar_produk;
         $namaFile = $nm->getClientOriginalName();
 

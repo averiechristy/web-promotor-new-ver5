@@ -3,7 +3,7 @@
 @section('content2')
 
     <!-- ======= Change Password Section ======= -->
-    <section id="edit-profil" class="edit-profil">
+    <section id="edit-profil" class="edit-profil align-items-center">
         <div class="container">
   
           <div class="row justify-content-between">

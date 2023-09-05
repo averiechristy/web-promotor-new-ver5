@@ -3,7 +3,7 @@
 @section('content2')
 
 <!-- ======= Income Section ======= -->
-<section id="income" class="income">
+<section id="income" class="income d-flex align-items-center">
     <div class="container">
 
         <div class="row justify-content-between">

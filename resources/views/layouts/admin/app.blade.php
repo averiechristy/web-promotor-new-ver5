@@ -136,6 +136,28 @@
   
 </script>
 
+<script type="text/javascript">
+ 
+     $('.show_confirm3').click(function(event) {
+          var form =  $(this).closest("form");
+          var name = $(this).data("name");
+          event.preventDefault();
+          swal({
+              title: `Apakah anda yakin ingin menghapus pesan?`,
+              text: "Jika anda melakukan penghapusan, maka pesan akan hilang selamanya.",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              form.submit();
+            }
+          });
+      });
+  
+</script>
+
 <!-- <script type="text/javascript">
 
 

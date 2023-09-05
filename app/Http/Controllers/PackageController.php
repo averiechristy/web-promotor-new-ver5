@@ -61,6 +61,7 @@ class PackageController extends Controller
     {
         $produk = Product::all();
         $role = UserRole::all();
+        
         return view ('admin.package.create',[
             'produk' => $produk,
             'role' => $role,
@@ -78,13 +79,14 @@ class PackageController extends Controller
             'judul_paket' => 'required',
             'deskripsi_paket' => 'required',
             'produk' => ['required', 'array', new UniqueSelectedProducts],
-            'qty_produk' => 'required',
+            'qty_produk' => 'required|numeric|min:0',
         ], [
             'role_id.required' => 'Pilih role terlebih dahulu.',
             'judul_paket.required' => 'Input judul terlebih dahulu',
             'deskripsi_paket.required' => 'Input deskripsi paket terlebih dahulu',
             'produk.required' => 'Pilih minimal satu produk.',
             'qty_produk.required' => 'Isi qty produk.',
+            'qty_produk.min' => 'Quantity Produk tidak boleh bernilai negatif',
             'produk.unique_selected_products' => 'Produk yang dipilih tidak boleh sama.',
         ]);
         

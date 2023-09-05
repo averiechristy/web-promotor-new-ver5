@@ -125,11 +125,7 @@ public function resetPassword(User $user, Request $request)
 
 
     public function updateuser(Request $request, $id) {
-    $loggedInUserId = Auth::id(); // Mendapatkan ID pengguna yang sedang login
 
-    if ($id == $loggedInUserId) {
-        return redirect()->back()->with('error', 'Tidak diizinkan untuk mengubah akun yang sedang login.');
-    }
 
     $this->validate($request, [
         'akses_id' => 'required',

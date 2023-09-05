@@ -4,91 +4,109 @@
 
  
 
+  <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
 
-<div class="container">
-  <div class="row gy-4">
-    <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-      <h1>Penghasilan, Atur Sendiri!</h1>
-      <h2>Catch Your Dream</h2>
-      
-    </div>
-    <div class="col-lg-6 order-1 order-lg-2 hero-img">
-    <img src="{{asset('img/banner.png')}}" class="img-fluid animated" alt="">
-    </div>
-  </div>
-</div>
-
-</section><!-- End Hero -->
-
-
-<main id="main">
-
-<!-- ======= About Section ======= -->
-<section id="about" class="about ">
-  <div class="container">
-
-    <div class="row justify-content-between">
-      <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
-      <img src="{{asset('img/income.png')}}" class="img-fluid" alt="" >
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+          <h1>Catch Your Dream</h1>
+          <h2>Hitung Penghasilan sesuai keinginanmu!</h2>
+          <div>
           </div>
-      <div class="col-lg-6 pt-5 pt-lg-0">
-        <h3>Pilih cara untuk atur penghasilanmu!</h3>
-      
-     
-        <div class="col-md-6" >
-        <a href="{{route ('user.kalkulator')}}"><button class="button-hitung" type="button">Hitung Sendiri</button><br></a>
-
-          </div>
-          <div class="col-md-6" >
-           
-            <a href="{{route ('user.package')}}"><button class="button-package" type="button">Lihat Paket yang tersedia</button></a>
-          </div>
-         
+        </div>
+        <div class="col-lg-6 order-1 order-lg-2 hero-img">
+          <img src="{{asset('img/banner.png')}}" class="img-fluid animated" alt="">
         </div>
       </div>
     </div>
 
-  </div>
-</section>
-<!-- End About Section -->
-<section id="artikel" class="portfolio">
+  </section><!-- End Hero -->
+
+  <main id="main">
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about d-flex">
   <div class="container">
-    <div class="section-title">
-      <p>Artikel</p>
-    </div>
-    <div class="article-container row">
-      @php
-        $latestArtikel = $artikel->take(6); // Mengambil 6 artikel terbaru
-      @endphp
-      @foreach ($artikel as $artikel)
-        <!-- Repeat this block for each article -->
-        <div class="col-lg-4 col-md-6 col-sm-12 portfolio-item filter-card">
-          <div class="portfolio-wrap">
-            <figure>
-              <a href="{{ route('user.artikelread', $artikel->id) }}">
-                <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid" alt="">
+    <div class="row justify-content-between">
+      <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
+        <img src="{{asset('img/income.png')}}" class="img-fluid" alt="">
+      </div>
+      <div class="col-lg-6 pt-5 pt-lg-0">
+        <h3>Income</h3>
+        <h5 data-aos-delay="100" align-items-center>
+          Pilih cara untuk atur pendapatanmu
+</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card" data-aos-delay="100">
+              <a href="{{route ('user.kalkulator')}}">
+                <i class="bx bx-calculator"></i>
+                <h4>Kalkulator</h4>
+                <p>Fitur kalkulator untuk hitung sendiri pendapatan</p>
               </a>
-            </figure>
-            <div class="portfolio-info">
-              <h4>{{$artikel->judul_artikel}}</h4>
-              <p><a href="{{ route('user.artikelread', $artikel->id) }}">Read More</a></p>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <div class="card" data-aos-delay="200">
+              <a href="{{route ('user.package')}}">
+                <i class="bx bx-coin"></i>
+                <h4>Paket Pendapatan</h4>
+                <p>Tersedia banyak pilihan paket pendapatan</p>
+              </a>
             </div>
           </div>
         </div>
-      @endforeach
-      <!-- Repeat for other articles -->
-    </div>
-    <div class="more-button">
-      <button class="btn btn-warning btn-lain"><a href="{{route('user.artikel')}}">Lihat artikel lebih banyak</a></button>
+      </div>
     </div>
   </div>
-</section>
+</section><!-- End About Section -->
+
+  <!-- ======= Portfolio Section ======= -->
+  <section id="portfolio" class="portfolio">
+      <div class="container" >
+
+        <div class="section-title">
+          <h2></h2>
+          <p>Artikel</p>
+        </div>
+<!--  -->
+
+        <div class="row portfolio-container"  data-aos-delay="200">
+        @php
+        $latestArtikel = $artikel->take(6); // Mengambil 6 artikel terbaru
+      @endphp
+      @foreach ($artikel as $artikel)
+          <div class="col-lg-4 portfolio-item ">
+          <a href="{{ route('user.artikelread', $artikel->id) }}">
+            <div class="card">
+              <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid" alt="">
+              <hr class="solid">
+              <div class="info">
+                <h4>{{$artikel->judul_artikel}}</h4>
+                <p>baca lebih lengkap</p>
+              </div>
+            </div>
+</a>
+          </div>
+          @endforeach
+
+          <div class="more-button">
+      <button class="btn btn-warning btn-lain"><a href="{{route('user.artikel')}}">Lihat artikel lebih banyak</a></button>
+    </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+    
+<!-- End About Section -->
+
 
 
     <!-- ======= Contact Us Section ======= -->
     <section id="contact" class="contact d-flex align-items-center">
-      <div class="container">
+      <div class="container" id = "contact">
         <div class="row">
 
           <div class="col-lg-5 d-flex align-items-stretch">
@@ -163,5 +181,13 @@
       
     </div>
   </footer><!-- End Footer -->
+
+
+  <script>
+  @if($errors->any())
+    // Jika terdapat kesalahan validasi, arahkan scroll ke elemen dengan ID "contact"
+    window.location.hash = '#contact';
+  @endif
+</script>
 
   @endsection

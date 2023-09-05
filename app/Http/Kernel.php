@@ -73,6 +73,7 @@ class Kernel extends HttpKernel
         'TM' => \App\Http\Middleware\TMMiddleware::class,
         'MS' => \App\Http\Middleware\MSMiddleware::class,
         'MR' => \App\Http\Middleware\MRMiddleware::class,
+        'ensureUserRole' => \App\Http\Middleware\EnsureUserRole::class,
     ];
     
 }

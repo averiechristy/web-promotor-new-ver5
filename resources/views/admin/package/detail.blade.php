@@ -6,7 +6,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h4 class="h3 mb-2 text-gray-800"><a href="{{ route('admin.package.index') }}">Package Income</a> / {{$data->Role->kode_role}} - {{$data->judul_paket}}</h4>
+                    <h4 class="h3 mb-2 text-gray-800"><a href="{{ route('admin.package.index') }}">Paket Pendapatan</a> / {{$data->Role->kode_role}} - {{$data->judul_paket}}</h4>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">

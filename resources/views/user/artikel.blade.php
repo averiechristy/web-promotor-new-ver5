@@ -5,42 +5,39 @@
 
    
   <!-- ======= Hero Section ======= -->
-
+  <main id="main">
 
    <!-- ======= Article Section ======= -->
-   
-<section id="artikel" class="portfolio">
-  <div class="container">
-    <div class="section-title">
-     
-    </div>
-    <div class="article-container row">
-    
-    @foreach ($artikel as $artikel)
-      <!-- Repeat this block for each article -->
-      <div class="col-lg-4 col-md-6 col-sm-12 portfolio-item filter-card">
-      <div class="portfolio-wrap">
-      <figure>
-      <a href="{{ route('user.artikelread', $artikel->id) }}">
-        <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid"  style="height: 100%; width:100%;" alt="">
-        <!-- <a href="{{asset('img/Article1.png')}}" data-gallery="portfolioGallery" class="link-preview portfolio-lightbox" title="Preview"><i class="bx bx-plus"></i></a>
-        <a href="#" class="link-details" title="More Details"><i class="bx bx-link"></i></a> -->
-        </a>
-      </figure>
-      <div class="portfolio-info">
-        <h4>{{$artikel->judul_artikel}}</h4>
-        <p><a href="{{ route('user.artikelread', $artikel->id) }}">Read More</a></p>
-      </div>
-    </div>
-    
-  </div>
+   <!-- ======= Portfolio Section ======= -->
+   <section id="portfolio" class="portfolio">
+      <div class="container" >
 
-      @endforeach
-      <!-- Repeat for other articles -->
-    </div>
- 
-  </div>
-</section>
+       
+<!--  -->
+
+        <div class="row portfolio-container"  data-aos-delay="200">
+        
+      @foreach ($artikel as $artikel)
+          <div class="col-lg-4 portfolio-item ">
+          <a href="{{ route('user.artikelread', $artikel->id) }}">
+            <div class="card">
+              <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid" alt="">
+              <hr class="solid">
+              <div class="info">
+                <h4>{{$artikel->judul_artikel}}</h4>
+                <p>baca lebih lengkap</p>
+              </div>
+            </div>
+</a>
+          </div>
+          @endforeach
+
+       
+
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
 
   
   
@@ -53,5 +50,5 @@
     </div>
   </footer><!-- End Footer -->
 
-
+</main>
 @endsection

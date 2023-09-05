@@ -12,10 +12,7 @@
 
 /* Login Page */
 
-.container {
-  float: right;
-  
-}
+
 
 .img-login {
   width: 750px;
@@ -453,10 +450,41 @@ font-family: Nunito;
 
 #about h3 {
   color: var(--primary-1, #01004C);
- 
-  font-size: 24px;
-  margin-top: 50px;
+ text-align: center;
 }
+
+#about h4 {
+  color: var(--primary-1, #01004C);
+
+
+}
+
+#about h5{
+  text-align: center;
+}
+
+#about .card {
+  margin: 10px; /* Menambahkan jarak di sekitar card */
+  padding: 20px; /* Menambahkan ruang dalam card */
+  border: 1px solid #ccc; /* Menambahkan border */
+  border-radius: 10px; /* Membuat sudut card menjadi lebih melengkung */
+  transition: transform 0.3s; /* Efek hover */
+}
+
+#about .card:hover {
+  transform: scale(1.05); /* Efek zoom in saat hover */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Efek bayangan saat hover */
+}
+
+#about .card-link {
+  text-decoration: none; /* Menghilangkan garis bawah pada tautan */
+  color: #333; /* Warna teks */
+}
+
+#about .card-link:hover {
+  color: #007bff; /* Warna teks berubah saat hover */
+}
+
 
 #hero .btn-get-started {
   font-family: "Raleway", sans-serif;
@@ -770,9 +798,11 @@ line-height: normal;
   }
   #about .button-hitung{
     width: 50%;
+    align-items: center;
   }
   #about .button-package{
     width: 50%;
+    align-items: center;
   }
 }
 
@@ -790,9 +820,11 @@ line-height: normal;
   }
   #about .button-hitung{
     width: 50%;
+    align-items: center;
   }
   #about .button-package{
     width: 50%;
+    align-items: center;
   }
 }
 
@@ -809,9 +841,11 @@ line-height: normal;
   }
   #about .button-hitung{
     width: 50%;
+    align-items: center;
   }
   #about .button-package{
     width: 50%;
+    align-items: center;
   }
 }
 
@@ -827,10 +861,16 @@ line-height: normal;
     text-align: center;
   }
   #about .button-hitung{
-    width: 50%;
+    width: 60%;
+    align-items: center;
+    display: flex;
+   
+
   }
   #about .button-package{
-    width: 50%;
+    width: 60%;
+    align-items: center;
+    display: flex;
   }
 }
 
@@ -1259,9 +1299,35 @@ text-align: center;
 /*--------------------------------------------------------------
 # Portfolio
 --------------------------------------------------------------*/
-.portfolio {
-  padding: 60px 0;
-  margin-right: 55px;
+
+#portfolio .portfolio-container .card {
+  margin: 5px; /* Menambahkan jarak di sekitar card */
+  padding: 20px; /* Menambahkan ruang dalam card */
+  border: 1px solid #ccc; /* Menambahkan border */
+  border-radius: 10px; /* Membuat sudut card menjadi lebih melengkung */
+  transition: transform 0.3s; /* Efek hover */
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  z-index: 1;
+}
+
+#portfolio .portfolio-container .card:hover {
+  transform: scale(1.05); /* Efek zoom in saat hover */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Efek bayangan saat hover */
+}
+
+#portfolio .portfolio-container .card-link {
+  text-decoration: none; /* Menghilangkan garis bawah pada tautan */
+  color: #333; /* Warna teks */
+}
+
+#portfolio .portfolio-container .card-link:hover {
+  color: #007bff; /* Warna teks berubah saat hover */
+}
+.portfolio .portfolio-item {
+  margin-bottom: 30px;
 }
 
 .portfolio #portfolio-flters {
@@ -1275,21 +1341,18 @@ text-align: center;
   cursor: pointer;
   margin: 0 15px 15px 0;
   display: inline-block;
-  padding: 10px 20px;
-  font-size: 12px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 20px;
-  color: #444444;
-  border-radius: 4px;
-  text-transform: uppercase;
-  background: #fff;
+  color: #212529;
   margin-bottom: 5px;
   transition: all 0.3s ease-in-out;
 }
 
 .portfolio #portfolio-flters li:hover,
 .portfolio #portfolio-flters li.filter-active {
-  background: #3498db;
-  color: #fff;
+  color: #eb5d1e;
 }
 
 .portfolio #portfolio-flters li:last-child {
@@ -1297,185 +1360,109 @@ text-align: center;
 }
 
 .portfolio .portfolio-wrap {
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  z-index: 1;
+}
+
+
+/* .portfolio .portfolio-wrap::before {
+  content: "";
+  background: rgba(122, 105, 96, 0.6);
+  position: absolute;
+  left: 100%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transition: all ease-in-out 0.3s;
+  z-index: 2;
+} */
+
+.portfolio .card img {
+  transition: 0.3s;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height:200px
+}
+
+.portfolio .card .portfolio-links {
+  opacity: 0;
+  left: 0;
+  right: 0;
+  top: calc(50% - 32px);
+  text-align: center;
+  z-index: 3;
+  position: absolute;
+  transition: all ease-in-out 0.3s;
+}
+.portfolio .card p {
+  color: #eb5d1e;
+}
+.portfolio .card .portfolio-links a {
+  color: #eb5d1e;
+  margin: 0 4px;
+  line-height: 0;
+  background-color: #fff;
+  padding-top: 6px;
+  padding-right: 1px;
+  border-radius: 50px;
+  text-align: center;
+  width: 32px;
+  height: 32px;
+  display: inline-block;
   transition: 0.3s;
 }
 
-.portfolio .portfolio-wrap:hover {
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.16);
-}
-
-.portfolio .portfolio-item {
-  position: relative;
-  height: 360px;
-  overflow: hidden;
-}
-
-.portfolio .portfolio-item figure {
-  background: #000;
-  overflow: hidden;
-  height: 240px;
-  position: relative;
-  border-radius: 4px 4px 0 0;
-  margin: 0;
-}
-
-.portfolio .portfolio-item figure:hover img {
-  opacity: 0.4;
-  transition: 0.4s;
-}
-
-.portfolio .portfolio-item figure .link-preview,
-.portfolio .portfolio-item figure .link-details {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
+.portfolio .portfolio-wrap .portfolio-links a i {
   line-height: 0;
-  text-align: center;
-  width: 36px;
-  height: 36px;
-  background: #fff;
-  border-radius: 50%;
-  transition: all 0.2s linear;
-  overflow: hidden;
   font-size: 20px;
 }
 
-.portfolio .portfolio-item figure .link-preview i,
-.portfolio .portfolio-item figure .link-details i {
-  color: #384046;
-  line-height: 0;
-}
-
-.portfolio .portfolio-item figure .link-preview:hover,
-.portfolio .portfolio-item figure .link-details:hover {
-  background: #3498db;
-}
-
-.portfolio .portfolio-item figure .link-preview:hover i,
-.portfolio .portfolio-item figure .link-details:hover i {
+.portfolio .portfolio-wrap .portfolio-links a:hover {
+  background: #eb5d1e;
   color: #fff;
 }
 
-.portfolio .portfolio-item figure .link-preview {
-  left: calc(50% - 38px);
-  top: calc(50% - 18px);
-}
-
-.portfolio .portfolio-item figure .link-details {
-  right: calc(50% - 38px);
-  top: calc(50% - 18px);
-}
-
-.portfolio .portfolio-item figure:hover .link-preview {
-  opacity: 1;
-  left: calc(50% - 44px);
-}
-
-.portfolio .portfolio-item figure:hover .link-details {
-  opacity: 1;
-  right: calc(50% - 44px);
-}
-
-.portfolio .portfolio-item .portfolio-info {
-  background: #fff;
+.portfolio .portfolio-wrap .portfolio-info {
+  opacity: 0;
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
   text-align: center;
-  padding: 30px;
-  height: 90px;
-  border-radius: 0 0 3px 3px;
+  z-index: 3;
+  transition: all ease-in-out 0.3s;
 }
 
-.portfolio .portfolio-item .portfolio-info h4 {
-  font-size: 18px;
-  line-height: 1px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  padding-bottom: 0;
+.portfolio .portfolio-wrap .portfolio-info h4 {
+  font-size: 20px;
+  color: #fff;
+  font-weight: 600;
 }
 
-.portfolio .portfolio-item .portfolio-info h4 a {
-  color: #333;
-}
-
-.portfolio .portfolio-item .portfolio-info h4 a:hover {
-  color: #3498db;
-}
-
-.portfolio .portfolio-item .portfolio-info p {
-  padding: 0;
-  margin: 0;
-  color: #b8b8b8;
-  font-weight: 500;
+.portfolio .portfolio-wrap .portfolio-info p {
+  color: #ffffff;
   font-size: 14px;
   text-transform: uppercase;
 }
 
-/*--------------------------------------------------------------
-# Portfolio Details
---------------------------------------------------------------*/
-.portfolio-details {
-  padding-top: 0;
+.portfolio .portfolio-wrap:hover::before {
+  left: 0;
 }
 
-.portfolio-details .portfolio-details-slider img {
-  width: 100%;
-}
-
-.portfolio-details .portfolio-details-slider .swiper-pagination {
-  margin-top: 20px;
-  position: relative;
-}
-
-.portfolio-details .portfolio-details-slider .swiper-pagination .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background-color: #fff;
+.portfolio .portfolio-wrap:hover .portfolio-links {
   opacity: 1;
-  border: 1px solid #3498db;
+  top: calc(50% - 16px);
 }
 
-.portfolio-details .portfolio-details-slider .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: #3498db;
+.portfolio .portfolio-wrap:hover .portfolio-info {
+  opacity: 1;
+  bottom: 0;
 }
 
-.portfolio-details .portfolio-info {
-  padding: 30px;
-  box-shadow: 0px 0 30px rgba(56, 64, 70, 0.08);
-}
-
-.portfolio-details .portfolio-info h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
-}
-
-.portfolio-details .portfolio-info ul {
-  list-style: none;
-  padding: 0;
-  font-size: 15px;
-}
-
-.portfolio-details .portfolio-info ul li+li {
-  margin-top: 10px;
-}
-
-.portfolio-details .portfolio-description {
-  padding-top: 30px;
-}
-
-.portfolio-details .portfolio-description h2 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.portfolio-details .portfolio-description p {
-  padding: 0;
-}
 
 #footer1 {
   background:#01004C;
@@ -2028,7 +2015,7 @@ border: none;
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
-  display: flex;
+ 
   align-items: flex-start;
   padding: 20px 0;
 }
@@ -2037,7 +2024,7 @@ border: none;
 .article {
   flex: 0 0 auto;
   width: 300px;
-  margin-right: 20px;
+ 
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
@@ -2194,9 +2181,31 @@ border: none;
 @media (max-width: 768px) {
  #artikel  .portfolio-item {
     margin-bottom: 20px;
+    align-items: center;
+  }
+
+  #artikel .article-container{
+    justify-content: center;
+    align-items: center;
+    display: flex;
   }
 }
+@media (max-width: 360px) {
+  #artikel  .portfolio-item {
+     margin-bottom: 20px;
+     align-items: center;
+   }
+ 
+   #artikel .article-container{
+     justify-content: center;
+     align-items: center;
+   }
 
+   #artikel .container{
+    align-items: center;
+    justify-content: center;
+   }
+ }
 #edit-profil .form-edit{
   margin-top: 100px;
 }
@@ -2206,3 +2215,45 @@ border: none;
     align-items: center;
    }
  }
+
+ 
+
+ /* CSS untuk membuat konten di tengah pada Samsung Galaxy Fold atau perangkat sejenis */
+@media screen and (max-width: 280px) {
+  .article-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  #artikel .col-lg-4 .col-md-6 .col-sm-12 .portfolio-item .filter-card
+  {
+    align-items: center;
+  }
+  
+  .portfolio-item {
+    margin-bottom: 20px; /* Atur jarak antar elemen jika diperlukan */
+  }
+  
+  .more-button {
+    text-align: center;
+  }
+}
+
+/* CSS untuk perangkat lainnya */
+@media screen and (min-width: 281px) {
+  /* Tambahkan gaya CSS khusus untuk perangkat lain jika diperlukan */
+}
+
+@media (max-width: 280px) {
+ #contact .contact-text h2{
+  font-size: 20px;
+ }
+
+ #contact .contact-text p{
+  font-size: 12px
+ }
+ 
+}
+

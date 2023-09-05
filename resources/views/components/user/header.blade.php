@@ -15,7 +15,7 @@
         <ul>
           <!-- <li ><a class="nav-link scrollto" href="{{route('user.home')}}">Home</a></li> -->
           <li><a class="nav-link scrollto" href="#about">Income</a></li>
-          <li><a class="nav-link scrollto" href="#artikel">Article</a></li>
+          <li><a class="nav-link scrollto" href="#portfolio">Article</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
 
 

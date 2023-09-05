@@ -3,7 +3,7 @@
 @section('content2')
 
        <!-- ======= Kalkulator Section ======= -->
-       <section id="count" class="count">
+       <section id="count" class="count d-flex align-items-center">
         <div class="container">
   
           <div class="row justify-content-between">
@@ -15,7 +15,7 @@
             </div>
             <div class="col-lg-6 pt-5 pt-lg-0">
               
-                <div class="col-lg-8 mt-5 mt-lg-0 d-flex align-items-stretch" >
+                <div class="col-lg-8 mt-5 mt-lg-0 d-flex align-items-center" >
                     <form action="{{ route('calculate') }}" method="post" role="form" class="php-email-form1" id="calculator-form">
                     @csrf
                       <p> Silakan masukan jumlah produk yang ingin kamu jual</p>
@@ -31,7 +31,7 @@
     <div class="row g-3 align-items-center">
  
   <div class="col-auto">
-  <input type="number" name="product_quantity[{{ $produk->id }}]" min="0"  id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}">
+  <input type="number" class ="form-control" style="width:300px"name="product_quantity[{{ $produk->id }}]" min="0"  id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}">
   </div>
   <div class="col-auto">
     <span id="passwordHelpInline" class="form-text">

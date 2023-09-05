@@ -3,7 +3,7 @@
 @section('content2')
 
   <!-- ======= Edit Profil Section ======= -->
-  <section id="edit-profil" class="edit-profil">
+  <section id="edit-profil" class="edit-profil d-flex align-items-center">
         <div class="container">
   
           <div class="row justify-content-between">

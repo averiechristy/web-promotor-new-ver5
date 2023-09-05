@@ -32,31 +32,22 @@
         <p class="text-danger">{{ $errors->first('role_id') }}</p>
     @endif
 </div>
-
-        
-
-                                            <div class="row g-3 align-items-center " style="margin-bottom: 20px;">
-                                                <div class="col-auto">
-                                                  <label for="inputPassword6" class="col-form-label">Nama Produk</label>
-                                               
-                                                </div>
-                                                <div class="col-auto">
-                                                  <input name ="nama_produk" type="text" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('nama_produk') ? 'is-invalid' : '' }}"  aria-describedby="passwordHelpInline" value="{{ old('nama_produk', $data->nama_produk) }}">
+<div class="form-group mb-4">
+                                                <label for="" class="form-label">Nama Produk</label>
+                                                <input name ="nama_produk" type="text" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('nama_produk') ? 'is-invalid' : '' }}"  aria-describedby="passwordHelpInline" value="{{ old('nama_produk', $data->nama_produk) }}">
                                                   @if ($errors->has('nama_produk'))
                                                     <p class="text-danger">{{$errors->first('nama_produk')}}</p>
                                                 @endif
-                                                </div>
-                                                <div class="col-auto">
-                                                    <label for="inputPassword6" class="col-form-label">Poin</label>
-                                                  </div>
-                                                <div class="col-auto">
-                                                    <input name="poin_produk" type="number" style="border-color: #01004C;"  id="" class="form-control {{ $errors->has('poin_produk') ? 'is-invalid' : '' }}"  aria-describedby="passwordHelpInline" value="{{ old('poin_produk', $data->poin_produk) }}" >
+                                            </div> 
+                                            <div class="form-group mb-4">
+                                                <label for="" class="form-label">Poin Produk</label>
+                                                <input name="poin_produk" type="number" style="border-color: #01004C;"  id="" class="form-control {{ $errors->has('poin_produk') ? 'is-invalid' : '' }}"  aria-describedby="passwordHelpInline" value="{{ old('poin_produk', $data->poin_produk) }}" >
                                                     @if ($errors->has('poin_produk'))
                                                     <p class="text-danger">{{$errors->first('poin_produk')}}</p>
                                                 @endif
-                                                </div>
-                                              </div>
-                                              <form>
+                                            </div> 
+
+
                                               <div class="form-group">
     <label for="exampleFormControlFile1">Upload Gambar Produk</label>
     <input id="gambar_produk_input" name="gambar_produk" type="file" class="form-control-file {{ $errors->has('gambar_produk') ? 'is-invalid' : '' }}" value="{{ old('data_gambar', $data->data_gambar) }}">
