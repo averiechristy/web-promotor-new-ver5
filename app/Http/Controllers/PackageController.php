@@ -108,7 +108,7 @@ class PackageController extends Controller
                 $packageDetails[] = [
                     'package_id' => $dtPackage->id,
                     'produk_id' => $productId,
-                    'qty_produk' => $request->qty_produk[$index],
+                    'qty_produk' => intval($request->qty_produk[$index]),
                 ];
             }
     
@@ -128,7 +128,7 @@ class PackageController extends Controller
         $package = PackageIncome::find($id); // Menggunakan find() untuk menghindari error jika tidak ditemukan
       
 
-        $produk = Product::where('role_id', $package->role_id)->get(); // Assuming your model name is Product
+        $kode = Product::where('role_id', $package->role_id)->get(); // Assuming your model name is Product
         $produk = Product::all();
 
         $role = UserRole::all();
@@ -142,6 +142,7 @@ return view('admin.package.edit')->with([
     'package' => $package,
     'produk' => $produk,
     'role' => $role,
+    'kode'=>$kode,
     'selectedRoleId' => $selectedRoleId,
     // 'detail' => $detail,
     'nama'=>$nama,
@@ -158,13 +159,14 @@ return view('admin.package.edit')->with([
             'judul_paket' => 'required',
             'deskripsi_paket' => 'required',
             'produk' => ['required', 'array', new UniqueSelectedProducts],
-            'qty_produk' => 'required',
+            'qty_produk' => 'required|min:0',
         ], [
             'role_id.required' => 'Pilih role terlebih dahulu.',
             'judul_paket.required' => 'Input judul terlebih dahulu',
             'deskripsi_paket.required' => 'Input deskripsi paket terlebih dahulu',
             'produk.required' => 'Pilih minimal satu produk.',
             'qty_produk.required' => 'Isi qty produk.',
+            'qty_produk.min' => 'Quantity Produk tidak boleh bernilai negatif',
             'produk.unique_selected_products' => 'Produk yang dipilih tidak boleh sama.',
         ]);
        // Ambil data paket berdasarkan ID
@@ -187,7 +189,7 @@ return view('admin.package.edit')->with([
             $packageDetails[] = [
                 'package_id' => $dtPackage->id,
                 'produk_id' => $productId, // Gunakan $productId langsung sebagai produk_id
-                'qty_produk' => $request->qty_produk[$index],
+                'qty_produk' => intval($request->qty_produk[$index]),
             ];
         }
 

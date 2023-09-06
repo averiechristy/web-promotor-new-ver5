@@ -15,30 +15,32 @@
                                        <form id ="form-id" action="{{route('admin.package.simpan')}}" method="post">
                                        @csrf
                                             
-                                           <div class="form-group mb-4 " id="koderole">
-                            <label for="role">Kode Role</label>
-                            <select name="role_id" id="role" class="form-control {{$errors->has('role_id') ? 'is-invalid' : ''}}" style="border-color: #01004C;">
-                                <option value="" disabled selected>Pilih Kode Role</option>
-                                <!-- Hidden option -->
-                                @php
-                                $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
-                                @endphp
+                                       <div class="form-group mb-4" id="koderole">
+    <label for="role">Kode Role</label>
+    <select name="role_id" id="role" class="form-control {{$errors->has('role_id') ? 'is-invalid' : ''}}" style="border-color: #01004C;">
+        <option value="" disabled selected>Pilih Kode Role</option>
+        <!-- Hidden option -->
+        @php
+        $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
+        @endphp
 
-                                @foreach ($produk as $item)
-                                @if (!in_array($item->role_id, $selectedRoleIds))
-                                @php
-                                $selectedRoleIds[] = $item->role_id;
-                                @endphp
+        @foreach ($produk as $item)
+            @if (!in_array($item->role_id, $selectedRoleIds))
+                @php
+                $selectedRoleIds[] = $item->role_id;
+                @endphp
 
-                                <option value="{{ $item->role_id }}"{{ old('role_id') == $item->Role->id ? 'selected' : '' }}>{{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                            @if ($errors->has('role_id'))
-                            <p class="text-danger">{{$errors->first('role_id')}}</p>
-                            @endif
-                        </div>
-        
+                <option value="{{ $item->role_id }}" {{ old('role_id') == $item->role_id ? 'selected' : '' }}>
+                    {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
+                </option>
+            @endif
+        @endforeach
+    </select>
+    @if ($errors->has('role_id'))
+    <p class="text-danger">{{$errors->first('role_id')}}</p>
+    @endif
+</div>
+
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
@@ -78,8 +80,12 @@
                                                 @endif
                        
             <label for="quantity">Quantity</label>
-            <input type="number" name="qty_produk[]" class="quantity-input form-control"  min="1" value="{{old('qty_produk.'.$index)}}" required>            @if ($errors->has('qty_produk.'.$index))
-    <p class="text-danger">{{ $errors->first('qty_produk.'.$index) }}</p>
+            <input type="number" name="qty_produk[]" class="quantity-input form-control"  min="1" value="{{old('qty_produk.'.$index)}}" required>       
+                 @if ($errors->has('qty_produk.'.$index))
+    
+
+
+            <p class="text-danger">{{ $errors->first('qty_produk.'.$index) }}</p>
 @endif
              
     <div class="form-group mb-4">

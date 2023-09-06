@@ -12,37 +12,32 @@
                                     </div>
                                     <div class="card-body">
                                         
-                                       <form id="form-id" action="/updatepackage/{{$package->id}}" method="post">
-                                       @csrf
+     <form id="form-id" action="/updatepackage/{{$package->id}}" method="post">
+     @csrf
                                             
-                                       <div class="form-group mb-4" id="koderole">
+     <div class="form-group mb-4" id="koderole">
     <label for="role">Kode Role</label>
     <select name="role_id" id="role" class="form-control {{$errors->has('role_id') ? 'is-invalid' : ''}}" style="border-color: #01004C;">
-    <option value="" disabled>Pilih Kode Role</option> <!-- Hidden option -->
-    <!-- Render unique role options from database -->
-    @php
-    $selectedRoleIds = []; // Array untuk menyimpan role_id yang telah ditambahkan
-    @endphp
+        <option value="" disabled>Pilih Kode Role</option> <!-- Hidden option -->
+        
+        @php
+        $selectedRoleId = old('role_id', $package->role_id); // Mengambil nilai 'role_id' dari request old atau menggunakan nilai default dari $package
+        $uniqueRoles = $produk->unique('Role.id'); // Memastikan pilihan unik berdasarkan id Role
+        @endphp
 
-    @foreach ($produk as $item)
-        @if (!in_array($item->Role->id, $selectedRoleIds))
-            @php
-                $selectedRoleIds[] = $item->Role->id;
-            @endphp
-            
-            <option value="{{ $item->Role->id }}" @if (old('role_id') == $item->Role->id) selected @endif>
+        @foreach ($uniqueRoles as $item)
+            <option value="{{ $item->Role->id }}" @if ($item->Role->id == $selectedRoleId) selected @endif>
                 {{ $item->Role->kode_role }} - {{ $item->Role->jenis_role }}
             </option>
-        @endif
-    @endforeach
-</select>
+        @endforeach
+    </select>
 
     @if ($errors->has('role_id'))
-                                                    <p class="text-danger">{{$errors->first('role_id')}}</p>
-                                                @endif
+        <p class="text-danger">{{$errors->first('role_id')}}</p>
+    @endif
 </div>
 
-        
+
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
@@ -82,11 +77,13 @@
                                                     <p class="text-danger">{{$errors->first('produk')}}</p>
                                                 @endif
 
-        <label for="quantity">Quantity</label>
-        <input type="number" name="qty_produk[]" class="quantity-input form-control {{$errors->has('qty_produk') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('qty_produk', $detailData->qty_produk) }}" required>
-        @if ($errors->has('qty_produk'))
-                                                    <p class="text-danger">{{$errors->first('qty_produk')}}</p>
-                                                @endif
+                                                <label for="quantity">Quantity</label>
+<input type="number" name="qty_produk[]" class="quantity-input form-control {{$errors->has('qty_produk') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ intval(old('qty_produk', $detailData->qty_produk)) }}" required>
+
+@if ($errors->has('qty_produk'))
+    <p class="text-danger">{{$errors->first('qty_produk')}}</p>
+@endif
+
         <div class="form-group mb-4">
             <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Hapus</button>
         </div>
@@ -139,10 +136,13 @@
 
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script>
     $(document).ready(function() {
         var counter = 0; // Set counter sesuai dengan jumlah produk yang ada
 
+
+        
         $('#role').change(function() {
             var roleId = $(this).val();
             $.ajax({
@@ -151,17 +151,9 @@
                 success: function(data) {
                     var productsSelect = $('.product-select');
                     
-                    var selectedProducts = [];
-                
-                // Simpan produk yang telah dipilih sebelumnya
-                productsSelect.each(function() {
-                    selectedProducts.push($(this).val());
-                });
-
                     productsSelect.empty();
                     $.each(data, function(key, produk) {
                         productsSelect.append('<option value="'+ produk.id +  '">' + produk.kode_produk + " - " + produk.nama_produk + '</option>');                  
-
 
                     });
                 }
@@ -174,17 +166,7 @@
             
             var existingSelect = $('.product-select').eq(0);
             var productSelect = existingSelect.clone();
-            var selectedProducts = [];
-        
-        // Simpan produk yang telah dipilih sebelumnya
-        $('.product-select').each(function() {
-            selectedProducts.push($(this).val());
-        });
-
-        // Menghapus opsi produk yang telah dipilih sebelumnya dari pilihan di baris produk baru
-        $.each(selectedProducts, function(index, selectedProduct) {
-            productSelect.find(`option[value="${selectedProduct}"]`).remove();
-        });
+            
             var existingQuantityInput = $('.quantity-input').eq(0);
             var quantityInput = existingQuantityInput.clone();
 
@@ -193,21 +175,19 @@
 
             var counterElement = $('<span class="counter">' + (counter + 1) + '</span>');
 
-
-
-productSelect.attr('name', `produk[]`);
+            productSelect.attr('name', `produk[]`);
             quantityInput.attr('name', `qty_produk[]`);
 
             
              // Reset nilai input fields dan select box
-    productSelect.val('');
-    quantityInput.val('');
+            productSelect.val('');
+            quantityInput.val('');
 
-    // Hapus elemen label dan input fields sebelumnya
-    productItem.find('label').remove();
-    productItem.find('.product-select').remove();
-    productItem.find('.quantity-input').remove();
-    productItem.find('.remove-product').remove();
+            // Hapus elemen label dan input fields sebelumnya
+            productItem.find('label').remove();
+            productItem.find('.product-select').remove();
+            productItem.find('.quantity-input').remove();
+            productItem.find('.remove-product').remove();
 
             productItem.append('<label for="quantity">Pilih Produk</label>');
             productItem.append(productSelect);
@@ -223,7 +203,14 @@ productSelect.attr('name', `produk[]`);
             productContainer.append(productItem);
             productItem.append('<div style="margin-top: 40px;"></div>');
 
+            productSelect.attr('data-selected', productSelect.val());
+
+
             counter++;
+            $('.product-select').each(function() {
+        var selectedOption = $(this).find('option:selected');
+        $(this).attr('data-selected', selectedOption.val());
+    });
         });
 
         $(document).on('click', '.remove-product', function() {
@@ -235,7 +222,9 @@ productSelect.attr('name', `produk[]`);
                 alert("You cannot remove the first product.");
             }
         });
-        $('#form-id').submit(function(event) {
+    
+
+    $('#form-id').submit(function(event) {
         var valid = true;
         var selectedProducts = []; // Array untuk menyimpan produk yang sudah dipilih
         
@@ -263,8 +252,7 @@ productSelect.attr('name', `produk[]`);
             // alert("Silahkan masukan produk dan quantity nya.");
         }
     });
-    });
-
-     
+});
+    
 </script>
 @endsection
