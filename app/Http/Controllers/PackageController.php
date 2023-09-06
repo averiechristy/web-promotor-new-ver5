@@ -79,7 +79,7 @@ class PackageController extends Controller
             'judul_paket' => 'required',
             'deskripsi_paket' => 'required',
             'produk' => ['required', 'array', new UniqueSelectedProducts],
-            'qty_produk' => 'required|numeric|min:0',
+            'qty_produk' => 'required|min:0',
         ], [
             'role_id.required' => 'Pilih role terlebih dahulu.',
             'judul_paket.required' => 'Input judul terlebih dahulu',

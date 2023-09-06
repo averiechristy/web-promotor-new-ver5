@@ -1300,6 +1300,11 @@ text-align: center;
 # Portfolio
 --------------------------------------------------------------*/
 
+#portfolio .info h4 {
+ font-size: 20px;
+}
+
+
 #portfolio .portfolio-container .card {
   margin: 5px; /* Menambahkan jarak di sekitar card */
   padding: 20px; /* Menambahkan ruang dalam card */
@@ -1308,6 +1313,7 @@ text-align: center;
   transition: transform 0.3s; /* Efek hover */
   transition: 0.3s;
   position: relative;
+  background-color: whitesmoke;
   overflow: hidden;
   border-radius: 8px;
   z-index: 1;
@@ -2043,10 +2049,29 @@ border: none;
 .more-button {
   text-align: center;
   margin-top: 20px;
+  
 }
 
+.btn-lain {
+background-color:  #01004C;
+border-radius: 50px;
+height: 50px;
+width: 300px;
+}
+
+.btn-lain:hover{
+  background-color:  #ef7f4d;
+  border:  #ef7f4d;
+
+}
+  
+
+  
+
 .btn-lain a  {
-  color: #000;
+  color:white;
+ 
+
 }
 
 .centered-image {

@@ -62,9 +62,9 @@
     @if ($errors->has('gambar_produk'))
         <p class="text-danger">{{ $errors->first('gambar_produk') }}</p>
     @endif
-</div>
+    </div>
 
-<script>
+    <script>
     window.onload = function() {
         var gambarPreview = document.getElementById('gambar-preview');
         var gambarInput = document.querySelector('input[name="gambar_produk"]');

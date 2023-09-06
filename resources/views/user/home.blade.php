@@ -92,7 +92,7 @@
           @endforeach
 
           <div class="more-button">
-      <button class="btn btn-warning btn-lain"><a href="{{route('user.artikel')}}">Lihat artikel lebih banyak</a></button>
+      <button class="btn-lain"><a href="{{route('user.artikel')}}">Lihat artikel lebih banyak</a></button>
     </div>
 
         </div>
