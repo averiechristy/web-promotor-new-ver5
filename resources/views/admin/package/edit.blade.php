@@ -36,9 +36,6 @@
         <p class="text-danger">{{$errors->first('role_id')}}</p>
     @endif
 </div>
-
-
-
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
                                                 <input name="judul_paket" type="text" class="form-control {{$errors->has('judul_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('judul_paket',$package->judul_paket) }}" />
@@ -54,13 +51,11 @@
                                                     <p class="text-danger">{{$errors->first('deskripsi_paket')}}</p>
                                                 @endif
                                             </div>
-                                            
 
-                                           
                                             <div class="form-group mb-4">
                                             <div id="product-container">
-                                            @foreach ($nama as $detailData)
-                                            
+                                                
+    @foreach ($nama as $detailData)
     <div class="product-item">
         <label for="product">Pilih Produk</label>
         <select name="produk[]" class="product-select form-control {{$errors->has('produk') ? 'is-invalid' : ''}}"  style="border-color: #01004C;">
@@ -69,11 +64,11 @@
                 <option value="{{ $product->id }}" {{ $detailData->produk_id == $product->id ? 'selected' : '' }}>
                         {{ $product->kode_produk }} - {{ $product->nama_produk }}
                     </option>
-
                 @endif
             @endforeach
         </select>
         @if ($errors->has('produk'))
+
                                                     <p class="text-danger">{{$errors->first('produk')}}</p>
                                                 @endif
 
@@ -219,7 +214,7 @@
             if (productContainer.children('.product-item').length > 1) {
                 $(this).closest('.product-item').remove();
             } else {
-                alert("You cannot remove the first product.");
+                alert("Anda tidak dapat menghapus produk pertama.");
             }
         });
     

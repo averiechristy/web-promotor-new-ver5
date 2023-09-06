@@ -242,7 +242,7 @@
             if (productContainer.children('.product-item').length > 1) {
                 $(this).closest('.product-item').remove();
             } else {
-                alert("You cannot remove the first product.");
+                alert("Anda tidak dapat menghapus produk pertama.");
             }
         });
     
