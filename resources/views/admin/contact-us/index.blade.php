@@ -9,17 +9,16 @@
                     @foreach($contacts as $contact)
                         <div class="col-md-6">
                             <a href="{{ route('contact-us.show', $contact->id) }}">
-                                <div class="card mb-3 {{ $contact->read ? 'bg-light text-black' : 'bg-white text-black' }}" data-id="{{ $contact->id }}">
+                                <div class="card mb-3 {{ $contact->read ? 'bg-sesudah ' : 'bg-sebelum ' }}" data-id="{{ $contact->id }}">
                                     <div class="card-body">
                                         <h5 class="card-title">Subject : {{ $contact->subject }}</h5>
-                                    </div>
-                                    <div class="card-footer">
                                         <form action="{{ route('contact-us.delete', $contact->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm show_confirm3">Delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm show_confirm3">Hapus</button>
                                         </form>
-                                    </div>
+                                        </div>
+
                                 </div>
                             </a>
                         </div>
@@ -34,6 +33,20 @@
             </div>
         </div>
     </div>
+
+    <style>
+        /* Warna latar belakang sebelum dibaca (belum dibaca) */
+.card.bg-white {
+    background-color: #FFFFFF; /* Ganti dengan HEX warna latar belakang sebelum dibaca */
+    
+}
+
+/* Warna latar belakang setelah dibaca (dibaca) */
+.card.bg-sesudah {
+    background-color: #F0F0F0; /* Ganti dengan HEX warna latar belakang setelah dibaca */
+}
+
+    </style>
 @endsection
 @push('scripts')
 <script>

@@ -151,7 +151,7 @@ class ArtikelController extends Controller
          $ubah->update($dtProduk);
      
          // Flash message
-         $request->session()->flash('success', "Artikel berhasil di update.");
+         $request->session()->flash('success', "Artikel berhasil diupdate.");
      
          // Redirect
          return redirect(route('admin.artikel.index'));
@@ -182,7 +182,7 @@ class ArtikelController extends Controller
        $artikel = Artikel::find($id);
        $artikel->delete();
 
-        $request->session()->flash('error', "Artikel berhasil di hapus.");
+        $request->session()->flash('error', "Artikel berhasil dihapus.");
 
         return redirect(route('admin.artikel.index'));
     }

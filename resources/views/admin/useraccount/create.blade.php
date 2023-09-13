@@ -10,13 +10,13 @@
                                         Tambahkan User Akun Baru
                                     </div>
                                     <div class="card-body">
-                                       <form action="{{route('admin.useraccount.simpan')}}" method="post">
+                                       <form name="saveform" action="{{route('admin.useraccount.simpan')}}" method="post" onsubmit="return validateForm()">
                                             @csrf
 
                                             <div class="form-group mb-4">
     <label for="" class="form-label">Pilih Akses</label>
-    <select name="akses_id" class="form-control {{ $errors->has('akses_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example">
-        <option selected disabled>-- Pilih Akses --</option>
+    <select name="akses_id" class="form-control {{ $errors->has('akses_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example"  oninvalid="this.setCustomValidity('Pilih salah satu akses')" oninput="setCustomValidity('')">
+        <option value="" selected disabled>-- Pilih Akses --</option>
         @foreach ($akses as $item)
             <option value="{{ $item->id }}"{{ old('akses_id') == $item->id ? 'selected' : '' }}> {{ $item->jenis_akses }}</option>
         @endforeach
@@ -28,8 +28,8 @@
 
 <div class="form-group mb-4">
     <label for="" class="form-label">Kode Role</label>
-    <select name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example" required>
-        <option selected disabled>-- Pilih Kode Role --</option>
+    <select name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example"  oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
+        <option value ="" selected disabled>-- Pilih Kode Role --</option>
         @if(old('akses_id'))
             @foreach ($roles[old('akses_id')] as $role)
                 <option value="{{ $role->id }}"{{ old('role_id') == $role->id ? 'selected' : '' }}> {{ $role->kode_role }} - {{ $role->jenis_role }}</option>
@@ -83,14 +83,14 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Nama</label>
-                                                <input name="nama" type="text"  class="form-control {{$errors->has('nama') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{old('nama')}}" />
+                                                <input name="nama" type="text"  class="form-control {{$errors->has('nama') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{old('nama')}}"  oninvalid="this.setCustomValidity('Nama user tidak boleh kosong')" oninput="setCustomValidity('')" />
                                                 @if ($errors->has('nama'))
                                                     <p class="text-danger">{{$errors->first('nama')}}</p>
                                                 @endif
                                             </div>
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Sales</label>
-                                                <input name="username" type="text" class="form-control {{$errors->has('username') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('username')}}" />
+                                                <input name="username" type="text" class="form-control {{$errors->has('username') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('username')}}"  oninvalid="this.setCustomValidity('Kode Sales (Username) tidak boleh kosong')" oninput="setCustomValidity('')"/>
                                                 @if ($errors->has('username'))
                                                     <p class="text-danger">{{$errors->first('username')}}</p>
                                                 @endif
@@ -112,7 +112,7 @@
 
                                               <div class="form-group mb-4">
                                                 <label for="" class="form-label">Email</label>
-                                                <input name="email" type="email" class="form-control {{$errors->has('email') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('email')}}"  />
+                                                <input name="email" type="email" class="form-control {{$errors->has('email') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('email')}}"   oninvalid="this.setCustomValidity('Format email harus benar')" oninput="setCustomValidity('')"/>
                                                 @if ($errors->has('email'))
                                                     <p class="text-danger">{{$errors->first('email')}}</p>
                                                 @endif
@@ -120,7 +120,7 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">No Handphone</label>
-                                                <input name="phone_number" type="number" class="form-control {{$errors->has('phone_number') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('phone_number')}}"  />
+                                                <input name="phone_number" type="number" class="form-control {{$errors->has('phone_number') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('phone_number')}}"  oninvalid="this.setCustomValidity('Nomor handphone tidak boleh kosong')" oninput="setCustomValidity('')" />
                                                 @if ($errors->has('phone_number'))
                                                     <p class="text-danger">{{$errors->first('phone_number')}}</p>
                                                 @endif
@@ -150,6 +150,41 @@
         <!-- End of Content Wrapper -->
 
     </div>
+
+    
+<script>
+function validateForm() {
+  let akses = document.forms["saveform"]["akses_id"].value;
+  let koderole = document.forms["saveform"]["role_id"].value;
+  let nama = document.forms["saveform"]["nama"].value;
+  let email = document.forms["saveform"]["email"].value;
+  let username = document.forms["saveform"]["username"].value;
+  let phonenumber = document.forms["saveform"]["phone_number"].value;
+
+
+  if (akses == "") {
+    alert("Akses tidak boleh kosong");
+    return false;
+  } else   if (koderole == "") {
+    alert("Kode role tidak boleh kosong");
+    return false;
+  } else   if (nama == "") {
+    alert("Nama user tidak boleh kosong");
+    return false;
+  }else   if (email == "") {
+    alert("Email tidak boleh kosong");
+    return false;
+}else   if (username == "") {
+    alert("Kode Sales (Username) tidak boleh kosong");
+    return false;
+
+}else   if (phonenumber == "") {
+    alert("Nomor handphone tidak boleh kosong");
+    return false;
+}
+}
+
+</script>
 
 
 @endsection

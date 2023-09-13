@@ -67,7 +67,9 @@
     </div>
                     <!-- {{ $item->gambar_produk}} -->
                         </td>
-                        <td>{!! nl2br(e($item->deskripsi_produk)) !!}</td>
+                        <td>   <a href="{{ route('detailproduct', $item->id) }}"><button type="button" class="btn btn-link">
+    Lihat Deskripsi Produk
+</button></a>     </td>
                         <td>{{ $item->Role->jenis_role }}</td>
                         
                         <td> 

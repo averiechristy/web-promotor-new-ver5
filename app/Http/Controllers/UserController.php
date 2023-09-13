@@ -207,7 +207,7 @@ public function resetPassword(User $user, Request $request)
 
         $useraccount->delete();
 
-        $request->session()->flash('error', "Akun User Berhasil di hapus.");
+        $request->session()->flash('error', "Akun User Berhasil dihapus.");
 
         return redirect()->route('admin.useraccount.index');
     }
@@ -219,7 +219,6 @@ public function resetPassword(User $user, Request $request)
         return view('admin.changepassword');
     }
 
-   
 
     public function adminchangePassword(Request $request)
     {
@@ -312,26 +311,38 @@ public function resetPassword(User $user, Request $request)
             'nama' => 'required',
             'email' => 'required|email',
             'phone_number' => 'required',
-
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+    
         ], [
             'nama.required' => 'Input nama terlebih dahulu',
             'email.required' => 'Input email terlebih dahulu',
             'phone_number.required' => 'Input no handphone terlebih dahulu',
-
+            'avatar.image' => 'File harus berupa gambar.',
+            'avatar.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'avatar.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
         ]);
-
-       
+    
         $user = Auth::user();
+        $filename = $user->avatar; // Tetap gunakan gambar lama jika tidak ada gambar yang diunggah
+    
+        if ($request->hasFile('avatar')) {
+            $path = public_path('img');
+            
+            // Upload gambar baru
+            $file = $request->file('avatar');
+            $filename = $file->getClientOriginalName();
+            $file->move($path, $filename);
+        }
+    
         $user->update([
             'nama' => $request->nama,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
+            'avatar' => $filename,
         ]);
-
-       
-
+    
         return redirect()->route('edit-profile')->with('success', 'Profil berhasil diupdate.');
     }
-
+    
     
 }

@@ -46,12 +46,14 @@
                     <div class="row">
                         @foreach ($paket as $data)
                             <div class="col-md-6">
+                                <a href="{{ route('tampilincome', $data->id) }}">
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <h5 class="card-title">{{ $data->judul_paket }}</h5>
-                                        <a href="{{ route('tampilincome', $data->id) }}" class="btn btn-link" style="color:#ff9029" role="button" data-bs-toggle="button">Lihat Detail</a>
+                                        <p  style="color:#ff9029">Lihat Detail</p>
                                     </div>
                                 </div>
+                                </a>
                             </div>
                         @endforeach
                         <div class="mt-4 pagination-container">

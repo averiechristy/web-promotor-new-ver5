@@ -19,15 +19,15 @@
       Income
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class="dropdown-item" href="{{route ('user.kalkulator')}}">Hitung Sendiri</a></li>
+      <li><a class="dropdown-item" href="{{route ('user.kalkulator')}}">Kalkulator</a></li>
       
-      <li><a class="dropdown-item" href="{{route ('user.package')}}">Lihat Paket Tersedia</a></li>
+      <li><a class="dropdown-item" href="{{route ('user.package')}}">Paket Pendapatan</a></li>
      
     </ul>
   </li>          <li><a class="nav-link scrollto" href="{{route('user.artikel')}}">Article</a></li>
           <li><a class="nav-link scrollto" href="{{route('user.contact')}}">Contact Us</a></li>
           
-          <li> <a class="nav-link" href=""><span class="ml-8 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span></a></li>
+          <li><p class="nav-link scrollto" style="margin-top:13px; margin-left:13px;" >Welcome,  {{ Auth::user()->nama }}!</p></li>
 
 
         <li class="dropdown">
@@ -42,7 +42,6 @@
         <i class="bi bi-chevron-down"></i>
     </a>
     <ul>
-        <li><a href="#" data-toggle="modal" data-target="#changeProfilePhotoModal">Change Profile Photo</a></li>
         <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
         <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
         <li>

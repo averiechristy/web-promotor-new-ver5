@@ -74,6 +74,7 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         
+        
         $this->validate($request, [
             'role_id' => 'required',
             'judul_paket' => 'required',
@@ -108,7 +109,7 @@ class PackageController extends Controller
                 $packageDetails[] = [
                     'package_id' => $dtPackage->id,
                     'produk_id' => $productId,
-                    'qty_produk' => intval($request->qty_produk[$index]),
+                    'qty_produk' => $request->qty_produk[$index],
                 ];
             }
     
@@ -125,6 +126,7 @@ class PackageController extends Controller
     public function show(string $id)
     {
 
+        
         $package = PackageIncome::find($id); // Menggunakan find() untuk menghindari error jika tidak ditemukan
       
 
@@ -169,6 +171,13 @@ return view('admin.package.edit')->with([
             'qty_produk.min' => 'Quantity Produk tidak boleh bernilai negatif',
             'produk.unique_selected_products' => 'Produk yang dipilih tidak boleh sama.',
         ]);
+
+
+         // Ambil data produk yang dipilih dari form
+    $selectedProductsArray = $request->input('produk');
+
+    // Simpan data produk yang dipilih ke dalam session
+    $request->session()->put('selected_products', $selectedProductsArray);
        // Ambil data paket berdasarkan ID
     $dtPackage = PackageIncome::find($id);
 
@@ -176,7 +185,9 @@ return view('admin.package.edit')->with([
     $dtPackage->judul_paket = $request->judul_paket;
     $dtPackage->role_id = $request->role_id;
     $dtPackage->deskripsi_paket = $request->deskripsi_paket;
+    
     $dtPackage->save();
+
 
     // Hapus detail paket yang ada sebelumnya
     PackageDetail::where('package_id', $id)->delete();
@@ -189,7 +200,7 @@ return view('admin.package.edit')->with([
             $packageDetails[] = [
                 'package_id' => $dtPackage->id,
                 'produk_id' => $productId, // Gunakan $productId langsung sebagai produk_id
-                'qty_produk' => intval($request->qty_produk[$index]),
+                'qty_produk' => $request->qty_produk[$index],
             ];
         }
 
@@ -244,7 +255,7 @@ return view('admin.package.edit')->with([
 
     $product->delete();
 
-    return response()->json(['message' => 'Produk berhasil di hapus.']);
+    return response()->json(['message' => 'Produk berhasil dihapus.']);
    }
 
 

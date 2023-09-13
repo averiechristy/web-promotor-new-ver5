@@ -173,6 +173,9 @@ Route::get('/tampilproduct/{id}',[ProductController::class,'tampilproduct'])->na
 Route::post('/updateproduct/{id}',[ProductController::class,'updateproduct'])->name('updateproduct');
 Route::delete('/deleteproduct/{id}', [ProductController::class, 'destroy'])->name('deleteproduct');
 
+Route::post('/restore-file-input', [ProductController::class,'restoreFileInput'])->name('restore-file-input');
+
+
 
 
 // Package Route
@@ -211,6 +214,9 @@ Route::get('/detailartikel/{id}',[ArtikelController::class,'detailartikel'])->na
 
 //Dashboard Route
 Route::get('admin/dashboard/index', [DashboardController::class, 'index'])->name('admin.dashboard.index');
+
+Route::get('/detailproduct/{id}',[ProductController::class,'detailproduct'])->name('detailproduct');
+
 
 });
 

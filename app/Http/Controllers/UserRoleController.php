@@ -15,6 +15,7 @@ class UserRoleController extends Controller
     /**
      * Display a listing of the resource.
      */
+    
     public function index()
     {
         $dtUserRole = UserRole::all();
@@ -52,6 +53,8 @@ class UserRoleController extends Controller
         'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
     ]);
 
+    
+
     UserRole::create([
         'akses_id'=> $request->akses_id,
         'kode_role'=> $request->kode_role,
@@ -85,7 +88,7 @@ class UserRoleController extends Controller
 
         $this->validate($request, [
             'akses_id' => 'required',
-            'kode_role' => 'required|unique:user_roles', // Tambah aturan unique di sini
+            'kode_role' => 'required|unique:user_roles,kode_role,' . $id,
             'jenis_role' => 'required', 
         ], [
             'akses_id.required' => 'Pilih akses terlebih dahulu.', 

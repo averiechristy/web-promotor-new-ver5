@@ -18,8 +18,8 @@
           <li><a class="nav-link scrollto" href="#portfolio">Article</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
 
+          <li><p class="nav-link scrollto" style="margin-top:13px; margin-left:13px;" >Welcome,  {{ Auth::user()->nama }}!</p></li>
 
-          <li> <a class="nav-link" href=""><span class="ml-8 d-none d-lg-inline text-gray-600 small">Welcome,  {{ Auth::user()->nama }}!</span></a></li>
 
 
         <li class="dropdown">
@@ -35,7 +35,6 @@
         <i class="bi bi-chevron-down"></i>
     </a>
     <ul>
-        <li><a href="#" data-toggle="modal" data-target="#changeProfilePhotoModal">Change Profile Photo</a></li>
         <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
         <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
         <li>

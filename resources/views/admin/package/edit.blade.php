@@ -12,7 +12,7 @@
                                     </div>
                                     <div class="card-body">
                                         
-     <form id="form-id" action="/updatepackage/{{$package->id}}" method="post">
+     <form name="form-id "id ="form-id"  action="/updatepackage/{{$package->id}}" method="post"  onsubmit="return validateForm()">
      @csrf
                                             
      <div class="form-group mb-4" id="koderole">
@@ -38,7 +38,7 @@
 </div>
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Judul Paket</label>
-                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('judul_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('judul_paket',$package->judul_paket) }}" />
+                                                <input name="judul_paket" type="text" class="form-control {{$errors->has('judul_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('judul_paket',$package->judul_paket) }}"oninvalid="this.setCustomValidity('Judul paket tidak boleh kosong')" oninput="setCustomValidity('')"/>
                                                 @if ($errors->has('judul_paket'))
                                                     <p class="text-danger">{{$errors->first('judul_paket')}}</p>
                                                 @endif
@@ -46,7 +46,7 @@
                                     
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Paket</label>
-                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('deskripsi_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="">{{ old('deskripsi_paket',$package->deskripsi_paket) }}</textarea>
+                                                <textarea name="deskripsi_paket" type="text" class="form-control {{$errors->has('deskripsi_paket') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value=""oninvalid="this.setCustomValidity('Deskripsi paket tidak boleh kosong')" oninput="setCustomValidity('')">{{ old('deskripsi_paket',$package->deskripsi_paket) }}</textarea>
                                                 @if ($errors->has('deskripsi_paket'))
                                                     <p class="text-danger">{{$errors->first('deskripsi_paket')}}</p>
                                                 @endif
@@ -54,41 +54,39 @@
 
                                             <div class="form-group mb-4">
                                             <div id="product-container">
-                                                
-    @foreach ($nama as $detailData)
-    <div class="product-item">
-        <label for="product">Pilih Produk</label>
-        <select name="produk[]" class="product-select form-control {{$errors->has('produk') ? 'is-invalid' : ''}}"  style="border-color: #01004C;">
-            @foreach ($produk as $product)
-                @if ($product->role_id == $selectedRoleId)
+
+@foreach ($nama as $detailData)
+@foreach(old('produk', ['']) as $index => $oldProduct)
+<div class="product-item">
+    <label for="product">Pilih Produk</label>
+    <select name="produk[]" class="product-select form-control {{$errors->has('produk') ? 'is-invalid' : ''}}"  data-selected="{{ old('produk.'.$index, '') }}"style="border-color: #01004C;">
+        @foreach ($produk as $product)
+            @if ($product->role_id == $selectedRoleId)
                 <option value="{{ $product->id }}" {{ $detailData->produk_id == $product->id ? 'selected' : '' }}>
-                        {{ $product->kode_produk }} - {{ $product->nama_produk }}
-                    </option>
-                @endif
-            @endforeach
-        </select>
-        @if ($errors->has('produk'))
+                    {{ $product->kode_produk }} - {{ $product->nama_produk }}
+                </option>
+            @endif
+        @endforeach
+    </select>
+    @if ($errors->has('produk'))
+        <p class="text-danger">{{$errors->first('produk')}}</p>
+    @endif
 
-                                                    <p class="text-danger">{{$errors->first('produk')}}</p>
-                                                @endif
+    <label for="quantity">Quantity</label>
+    <input type="number" name="qty_produk[]" class="quantity-input form-control {{$errors->has('qty_produk') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ old('qty_produk.'.$index, $detailData->qty_produk) }}"oninvalid="this.setCustomValidity('Quantity produk tidak boleh kosong')" oninput="setCustomValidity('')">
 
-                                                <label for="quantity">Quantity</label>
-<input type="number" name="qty_produk[]" class="quantity-input form-control {{$errors->has('qty_produk') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ intval(old('qty_produk', $detailData->qty_produk)) }}" required>
+    @if ($errors->has('qty_produk'))
+        <p class="text-danger">{{$errors->first('qty_produk.'.$index)}}</p>
+    @endif
 
-@if ($errors->has('qty_produk'))
-    <p class="text-danger">{{$errors->first('qty_produk')}}</p>
-@endif
-
-        <div class="form-group mb-4">
-            <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Hapus</button>
-        </div>
+    <div class="form-group mb-4">
+        <button type="button" class="remove-product btn btn-danger btn-sm mt-2 mb-2" style="float: right">Hapus</button>
     </div>
+</div>
+@endforeach
 @endforeach
 
-
-                   
-    
-        </div>
+    </div>
     </div>
     </div>
             
@@ -98,6 +96,7 @@
     </div>                                       
 
                                             <div class="form-group mb-4  ml-3">
+                                                
                                                 <button type="submit" class="btn " style="background-color: #01004C; color: white;">Simpan</button>
                                             </div>
                                         </form>
@@ -132,12 +131,44 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
         <script>
+
+            // Fungsi untuk menyimpan data produk ke dalam localStorage
+function saveProductData() {
+    var productData = [];
+    $('.product-item').each(function() {
+        var productSelect = $(this).find('.product-select');
+        var quantityInput = $(this).find('.quantity-input');
+        var productId = productSelect.val();
+        var quantity = quantityInput.val();
+        productData.push({ productId: productId, quantity: quantity });
+    });
+    localStorage.setItem('productData', JSON.stringify(productData));
+}
+
+$(document).ready(function() {
+    // ...
+
+    // Event handler untuk menambah produk
+    $('.add-product').click(function() {
+        // ...
+        saveProductData();
+    });
+
+    // Event handler untuk menghapus produk
+    $(document).on('click', '.remove-product', function() {
+        // ...
+        saveProductData();
+    });
+
+    // ...
+});
+
     $(document).ready(function() {
         var counter = 0; // Set counter sesuai dengan jumlah produk yang ada
-
-
         
+
         $('#role').change(function() {
             var roleId = $(this).val();
             $.ajax({
@@ -155,6 +186,7 @@
             });
         });
 
+
         $('.add-product').click(function() {
             var productContainer = $('#product-container');
             var productItem = $('<div class="product-item">');
@@ -170,6 +202,7 @@
 
             var counterElement = $('<span class="counter">' + (counter + 1) + '</span>');
 
+            
             productSelect.attr('name', `produk[]`);
             quantityInput.attr('name', `qty_produk[]`);
 
@@ -199,55 +232,116 @@
             productItem.append('<div style="margin-top: 40px;"></div>');
 
             productSelect.attr('data-selected', productSelect.val());
-
-
             counter++;
-            $('.product-select').each(function() {
-        var selectedOption = $(this).find('option:selected');
-        $(this).attr('data-selected', selectedOption.val());
-    });
+
+            saveProductData();
+        
         });
+        
+        $('.product-select').each(function() {
+        var selectedOption = $(this).attr('data-selected');
+        if (selectedOption) {
+            $(this).val(selectedOption);
+        }
+    });
 
         $(document).on('click', '.remove-product', function() {
             var productContainer = $('#product-container');
             
-            if (productContainer.children('.product-item').length > 1) {
+            if (productContainer.children('.product-item').length > 1) { 
                 $(this).closest('.product-item').remove();
+
+                counter--;
             } else {
                 alert("Anda tidak dapat menghapus produk pertama.");
             }
+
+            saveProductData();
         });
     
 
-    $('#form-id').submit(function(event) {
-        var valid = true;
-        var selectedProducts = []; // Array untuk menyimpan produk yang sudah dipilih
-        
-        $('.product-item').each(function(index) {
-            var productSelect = $(this).find('.product-select');
-            var quantityInput = $(this).find('.quantity-input');
+        $('#form-id').submit(function(event) {
+    var valid = true;
+    var selectedProducts = [];
 
-            if (productSelect.val() === '' || quantityInput.val() === '') {
-                valid = false;
-                return false; // Keluar dari loop jika salah satu tidak valid
-            }
+    let roleSelect = document.forms["form-id"]["role"].value;
+    if (roleSelect == "") {
+        alert("Kode role tidak boleh kosong");
+        return false;
+    }
+    // Validasi input Judul Paket
+    var judulPaketInput = $('input[name="judul_paket"]');
+    if (judulPaketInput.val() === '') {
+        valid = false;
+        alert("Judul paket tidak boleh kosong.");
+        return false;
+    }
 
-            var selectedProductId = productSelect.val();
-            if (selectedProducts.includes(selectedProductId)) {
-                valid = false;
-                alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
-                return false; // Keluar dari loop jika produk sudah dipilih sebelumnya
-            } else {
-                selectedProducts.push(selectedProductId);
-            }
-        });
+    // Validasi input Deskripsi Paket
+    var deskripsiPaketTextarea = $('textarea[name="deskripsi_paket"]');
+    if (deskripsiPaketTextarea.val() === '') {
+        valid = false;
+        alert("Deskripsi paket tidak boleh kosong.");
+        return false;
+    }
+    var productSelect = $(this).find('.product-select');
+var productValue = productSelect.val();
 
-        if (!valid) {
-            event.preventDefault(); // Mencegah form disubmit jika ada input yang tidak valid
-            // alert("Silahkan masukan produk dan quantity nya.");
+if (!productValue) { // Periksa apakah productValue falsy, termasuk null
+    valid = false;
+    alert("Silakan pilih produk.");
+    return false;
+}
+     var quantityInput = $(this).find('.quantity-input');
+    var quantityValue = quantityInput.val();
+        if (quantityValue === '') {
+            valid = false;
+            alert("Quantity produk tidak boleh kosong.");
+            return false;
         }
-    });
+    // Validasi input Kode Role (role_id)
+    // Validasi produk
+    $('.product-item').each(function(index) {
+    
+        var productSelect = $(this).find('.product-select');
+var productValue = productSelect.val();
+
+if (!productValue) { // Periksa apakah productValue falsy, termasuk null
+    valid = false;
+    alert("Silakan pilih produk.");
+    return false;
+}
+
+
+   
+
+    var quantityInput = $(this).find('.quantity-input');
+    var quantityValue = quantityInput.val();
+    if (quantityValue === '') {
+        valid = false;
+        alert("Quantity produk tidak boleh kosong.");
+        return false;
+    }
+
+    var selectedProductId = productSelect.val();
+    if (selectedProducts.includes(selectedProductId)) {
+        valid = false;
+        alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
+        return false;
+    } else {
+        selectedProducts.push(selectedProductId);
+    }
 });
+
+    // Tambahkan console.log di sini
+    if (!valid) {
+        event.preventDefault();
+    }
+});
+
+});
+
     
 </script>
+
 @endsection

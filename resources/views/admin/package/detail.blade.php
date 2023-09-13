@@ -20,7 +20,7 @@
     <thead>
         <tr>
             <th>Nama Produk</th>
-            <th>Qty Produk</th>
+            <th>Quantity Produk</th>
             
         </tr>
     </thead>

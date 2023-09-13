@@ -14,6 +14,21 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     public function detailproduct($id) {
+        // Ambil data dari tabel PackageIncome berdasarkan id
+        $data = Product::find($id);
+    
+        // Ambil semua data dari tabel PackageDetail
+    
+        // Ambil data produk yang terhubung dengan tabel PackageDetail
+    
+        return view('admin.product.detail', [
+            'data' => $data,
+            
+        ]);
+    }
     public function index()
     {
 
@@ -52,38 +67,49 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
+       
         
-        
-        $validator = Validator::make($request->all(), [
-            'role_id' => 'required',
-            'nama_produk' => 'required|unique_per_role:nama_produk,role_id,' . $request->role_id,
-            'poin_produk' => 'required|numeric|min:0',
-            
-            'gambar_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
-                        'deskripsi_produk' => 'required',
+  // Validasi
+$request->validate([
+    'role_id' => 'required',
+    'nama_produk' => [
+        'required',
+        'string',
+        // Validasi kustom untuk memeriksa nama produk yang sama dengan role yang sama
+        function ($attribute, $value, $fail) use ($request) {
+            $existingProduct = Product::where('nama_produk', $value)
+                ->where('role_id', $request->input('role_id'))
+                ->first();
 
-        ], [
-            'role_id.required' => 'Pilih role terlebih dahulu.', 
-            'nama_produk.required' => 'Input nama produk dahulu',
-            'nama_produk.unique_per_role' =>'Nama Produk tidak boleh sama',
-            'poin_produk.required' => 'Input poin terlebih dahulu',
-            'poin_produk.min' => 'Poin Produk tidak boleh bilangan negatif',
-                        'gambar_produk.required' => 'Pilih gambar produk untuk diunggah.',
-            'gambar_produk.image' => 'File harus berupa gambar.',
-            'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
-            'gambar_produk.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
-            'deskripsi_produk.required' => 'Input Deskripsi produk terlebih dahulu',
-
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                ->route('admin.product.create')
-                ->withErrors($validator)
-                ->withInput()
-                ->with('gambar_produk_path', $request->file('gambar_produk')->store('public/products'));
+            if ($existingProduct) {
+                $fail('Nama produk ini sudah digunakan untuk role yang sama.');
             }
+        },
+    ],
+    'poin_produk' => 'required',
+    'gambar_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
+    'deskripsi_produk' => 'required',
+], [
+    'role_id.required' => 'Pilih role terlebih dahulu.', 
+    'nama_produk.required' => 'Input nama produk dahulu',
+    'poin_produk.required' => 'Input poin produk dahulu',
+    'gambar_produk.required' => 'Upload Gambar Produk dahulu.',
+    'gambar_produk.image' => 'File harus berupa gambar.',
+    'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+    'gambar_produk.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
+    'deskripsi_produk.required' => 'Input Deskripsi produk terlebih dahulu',
+]);
 
+// Simpan gambar_produk dalam session jika validasi gagal
+if ($request->session()->has('errors')) {
+    $gambarProduk = $request->file('gambar_produk'); // Mendapatkan file gambar dari permintaan
+    $request->session()->put('gambar_produk', $gambarProduk);
+    return redirect()->back()->withInput();
+}
+
+
+    
+        
         $nm = $request->gambar_produk;
         $namaFile = $nm->getClientOriginalName();
 
@@ -102,17 +128,26 @@ class ProductController extends Controller
 
         $nm->move(public_path().'/img', $namaFile);
         $dtProduk->save();
+        $request->session()->forget('gambar_produk');
+
 
         $request->session()->flash('success', 'Produk berhasil ditambahkan.');
 
-        return redirect(route('admin.product.index'));
+        return redirect(route('admin.product.index'))->withInput();
 
         // dd($request->all());
 
 
 
     }
-
+    public function restoreFileInput(Request $request)
+    {
+        // Periksa jika ada nama file yang sudah diunggah sebelumnya dalam session atau database
+        $gambarProdukPath = session('gambar_produk_path') ?? '';
+    
+        return response()->json(['gambar_produk' => $gambarProdukPath]);
+    }
+    
     public function tampilproduct ($id){
         $data = Product::find($id);
       

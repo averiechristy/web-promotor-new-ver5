@@ -78,32 +78,7 @@
         </div>
     </div>
 <!-- Modal -->
-<div class="modal" id="changeProfilePhotoModal" tabindex="-1" aria-labelledby="changeProfilePhotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('update-avatar') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changeProfilePhotoModalLabel">Change Profile Photo</h5>
-                </div>
-                <div class="modal-body">
-                    <input type="file" name="avatar" id="avatar-input">
-                    <div class="mt-2">
-                        <img id="avatar-preview" src="{{ asset('img/' . auth()->user()->avatar) }}" alt="Preview" style="max-width: 100px; max-height: 100px;">
-                    </div>
-                    <div id="success-message" class="text-success d-none">Profile photo updated successfully!</div>
-                    @if($errors->has('avatar'))
-                        <p class="text-danger">{{ $errors->first('avatar') }}</p>
-                    @endif
-                </div>
-                <div class="modal-footer">   
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload Photo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

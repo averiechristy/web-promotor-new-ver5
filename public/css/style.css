@@ -161,6 +161,7 @@ h6,
   text-decoration: none;
 }
 
+
 #header .logo img {
   padding: 0;
   margin: 0;
@@ -412,7 +413,7 @@ h6,
 #hero {
   width: 100%;
   height: 70vh;
-  background: #E2FADA;
+  background: #C9FFB7;
   border-bottom: 2px solid #fcebe3;
   margin: 72px 0 -72px 0;
 }
@@ -874,6 +875,7 @@ line-height: normal;
   }
 }
 
+
 /*--------------------------------------------------------------
 # Contact Us
 --------------------------------------------------------------*/
@@ -881,7 +883,7 @@ line-height: normal;
 
 
 .contact {
-  background-color:#E2FADA;
+  background-color:#C9FFB7;
 }
 
 
