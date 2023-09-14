@@ -52,13 +52,19 @@ class UserRoleController extends Controller
         'kode_role.unique' => 'Kode Role sudah digunakan.',
         'jenis_role.required' => 'Masukan Jenis Role terlebih dahulu.', 
     ]);
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
 
     
+    // $createdBy = auth()->user()->id;
 
     UserRole::create([
         'akses_id'=> $request->akses_id,
         'kode_role'=> $request->kode_role,
         'jenis_role'=> $request->jenis_role,
+        'created_by' => $loggedInUsername,
+        
+        
     ]);
 
     $request->session()->flash('success', 'User Role berhasil ditambahkan.');
@@ -98,9 +104,15 @@ class UserRoleController extends Controller
         ]);
         
         $data = UserRole::find($id);
+        // $updatedBy = auth()->user()->id;
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+
         $data->akses_id    = $request->akses_id;
         $data->kode_role = $request->kode_role;
         $data->jenis_role  = $request->jenis_role;
+        $data->updated_by = $loggedInUsername;
+
        
  
         $data->save();

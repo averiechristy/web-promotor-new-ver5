@@ -30,8 +30,11 @@ class User extends Authenticatable
         'avatar',
         'number',
         'kode_user',
+        'created_by',
+        'updated_by',
     ];
 
+    
     public function Akses()
     {
 
@@ -82,6 +85,19 @@ public static function boot()
         $model->number = static::where('role_id', $model->role_id)->max('number') + 1;
         $model->kode_user = $roleId . $dateFormatted . str_pad($model->number, 3, '0', STR_PAD_LEFT);
     });
+
+  
+    
+        // Event "updating" dipicu ketika entitas diperbarui
+        static::updating(function ($item) {
+            // Ambil ID pengguna yang saat ini sedang masuk
+            $loggedInUser = auth()->user();
+            $loggedInUsername = $loggedInUser->nama; 
+        
+            // Set kolom "updated_by" dengan ID pengguna yang sedang masuk
+            $item->updated_by = $loggedInUsername;
+        });
+    
 }
 
 public function isAdmin()
@@ -89,6 +105,11 @@ public function isAdmin()
     $jenis_akses = $this->Akses->jenis_akses;
     return strtoupper($jenis_akses) === 'ADMIN';
 }
+public function createdByUser()
+{
+    return $this->belongsTo(User::class, 'created_by');
+}
+
 
 
 // app/Models/User.php
@@ -116,6 +137,7 @@ public function deleteAvatar()
         $this->setDefaultAvatar();
     }
 }
+
 
 
 }

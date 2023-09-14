@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artikel;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
@@ -28,8 +29,11 @@ class ArtikelController extends Controller
     public function index()
     {
         $dtArtikel = Artikel::all();
+        $createdBy = User::all();
+
         return view('admin.artikel.index', [
-            'dtArtikel' => $dtArtikel
+            'dtArtikel' => $dtArtikel,
+            'createdBy' => $createdBy,
         ]);
     }
 
@@ -67,11 +71,14 @@ class ArtikelController extends Controller
           $nm = $request->gambar_artikel;
         $namaFile = $nm->getClientOriginalName();
 
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; // Ganti "name" sesuai dengan kolom yang sesuai di tabel pengguna.
+        
         $dtArtikel = new Artikel;
         $dtArtikel->judul_artikel = $request->judul_artikel;
         $dtArtikel->isi_artikel = $request->isi_artikel;
         $dtArtikel->gambar_artikel = $namaFile;
-
+        $dtArtikel->created_by = $loggedInUsername; 
 
         $nm->move(public_path().'/img', $namaFile);
         $dtArtikel->save();
@@ -134,11 +141,15 @@ class ArtikelController extends Controller
              $ubah->update(['gambar_artikel' => $filename]);
          }
      
+         $loggedInUser = auth()->user();
+         $loggedInUsername = $loggedInUser->nama; // Ganti "name" dengan kolom yang sesuai di tabel pengguna.
+         
          // Update informasi lainnya
          $dtProduk = [
              
              'judul_artikel' => $request->judul_artikel,
              'isi_artikel' => $request->isi_artikel,
+             'updated_by' => $loggedInUsername, 
              
          ];
      

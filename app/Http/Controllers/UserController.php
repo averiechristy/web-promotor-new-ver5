@@ -72,6 +72,10 @@ class UserController extends Controller
             'email.email' => 'Format email tidak valid.',
 
         ]);
+
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+
         User::create([
             'akses_id'=> $request->akses_id,
             'role_id'=> $request->role_id,
@@ -82,6 +86,7 @@ class UserController extends Controller
            'phone_number'=> $request->phone_number,
             'number' => $request->number,
             'kode_user' => $request->kode_user,
+            'created_by' => $loggedInUsername,
             
 
         ]);

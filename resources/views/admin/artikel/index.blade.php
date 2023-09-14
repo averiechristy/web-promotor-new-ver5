@@ -25,6 +25,10 @@
                                             <th>Judul Artikel</th>
                                             <th>Gambar Artikel</th>
                                             <th>Isi Artikel</th>
+                                            <th>Created At </th>
+                                            <th>Created By </th>
+                                            <th>Updated At </th>
+                                            <th>Updated By</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -64,6 +68,21 @@
                                             <a href="{{ route('detailartikel', $item->id) }}"><button type="button" class="btn btn-link">
     Lihat Isi Artikel
 </button></a>
+<td>{{$item->created_at}}</td>
+<td>            @if ($item->created_by)
+                {{ $item->created_by}}
+            @else
+                User tidak terdeteksi
+            @endif
+</td>
+                                                <td>{{$item->updated_at}}</td>
+                                                <td>            @if ($item->updated_by)
+                {{ $item->updated_by }}
+            @else
+                Belum ada pembaruan
+            @endif
+</td>
+
                                             <td> 
                                                <div class="row">
                                                <a href="{{route('tampilartikel', $item->id)}}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 

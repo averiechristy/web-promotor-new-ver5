@@ -113,7 +113,9 @@ if ($request->session()->has('errors')) {
         $nm = $request->gambar_produk;
         $namaFile = $nm->getClientOriginalName();
 
-        
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+
 
         $dtProduk = new Product;
         $dtProduk->nama_produk = $request->nama_produk;
@@ -122,6 +124,7 @@ if ($request->session()->has('errors')) {
         $dtProduk->deskripsi_produk = $request->deskripsi_produk;
         $dtProduk->number = $request->number;
         $dtProduk->kode_produk = $request->kode_produk;
+        $dtProduk->created_by = $loggedInUsername;
 
         $dtProduk->gambar_produk = $namaFile;
 
@@ -205,12 +208,16 @@ if ($request->session()->has('errors')) {
              $ubah->update(['gambar_produk' => $filename]);
          }
      
+         $loggedInUser = auth()->user();
+         $loggedInUsername = $loggedInUser->nama; 
+ 
          // Update informasi lainnya
          $dtProduk = [
              'role_id' => $request->role_id,
              'nama_produk' => $request->nama_produk,
              'poin_produk' => $request->poin_produk,
              'deskripsi_produk' => $request->deskripsi_produk,
+             'updated_by' => $loggedInUsername,
          ];
          
          // Jika tidak ada perubahan file gambar, gunakan gambar yang lama

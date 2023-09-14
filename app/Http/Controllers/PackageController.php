@@ -92,12 +92,15 @@ class PackageController extends Controller
         ]);
         
         
-        
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+
       
         $dtPackage = new PackageIncome;
         $dtPackage->judul_paket = $request->judul_paket;
         $dtPackage->role_id = $request->role_id;
         $dtPackage->deskripsi_paket = $request->deskripsi_paket;
+        $dtPackage->created_by = $loggedInUsername;
         $dtPackage->save();
     
         $packageDetails = [];
@@ -180,11 +183,14 @@ return view('admin.package.edit')->with([
     $request->session()->put('selected_products', $selectedProductsArray);
        // Ambil data paket berdasarkan ID
     $dtPackage = PackageIncome::find($id);
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
 
     // Update data paket dengan nilai baru dari form
     $dtPackage->judul_paket = $request->judul_paket;
     $dtPackage->role_id = $request->role_id;
     $dtPackage->deskripsi_paket = $request->deskripsi_paket;
+    $dtPackage->updated_by = $loggedInUsername;
     
     $dtPackage->save();
 

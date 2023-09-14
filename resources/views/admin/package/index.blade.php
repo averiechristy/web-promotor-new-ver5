@@ -25,6 +25,12 @@
             <th>Judul Paket</th>
             <th>Deskripsi Paket</th>
             <th>Produk</th>
+            <th>Created At </th>
+            <th>Created By</th>
+
+             <th>Updated At </th>
+             <th>Updated By </th>
+
             <th>Action</th>
         </tr>
     </thead>
@@ -41,6 +47,19 @@
     Lihat Detail Produk
 </button></a>
 </td>
+<td>{{ $item->created_at }}</td>
+<td> @if ($item->created_by)
+                {{ $item->created_by }}
+            @else
+                User tidak terdeteksi
+            @endif</td>
+<td>{{ $item->updated_at }}</td>
+<td> @if ($item->updated_by)
+                {{ $item->updated_by }}
+            @else
+                Belum ada pembaruan
+            @endif</td>
+
                 <td>
                     <div class="row">
                         <a href="{{ route('tampilpackage', $item->id) }}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange"></i></a>

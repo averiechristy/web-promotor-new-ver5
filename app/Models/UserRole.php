@@ -14,6 +14,8 @@ class UserRole extends Model
         'akses_id',
         'kode_role',
         'jenis_role',
+        'created_by',
+        'updated_by',
         
     ];
 
@@ -40,6 +42,32 @@ class UserRole extends Model
 
         return $this->belongsTo(Akses::class);
     }
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
+    public static function boot()
+    {
+        parent::boot();
+    
+        // Event "updating" dipicu ketika entitas diperbarui
+        static::updating(function ($item) {
+            // Ambil ID pengguna yang saat ini sedang masuk
+            $loggedInUser = auth()->user();
+            $loggedInUsername = $loggedInUser->nama; 
+        
+            // Set kolom "updated_by" dengan ID pengguna yang sedang masuk
+            $item->updated_by = $loggedInUsername;
+        });
+    }
+    
+    
+        
+    
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
 }

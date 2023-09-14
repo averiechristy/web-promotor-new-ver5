@@ -34,8 +34,14 @@
                                             <th>Kode Role</th>
                                             <th>Jenis Role</th>
                                             <th>Akses</th>
-                                            <th>Action</th>
+                                            <th>Created At </th>
+                                            <th>Created By </th>
+                                            <th>Updated At </th>
+                                            <th>Updated By</th>
+
                                            
+                                            <th>Action</th>
+                                          
                                         </tr>
                                     </thead>
                                     
@@ -48,6 +54,18 @@
                                             <td>{{$item->kode_role}}</td>
                                             <td>{{$item->jenis_role}}</td>
                                             <td>{{ $item->Akses->jenis_akses }}</td>
+                                            <td>{{$item->created_at}}</td>
+                                            <td>   @if ($item->created_by)
+                {{ $item->created_by }}
+            @else
+                User tidak terdeteksi
+            @endif</td>
+                                            <td>{{$item->updated_at}}</td>
+<td>    @if ($item->updated_by)
+                {{ $item->updated_by }}
+            @else
+                Belum ada pembaruan
+            @endif</td>
                                             <td> 
                                             <div class="row">
                                                                <a href="{{route('tampildata', $item->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
