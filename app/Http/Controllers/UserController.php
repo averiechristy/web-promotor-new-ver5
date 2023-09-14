@@ -150,13 +150,15 @@ public function resetPassword(User $user, Request $request)
     ]);
 
     $data = User::find($id);
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $data->akses_id = $request->akses_id;
     $data->role_id = $request->role_id;
     $data->nama = $request->nama;
     $data->username = $request->username;
     $data->email = $request->email;
     $data->phone_number = $request->phone_number;
+    $data->updated_by = $loggedInUsername;
 
     $data->save();
 

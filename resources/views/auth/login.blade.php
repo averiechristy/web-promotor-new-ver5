@@ -50,7 +50,7 @@
                                         <div class="form-group">
                                         <input type="text" name="username" class="form-control form-control-user @error('username') is-invalid @enderror"
                                                 id="username" aria-describedby="emailHelp"
-                                                placeholder="Masukan Kode Sales / Username" autofocus required value="{{old('username')}}">
+                                                placeholder="Masukan Kode Sales / NIK" autofocus required value="{{old('username')}}">
                                                 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
