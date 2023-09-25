@@ -8,11 +8,13 @@ use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KontakController;
+use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
 use App\Http\Controllers\UserController\UserIncomeController;
+use App\Http\Controllers\UserController\UserLeaderboardController;
 use App\Http\Controllers\UserController\UserPaketController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
@@ -175,6 +177,11 @@ Route::delete('/deleteproduct/{id}', [ProductController::class, 'destroy'])->nam
 
 Route::post('/restore-file-input', [ProductController::class,'restoreFileInput'])->name('restore-file-input');
 
+Route::get('admin/leaderboard/index', [LeaderBoardController::class, 'index'])->name('admin.leaderboard.index');
+
+Route::get('/export-excel', [LeaderBoardController::class,'exportExcel'])->name('export.excel');
+Route::post('/import-excel', [LeaderBoardController::class,'importDataFromExcel'])->name('import.excel');
+Route::post('/get-leaderboard-data',[ LeaderBoardController::class,'getLeaderboardData'])->name('get.leaderboard.data');
 
 
 
@@ -249,6 +256,9 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
 Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
 Route::get('user/kalkulator', [KalkulatorController::class,'index'])->name('user.kalkulator');
 Route::post('/calculate', [KalkulatorController::class,'calculate'])->name('calculate');
+
+Route::get('user/leaderboard', [UserLeaderboardController::class,'index'])->name('user.leaderboard');
+
 
 
 });

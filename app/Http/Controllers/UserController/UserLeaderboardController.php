@@ -3,33 +3,25 @@
 namespace App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Controller;
-use App\Models\Artikel;
 use App\Models\LeaderBoard;
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class UserLeaderboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // $artikel = Artikel::all();
+        $userRole = Auth::user()->role_id;
+        $leaderboardData = LeaderBoard::getLeaderboardUser($userRole);
 
-        $artikel= Artikel::orderBy('created_at', 'desc')->paginate(6); // Ubah 10 dengan jumlah data per halaman yang Anda inginkan
-        $userRole = Auth::user()->role_id; // Mengambil peran pengguna yang login
-        $leaderboardData = Leaderboard::getLeaderboardForRole($userRole);
-        
-
-        return view('user.home',[
-            'artikel' => $artikel,
+        return view('user.leaderboard',[
             'leaderboardData' => $leaderboardData
 
         ]);
     }
-
-    
 
     /**
      * Show the form for creating a new resource.
@@ -78,6 +70,4 @@ class HomeController extends Controller
     {
         //
     }
-
-    
 }

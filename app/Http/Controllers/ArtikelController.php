@@ -83,7 +83,7 @@ class ArtikelController extends Controller
         $nm->move(public_path().'/img', $namaFile);
         $dtArtikel->save();
 
-        $request->session()->flash('success', 'Artikel berhasil ditambahkan.');
+        $request->session()->flash('success', 'Promo berhasil ditambahkan.');
 
         return redirect(route('admin.artikel.index'));
     }
@@ -162,7 +162,7 @@ class ArtikelController extends Controller
          $ubah->update($dtProduk);
      
          // Flash message
-         $request->session()->flash('success', "Artikel berhasil diupdate.");
+         $request->session()->flash('success', "Promo berhasil diupdate.");
      
          // Redirect
          return redirect(route('admin.artikel.index'));
@@ -193,7 +193,7 @@ class ArtikelController extends Controller
        $artikel = Artikel::find($id);
        $artikel->delete();
 
-        $request->session()->flash('error', "Artikel berhasil dihapus.");
+        $request->session()->flash('error', "Promo berhasil dihapus.");
 
         return redirect(route('admin.artikel.index'));
     }

@@ -6,7 +6,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Artikel</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Promo</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -22,9 +22,9 @@
                                     <thead>
                                         <tr>
                                            
-                                            <th>Judul Artikel</th>
-                                            <th>Gambar Artikel</th>
-                                            <th>Isi Artikel</th>
+                                            <th>Judul Promo</th>
+                                            <th>Gambar Promo</th>
+                                            <th>Isi Promo</th>
                                             <th>Created At </th>
                                             <th>Created By </th>
                                             <th>Updated At </th>
@@ -66,7 +66,7 @@
                                             </td>
                                             <td>
                                             <a href="{{ route('detailartikel', $item->id) }}"><button type="button" class="btn btn-link">
-    Lihat Isi Artikel
+    Lihat Isi Promo
 </button></a>
 <td>{{$item->created_at}}</td>
 <td>            @if ($item->created_by)

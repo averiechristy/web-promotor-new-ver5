@@ -41,6 +41,13 @@ class User extends Authenticatable
         return $this->belongsTo(Akses::class);
     }
 
+
+    public function LeaderBoard()
+    {
+
+        return $this->hasMany(LeaderBoard::class);
+    }
+
     public function Role()
     {
 

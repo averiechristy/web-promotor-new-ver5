@@ -24,7 +24,10 @@
       <li><a class="dropdown-item" href="{{route ('user.package')}}">Paket Pendapatan</a></li>
      
     </ul>
-  </li>          <li><a class="nav-link scrollto" href="{{route('user.artikel')}}">Article</a></li>
+  </li>      
+  
+  <li><a class="nav-link scrollto" href="{{route('user.artikel')}}">Promo</a></li>
+  <li><a class="nav-link scrollto" href="{{route('user.leaderboard')}}">Leaderboard</a></li>
           <li><a class="nav-link scrollto" href="{{route('user.contact')}}">Contact Us</a></li>
           
           <li><p class="nav-link scrollto" style="margin-top:13px; margin-left:13px;" >Welcome,  {{ Auth::user()->nama }}!</p></li>

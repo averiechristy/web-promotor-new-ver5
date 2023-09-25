@@ -25,6 +25,12 @@ class UserRole extends Model
         return $this->hasMany(User::class);
     }
 
+    public function LeaderBoard()
+    {
+
+        return $this->hasMany(LeaderBoard::class);
+    }
+
     public function Product()
     {
 

@@ -14,7 +14,7 @@
     <hr class="sidebar-divider my-0" style="border-color: #01004C; border-radius: 5px;">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ Request::is('admin/dashboard/index') ? 'active' : '' }} ">
         <a class="nav-link" href="{{route('admin.dashboard.index')}}">
             <i class="fas fa-fw fa-tachometer-alt" style="color: #01004C"></i>
             <span style="color: #01004C">Dashboard</span></a>
@@ -26,7 +26,7 @@
     
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
+    <li class="nav-item {{ Request::is('admin/userrole/index') || Request::is('admin/userrole/create') || Request::is('/tampildata/{id}') ? 'active' : '' }} ">
         <a class="nav-link" href="{{route('admin.userrole.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-user" style="color: #01004C"></i>
@@ -35,7 +35,7 @@
         
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item {{ Request::is('admin/useraccount/index') || Request::is('admin/useraccount/create') ? 'active' : '' }}">
         <a class="nav-link " href="{{route('admin.useraccount.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-address-card" style="color: #01004C"></i>
@@ -44,7 +44,7 @@
         
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item {{ Request::is('admin/product/index') || Request::is('admin/product/create') ? 'active' : '' }}">
         <a class="nav-link " href="{{route('admin.product.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-box" style="color: #01004C"></i>
@@ -53,7 +53,7 @@
         
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item {{ Request::is('admin/package/index') || Request::is('admin/package/create')  ? 'active' : '' }}">
         <a class="nav-link " href="{{route('admin.package.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-money-bill-wave-alt" style="color: #01004C"></i>
@@ -62,25 +62,23 @@
         
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item {{ Request::is('admin/artikel/index') || Request::is('admin/artikel/create')  ? 'active' : '' }}">
         <a class="nav-link " href="{{route('admin.artikel.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="far fa-newspaper" style="color: #01004C"></i>
-            <span style="color: #01004C">Artikel</span>
+            <span style="color: #01004C">Promo</span>
         </a>
         
     </li>
 
   
 
-    <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.contact-us.index') }}" data-toggle="" data-target="#collapseContact"
+    <li class="nav-item {{ Request::is('admin/leaderboard/index')  ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.leaderboard.index') }}" data-toggle="" data-target="#collapseContact"
                 aria-expanded="true" aria-controls="collapseContact">
-                <i class="fas fa-envelope" style="color: #01004C"></i>
-                <span style="color: #01004C">Kontak Kami</span>
-                @if ($unreadContacts > 0)
-                    <span class="badge badge-danger">{{ $unreadContacts }}</span>
-                @endif
+                <i class="fa fa-trophy" style="color: #01004C"></i>
+                <span style="color: #01004C">Leaderboard</span>
+               
             </a>
         </li>
     <!-- Nav Item - Utilities Collapse Menu -->

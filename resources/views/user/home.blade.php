@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img">
-          <img src="{{asset('img/banner.png')}}" class="img-fluid animated" alt="">
+          <img src="{{asset('img/banner.png')}}" class="img-fluid" alt="">
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
         <h3>Income</h3>
         <h5 data-aos-delay="100" align-items-center>
           Pilih cara untuk atur pendapatanmu
-</h5>
+        </h5>
         <div class="row">
           <div class="col-md-6 mb-3">
             <div class="card" data-aos-delay="100">
@@ -68,7 +68,7 @@
 
         <div class="section-title">
           <h2></h2>
-          <p>Artikel</p>
+          <p>Promo</p>
         </div>
 <!--  -->
 
@@ -92,7 +92,7 @@
           @endforeach
 
           <div class="more-button">
-      <button class="btn-lain"><a href="{{route('user.artikel')}}">Lihat artikel lebih banyak</a></button>
+      <button class="btn-lain"><a href="{{route('user.artikel')}}">Lihat promo lebih banyak</a></button>
     </div>
 
         </div>
@@ -102,7 +102,110 @@
     
 <!-- End About Section -->
 
+<!-- Leaderboard Section -->
 
+
+<section id="leaderboard" class="leaderboard">
+  <div class="container">
+    <div class="section-title">
+      <h2>
+      3 Besar Ranking per tanggal {{ now()->subDay()->format('d-m-Y') }}
+      </h2>
+      <p>Leaderboard</p>
+    </div>
+    @if (count($leaderboardData) > 0)
+    <div class="row">
+    @foreach ($leaderboardData as $leader)
+        <div class="col-lg-4 col-md-6 @if ($loop->first) col-lg-offset-4 @endif">
+            <div class="leaderboard-card @if ($loop->first) leaderboard-first @endif">
+                <div class="leaderboard-rank">
+                    <span class="rank-number">#{{ $loop->iteration }}</span>
+                </div>
+                <div class="leaderboard-avatar">
+    <!-- Cek apakah ada gambar avatar sesuai dengan nama user -->
+    @if ($leader->user)
+        @if ($leader->user->avatar)
+            <img src="{{ asset('img/' . $leader->user->avatar) }}" alt="{{ $leader->nama }} Avatar" width="100" height="100" style="border-radius:100%;">
+        @else
+            <!-- Jika tidak ada avatar, Anda bisa menampilkan gambar default di sini -->
+            <img src="{{ asset('img/default-profile.jpg') }}" alt="Default Avatar" width="100" height="100"  style="border-radius:100%;">
+        @endif
+    @else
+        <!-- Jika tidak ada data pengguna yang sesuai, Anda bisa menampilkan gambar default di sini -->
+        <img src="{{ asset('img/default-profile.jpg') }}" alt="Default Avatar" width="100" height="100"  style="border-radius:100%;">
+    @endif
+</div>
+
+                <div class="leaderboard-info">
+                    <h4>{{ $leader->nama }}</h4>
+                    <p>Total Poin: {{ $leader->total }}</p>
+                    
+          <?php
+    $formattedHasil = 'Rp. ' . number_format($leader->income, 0, ',', '.') . ',-';
+    ?>
+          <p>Pendapatan : {{ $formattedHasil }}</p>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+@else
+<p style="text-align: center;">Tidak ada data leaderboard yang tersedia saat ini.</p>
+            @endif
+
+<style>
+    .leaderboard-card {
+        border: 2px solid #01004C; /* Warna border kartu */
+        padding: 20px;
+        text-align: center;
+        background-color: #f8f9fa; /* Warna latar belakang kartu */
+        border-radius: 8px;
+    }
+
+    .leaderboard-first {
+        /* Gaya kartu untuk peringkat pertama */
+        border: 4px solid #FFD700; /* Warna border lebih tebal untuk peringkat pertama */
+        padding: 20px; /* Lebih besar padding untuk peringkat pertama */
+        background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
+    }
+
+    .leaderboard-rank {
+        font-size: 36px; /* Ukuran angka rank yang lebih besar */
+        color: #01004C; /* Warna angka rank */
+    }
+
+    .rank-number {
+        font-weight: bold; /* Membuat angka rank lebih tebal */
+    }
+
+    /* Menggunakan Flexbox untuk mengatur kartu secara horizontal */
+    .row {
+        display: flex;
+        justify-content: center; /* Mengatur kartu di tengah secara horizontal */
+    }
+
+    /* Mengatur offset kolom untuk peringkat pertama */
+    .col-lg-offset-4 {
+        margin-left: auto; /* Geser peringkat pertama ke tengah */
+    }
+</style>
+
+
+
+
+      <!-- Akhiri daftar leaderboard -->
+
+      <!-- Tombol untuk melihat lebih banyak -->
+      <div class="col-12 text-center mt-4">
+        <button class="btn-lain"><a href="{{route ('user.leaderboard')}}">Lihat daftar ranking</a></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- End Leaderboard Section -->
 
     <!-- ======= Contact Us Section ======= -->
     <section id="contact" class="contact d-flex align-items-center">
@@ -112,7 +215,6 @@
           <div class="col-lg-5 d-flex align-items-stretch">
             <div class="contact-text">
               <h2>Contact Us</h2>
-              <i class="fa fa-phone circle-icon" style="font-size:32px ; color: #FF9029;" > <p> +12345678 </p></i> <br>
               <i class="fa fa-envelope circle-icon1" style="font-size:28px ; color: #FF9029;" > <p> loremipsum@gmail.com </p></i>
                  </div>
 
@@ -160,7 +262,7 @@
                                                     <p class="text-danger">{{$errors->first('message')}}</p>
                                                 @endif
               </div>
-              
+              <input type="hidden" name="user_email" value="{{ Auth::user()->email }}">
               <div class="text-center">
                 <button type="submit" >Send</button></div>
             </form>
@@ -169,6 +271,9 @@
 
       </div>
     </section><!-- End Contact Us Section -->
+
+
+    
 
   </main><!-- End #main -->
 

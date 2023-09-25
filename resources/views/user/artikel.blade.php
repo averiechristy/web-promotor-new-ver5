@@ -31,24 +31,12 @@
 </a>
           </div>
           @endforeach
-
-       
-
         </div>
-
       </div>
     </section><!-- End Portfolio Section -->
 
   
-  
-<footer id="footer" style="height:5px;" class ="d-flex align-items-center">
-    <div class="container py-4">
-      <div class="copyright mt-5">
-        &copy; 2023 by <strong><span>PT. Exa Mitra Solusi</span></strong>. 
-      </div>
-      
-    </div>
-  </footer><!-- End Footer -->
+
 
 </main>
 @endsection
