@@ -36,6 +36,8 @@
         <i class="bi bi-chevron-down"></i>
     </a>
     <ul>
+    <li><a href="{{ route('user.myincome') }}">Pendapatan Saya</a></li>
+
         <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
         <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
         <li>

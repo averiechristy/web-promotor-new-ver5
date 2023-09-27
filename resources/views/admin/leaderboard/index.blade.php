@@ -29,6 +29,7 @@
             
             @endif
             @endforeach
+
         </select>
     </div>
 
@@ -46,6 +47,7 @@
 @include('components.alert')
 
 <input class="form" id="formFileSm" type="file" name="file" style="display: none;" required>
+
 </div>
 
 <button type="submit" class="btn btn-primary btn-sm" style="display: none;">Import Data</button>
@@ -60,6 +62,21 @@
         <table id="myDataTable" class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
         <thead>
             
+        <div style="display: flex; align-items: center;">
+        <div class="form-group" style="margin-right: 10px;">
+            <label for="start_date">Tanggal Mulai</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" >
+        </div>
+
+        <div class="form-group" style="margin-right: 10px;">
+            <label for="end_date">Tanggal Akhir</label>
+            <input type="date" id="end_date" name="end_date" class="form-control" >
+        </div>
+
+        <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterData()">Filter Data</button>
+    </div>
+
+            
             <tr>
                 <th>Role</th>
                 <th>Nama</th>
@@ -73,7 +90,7 @@
         </thead>
 
       <!-- Di dalam file Blade Anda -->
-<tbody id="tableBody">
+    <tbody id="tableBody">
     @php
     $roleCounter = []; // Array untuk menyimpan nomor urut berdasarkan peran
     @endphp
@@ -120,6 +137,32 @@
 <!-- Modal Import -->
 <script>
     // Fungsi ini akan dipanggil saat pilihan peran berubah
+
+    function filterData() {
+    var startDate = document.getElementById('start_date').value;
+    var endDate = document.getElementById('end_date').value;
+    var selectedRole = document.getElementById('role').value; // Ambil peran yang dipilih
+
+    // Ambil semua baris data dalam tbody
+    var allRows = document.querySelectorAll('#tableBody tr');
+
+    // Loop melalui semua baris data dan tampilkan hanya yang sesuai dengan tanggal dan peran yang dipilih
+    allRows.forEach(function (row) {
+        var createdAt = row.querySelector('td:last-child').textContent; // Ambil nilai kolom "Created At"
+        var role = row.getAttribute('data-role'); // Ambil peran dari atribut data-role
+
+        // Format tanggal dari kolom "Created At" ke format "YYYY-MM-DD"
+        var createdDate = new Date(createdAt).toISOString().split('T')[0];
+
+        if ((startDate <= createdDate && createdDate <= endDate) && (selectedRole === '' || selectedRole === role)) {
+            row.style.display = 'table-row'; // Tampilkan baris data yang sesuai
+        } else {
+            row.style.display = 'none'; // Sembunyikan baris data yang tidak sesuai
+        }
+    });
+}
+
+
     function onRoleChange() {
     var roleSelect = document.getElementById('role');
     var selectedRole = roleSelect.options[roleSelect.selectedIndex].value;

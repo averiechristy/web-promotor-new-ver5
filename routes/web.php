@@ -11,6 +11,7 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
+use App\Http\Controllers\UserController\MyIncomeController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
 use App\Http\Controllers\UserController\UserIncomeController;
@@ -258,7 +259,13 @@ Route::get('user/kalkulator', [KalkulatorController::class,'index'])->name('user
 Route::post('/calculate', [KalkulatorController::class,'calculate'])->name('calculate');
 
 Route::get('user/leaderboard', [UserLeaderboardController::class,'index'])->name('user.leaderboard');
+Route::get('user/myincome', [MyIncomeController::class,'index'])->name('user.myincome');
 
+Route::post('/filter-income', [MyIncomeController::class,'filterIncome']);
+
+// routes/web.php
+
+Route::get('/filter-pendapatan', 'PendapatanController@filter');
 
 
 });

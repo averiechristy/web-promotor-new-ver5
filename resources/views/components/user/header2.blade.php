@@ -40,11 +40,11 @@
 @else
 <span> <img src="{{ asset('img/default.jpg') }}"  class="user"> </span>
 @endif
-
-
         <i class="bi bi-chevron-down"></i>
     </a>
     <ul>
+    <li><a href="{{ route('user.myincome') }}">Pendapatan Saya</a></li>
+
         <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
         <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
         <li>
@@ -53,9 +53,7 @@
             </a>
         </li>
     </ul>
-</li>
-
-          
+</li>          
         </ul>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
     @csrf

@@ -33,6 +33,7 @@ class LeaderBoardController extends Controller
         ]);
     }
     
+    
 
     public function exportExcel(Request $request)
 {
@@ -97,6 +98,18 @@ for ($i = 1; $i < count($data); $i++) {
     $rowData = $data[$i];
     $kodeSales = $rowData[2]; // Kolom 'Kode Sales'
 
+    $role_id = $request->input('role_id');
+
+    $role = UserRole::find($role_id);
+
+    if (!$role) {
+        // Tangani kesalahan jika role tidak ditemukan
+        $request->session()->flash('error', 'Role tidak ditemukan.');
+        return redirect(route('admin.leaderboard.index'))->withInput();
+    }
+    $kodeRole = strtolower($role->kode_role);
+
+
     $user = User::where('username', $kodeSales)->first();
 
     if (!$user) {
@@ -145,7 +158,7 @@ for ($j = 3; $j < count($headerRow); $j++) {
     // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
     $total += $product->poin_produk * $jumlah;
 }
-
+if ($kodeRole == 'mr') {
 if ($total < 72) {
     $hasil = 3600000; 
 
@@ -164,6 +177,13 @@ if ($total < 72) {
     $hasil = $insentif + 6000000;
         
 }
+} elseif ($kodeRole == 'tm') {
+  $hasil =0;
+}
+elseif ($kodeRole == 'ms') {
+    $hasil =0;
+  }
+
     // Tambahkan nilai total ke dalam array $rowData
     $rowData[] = $total;
 
