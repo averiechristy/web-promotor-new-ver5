@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LeaderBoardController;
+use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\MyIncomeController;
@@ -185,6 +186,15 @@ Route::post('/import-excel', [LeaderBoardController::class,'importDataFromExcel'
 Route::post('/get-leaderboard-data',[ LeaderBoardController::class,'getLeaderboardData'])->name('get.leaderboard.data');
 
 
+Route::get('admin/reward/index',[RewardController::class,'index'])->name('admin.reward.index');
+Route::get('admin/reward/create',[RewardController::class,'create'])->name('admin.reward.create');
+Route::post('admin/reward/simpan', [RewardController::class, 'store'])->name('admin.reward.simpan');
+
+
+Route::get('/tampilreward/{id}',[RewardController::class,'show'])->name('tampilreward');
+Route::post('/updatereward/{id}',[RewardController::class,'updatereward'])->name('updatereward');
+Route::delete('/deletereward/{id}',[RewardController::class,'destroy'])->name('deletereward');
+
 
 // Package Route
 
@@ -224,6 +234,8 @@ Route::get('/detailartikel/{id}',[ArtikelController::class,'detailartikel'])->na
 Route::get('admin/dashboard/index', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
 Route::get('/detailproduct/{id}',[ProductController::class,'detailproduct'])->name('detailproduct');
+
+
 
 
 });

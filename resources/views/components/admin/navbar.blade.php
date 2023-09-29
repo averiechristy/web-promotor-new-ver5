@@ -71,7 +71,14 @@
         
     </li>
 
-  
+    <li class="nav-item {{ Request::is('admin/reward/index')  || Request::is('admin/reward/create')  ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.reward.index') }}" data-toggle="" data-target="#collapseContact"
+                aria-expanded="true" aria-controls="collapseContact">
+                <i class="fa fa-star" style="color: #01004C"></i>
+                <span style="color: #01004C">Reward</span>
+               
+            </a>
+        </li>
 
     <li class="nav-item {{ Request::is('admin/leaderboard/index')  ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.leaderboard.index') }}" data-toggle="" data-target="#collapseContact"

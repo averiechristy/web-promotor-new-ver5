@@ -37,6 +37,13 @@ class UserRole extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function Reward()
+    {
+
+        return $this->hasMany(Reward::class);
+    }
+
+
     public function Package()
     {
 

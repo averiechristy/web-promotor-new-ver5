@@ -61,7 +61,7 @@ cara validari ck editor dengan validasi diatas> {{ old('isi_artikel', $data->isi
                                                     <p class="text-danger">{{$errors->first('isi_artikel')}}</p>
                                                 @endif
                                             <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Save</button>
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Simpan</button>
                                             </div>
                                         </form>
                                     </div>

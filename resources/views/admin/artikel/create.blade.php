@@ -71,7 +71,7 @@
 
 
                                               <div class="form-group mb-4">
-                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Submit</button>
+                                                <button type="submit" class="btn " style="background-color: #01004C; color: white;">Simpan</button>
                                             </div>
                                         </form>
                                     </div>
