@@ -46,7 +46,7 @@
 <div class="mb-3 mt-3">
 @include('components.alert')
 
-<input class="form" id="formFileSm" type="file" name="file" style="display: none;" required>
+<input class="form" id="formFileSm" type="file" name="file" style="display: none;" required accept=".xls, .xlsx">
 
 </div>
 
