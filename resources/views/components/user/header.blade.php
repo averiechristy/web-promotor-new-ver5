@@ -16,6 +16,8 @@
           <!-- <li ><a class="nav-link scrollto" href="{{route('user.home')}}">Home</a></li> -->
           <li><a class="nav-link scrollto" href="#about">Income</a></li>
           <li><a class="nav-link scrollto" href="#portfolio">Promo</a></li>
+          <li><a class="nav-link scrollto" href="{{route('user.reward')}}">Reward</a></li>
+
           <li><a class="nav-link scrollto" href="#leaderboard">Leaderboard</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
 

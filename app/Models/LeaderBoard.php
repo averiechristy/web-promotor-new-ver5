@@ -34,7 +34,9 @@ class LeaderBoard extends Model
         'user_id',
         'nama',
         'pencapaian',
+        'tanggal',
         'income',
+        'kode_sales',
         'total',// Kolom JSON yang baru ditambahkan
     ];
 

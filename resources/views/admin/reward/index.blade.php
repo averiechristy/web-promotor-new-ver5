@@ -25,6 +25,8 @@
                                           <th>Role</th>
                                           <th>Judul Reward</th>
                                           <th>Poin Reward</th>
+                                          <th>Deskripsi Reward</th>
+                                          <th>Gambar Reward</th>
                                           <th>Tanggal Mulai</th>
                                           <th>Tanggal Berakhir</th>
                                           <th>Status</th>
@@ -42,12 +44,45 @@
                                    <tr>
 <td> {{$item ->Role->jenis_role}} </td>
 <td> {{$item->judul_reward}} </td>
+
+<td>
+
+<a href="#" data-toggle="modal" data-target="#gambarModal{{ $item->id }}">Lihat Gambar</a>
+
+
+<!-- Kode lainnya -->
+
+<!-- Modal untuk gambar artikel -->
+<div class="modal fade" id="gambarModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="gambarModalLabel{{ $item->id }}" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="gambarModalLabel{{ $item->id }}">Gambar Reward</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<img src="{{ asset('img/'.$item->gambar_reward) }}" alt="Gambar Reward" class="img-fluid">
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+<!-- {{ $item->gambar_produk}} -->
+</td>
+<td>   <a href="{{ route('detailreward', $item->id) }}"><button type="button" class="btn btn-link">
+    Lihat Deskripsi Reward
+</button></a>     </td>
 <td>{{$item->poin_reward}} </td>
 <td> {{$item->tanggal_mulai}}</td>
 <td>  {{$item->tanggal_selesai}}</td>
-<td>    @if ($item->status == 1)
-                                            <span class="badge badge-success">Aktif</span>
-                                        @else
+<td>    @if ($item->status === 'Sedang berjalan')
+                                            <span class="badge badge-success">Sedang Berjalan</span>
+                                        @elseif($item->status === 'Akan datang')
+                                            <span class="badge badge-warning">Akan Datang</span>
+                                            @else 
                                             <span class="badge badge-danger">Tidak Aktif</span>
                                         @endif</td>
 <td> {{$item->created_at}}</td>
@@ -65,8 +100,11 @@
 
                                            <td> 
                                            <div class="row">
-                           <a href="{{ route('tampilreward', $item->id) }}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
-                           <form method="POST" action="{{ route('deletereward', $item->id) }}">
+                                           @if ($item->status === 'Tidak Aktif')
+                                           <button class="btn" data-toggle="tooltip" title='Tidak dapat edit data yang sudah tidak aktif' disabled><i class="fas fa-fw fa-edit" style="color:gray"></i></button>            @else
+                <a href="{{ route('tampilreward', $item->id) }}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange"></i></a>
+            @endif
+                                       <form method="POST" action="{{ route('deletereward', $item->id) }}">
                             @csrf
                             <input name="_method" type="hidden" value="DELETE">
                             <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red" ></i></button>

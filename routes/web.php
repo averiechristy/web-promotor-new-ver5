@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController\UserPaketController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserController\UserRewardController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -132,6 +133,11 @@ Route::get('/user/income', function () {
     return view('/user/income');
 });
 
+Route::get('/user/submenukalkulator', function () {
+    return view('/user/submenukalkulator');
+});
+
+
 
 
 //akses route
@@ -184,7 +190,7 @@ Route::get('admin/leaderboard/index', [LeaderBoardController::class, 'index'])->
 Route::get('/export-excel', [LeaderBoardController::class,'exportExcel'])->name('export.excel');
 Route::post('/import-excel', [LeaderBoardController::class,'importDataFromExcel'])->name('import.excel');
 Route::post('/get-leaderboard-data',[ LeaderBoardController::class,'getLeaderboardData'])->name('get.leaderboard.data');
-
+Route::delete('/deleteleaderboard/{id}',[LeaderBoardController::class,'destroy'])->name('deleteleaderboard');
 
 Route::get('admin/reward/index',[RewardController::class,'index'])->name('admin.reward.index');
 Route::get('admin/reward/create',[RewardController::class,'create'])->name('admin.reward.create');
@@ -194,6 +200,7 @@ Route::post('admin/reward/simpan', [RewardController::class, 'store'])->name('ad
 Route::get('/tampilreward/{id}',[RewardController::class,'show'])->name('tampilreward');
 Route::post('/updatereward/{id}',[RewardController::class,'updatereward'])->name('updatereward');
 Route::delete('/deletereward/{id}',[RewardController::class,'destroy'])->name('deletereward');
+
 
 
 // Package Route
@@ -236,6 +243,7 @@ Route::get('admin/dashboard/index', [DashboardController::class, 'index'])->name
 Route::get('/detailproduct/{id}',[ProductController::class,'detailproduct'])->name('detailproduct');
 
 
+Route::get('/detailreward/{id}',[RewardController::class,'detailreward'])->name('detailreward');
 
 
 });
@@ -263,6 +271,7 @@ Route::get('user/home', [HomeController::class, 'index'])->name('user.home')->mi
 Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
     Route::get('user/package', [UserPaketController::class, 'index'])->name('user.package');
     Route::get('user/income/{id}', [UserPaketController::class, 'show'])->name('tampilincome');
+    
 });
 
 // Kalkulator
@@ -278,6 +287,8 @@ Route::post('/filter-income', [MyIncomeController::class,'filterIncome']);
 // routes/web.php
 
 Route::get('/filter-pendapatan', 'PendapatanController@filter');
+
+Route::get('user/reward',[UserRewardController::class,'index'])->name('user.reward');
 
 
 });

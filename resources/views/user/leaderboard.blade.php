@@ -6,13 +6,13 @@
 <section id="leaderboard" class="leaderboard">
   <div class="container">
     <div class="section-title">
-    <h2>10 Besar Ranking per tanggal {{ now()->subDay()->format('d-m-Y') }}</h2>
+    <h2>10 Besar Ranking per bulan {{ now()->format('F') }}</h2>
       <p>Leaderboard</p>
     </div>
     @if (count($leaderboardData) > 0)
     <ul class="leaderboard-list">
       @foreach ($leaderboardData as $leader)
-      <li class="leaderboard-item @if ($loop->first) leaderboard-first @endif">
+      <li class="leaderboard-item @if ($loop->first) leaderboard-first @elseif ($loop->iteration == 2) leaderboard-second @elseif ($loop->iteration == 3) leaderboard-third @endif">
                 <div class="leaderboard-rank">
           <span class="rank-number">#{{ $loop->iteration }}</span>
         </div>
@@ -50,6 +50,8 @@
     <!-- Tombol untuk melihat lebih banyak -->
    
   </div>
+
+  
 </section>
 
 </main>
@@ -61,6 +63,8 @@
   list-style: none;
   padding: 0;
 }
+
+
 
 .leaderboard-item {
   border: 2px solid #01004C; /* Warna border item leaderboard */
@@ -95,6 +99,21 @@
         padding: 20px; /* Lebih besar padding untuk peringkat pertama */
         background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
     }
+
+   .leaderboard-second {
+        /* Gaya kartu untuk peringkat pertama */
+        border: 4px solid #d6d6d6; /* Warna border lebih tebal untuk peringkat pertama */
+        padding: 20px; /* Lebih besar padding untuk peringkat pertama */
+        background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
+    }
+
+    .leaderboard-third {
+        /* Gaya kartu untuk peringkat pertama */
+        border: 4px solid #CD7F32; /* Warna perunggu (bronze) */
+                padding: 20px; /* Lebih besar padding untuk peringkat pertama */
+        background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
+    }
+
 
 .leaderboard-info {
   flex: 1;

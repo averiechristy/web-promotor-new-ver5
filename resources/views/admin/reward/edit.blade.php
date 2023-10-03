@@ -2,8 +2,6 @@
 
 @section('content')
                 <!-- Begin Page Content -->
-             
-
                     <div class="container">
                         <div class="row">
                             <div class="col-8 offset-2">
@@ -12,7 +10,7 @@
                                     Edit Reward
                                     </div>
                                     <div class="card-body">
-                                       <form name="saveform" action="/updatereward/{{$data->id}}" method="post" onsubmit="return validateForm()">
+                                       <form name="saveform" action="/updatereward/{{$data->id}}" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
                                              @csrf
                                              <div class="form-group mb-4">
     <label for="" class="form-label">Kode Role</label>
@@ -46,11 +44,47 @@
                                                     <p class="text-danger">{{$errors->first('poin_reward')}}</p>
                                                 @endif
                                             </div>
-                                            
+
                                             <div class="form-group mb-4">
-                            <label for="tanggal_mulai">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', isset($data) ? $data->tanggal_mulai : '') }}" required>
-                        </div>
+                                                <label for="" class="form-label">Deskripsi Reward</label>
+                                                <textarea name="deskripsi_reward" type="text" class="form-control {{$errors->has('deskripsi_reward') ? 'is-invalid' : ''}}"  style="border-color: #01004C;"  oninvalid="this.setCustomValidity('Deskripsi produk tidak boleh kosong')" oninput="setCustomValidity('')"> {{ old('deskripsi_reward', $data->deskripsi_reward) }}</textarea>
+                                                @if ($errors->has('deskripsi_reward'))
+                                                    <p class="text-danger">{{$errors->first('deskripsi_reward')}}</p>
+                                                @endif
+                                            </div>
+
+                                            <div class="form-group">
+                                            <label for="file">Upload Gambar (PNG atau JPG, maksimum 5 MB):</label>
+    <input id="gambar_reward_input" name="gambar_reward" type="file" class="form-control-file {{ $errors->has('gambar_reward') ? 'is-invalid' : '' }}" value="{{ old('data_gambar', $data->data_gambar) }}" accept=".png, .jpg, .jpeg" 
+               title="Hanya file dengan ekstensi .png, .jpg, atau .jpeg yang diterima" 
+               size="5000">
+    @if ($errors->has('gambar_reward'))
+        <p class="text-danger">{{$errors->first('gambar_reward')}}</p>
+    @endif
+</div>
+
+<div class="form-group">
+    <img id="gambar_reward_preview" src="{{ asset('img/'.$data->gambar_reward) }}" height="10%" width="50%" alt="tes" srcset="">
+</div>
+
+<script>
+    // Fungsi untuk menampilkan gambar yang diunggah saat memilih file
+    document.getElementById('gambar_reward_input').addEventListener('change', function (event) {
+        const preview = document.getElementById('gambar_reward_preview');
+        preview.src = URL.createObjectURL(event.target.files[0]);
+    });
+</script>
+                                            
+<div class="form-group mb-4">
+    <label for="tanggal_mulai">Tanggal Mulai</label>
+    @if ($data->status == 'Sedang berjalan')
+    <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $data->tanggal_mulai) }}" readonly>
+        <small class="text-muted">Tanggal Mulai tidak dapat diubah karena status sedang berjalan.</small>
+    @else
+        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $data->tanggal_mulai) }}" required>
+    @endif
+</div>
+
 
                         <div class="form-group mb-4">
                             <label for="tanggal_selesai">Tanggal Selesai</label>
@@ -89,6 +123,9 @@ function validateForm() {
   let koderole = document.forms["saveform"]["role_id"].value;
   let judul_reward = document.forms["saveform"]["judul_reward"].value;
   let poin_reward = document.forms["saveform"]["poin_reward"].value;
+  let deskripsi_reward = document.forms["saveform"]["deskripsi_reward"].value;
+  let gambar_reward = document.forms["saveform"]["gambar_reward"].value;
+
   let tanggal_mulai = document.forms["saveform"]["tanggal_mulai"].value;
   let tanggal_selesai = document.forms["saveform"]["tanggal_selesai"].value;
 
@@ -101,7 +138,10 @@ function validateForm() {
   } else if (poin_reward == "") {
     alert("Poin reward tidak boleh kosong");
     return false;
-  } else if (tanggal_mulai == "") {
+  } else if (deskripsi_reward == "") {
+    alert("Deskripsi reward tidak boleh kosong");
+    return false;
+  }else if (tanggal_mulai == "") {
     alert("Tanggal mulai tidak boleh kosong");
     return false;
   } else if (tanggal_selesai == "") {

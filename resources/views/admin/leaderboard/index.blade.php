@@ -84,7 +84,8 @@
                 <th>Pencapaian Penjualan Produk</th>
                 <th>Total Poin</th>
                 <th>Income</th>
-                <th>Created At</th>
+                <th>Tanggal</th>
+                <th>Action</th>
                 <!-- Kolom lainnya -->
             </tr>
         </thead>
@@ -122,7 +123,13 @@
     $formattedHasil = 'Rp. ' . number_format($item->income, 0, ',', '.') . ',-';
     ?>
         <td>{{ $formattedHasil}} </td>
-        <td>{{ $item->created_at }}</td> <!-- Kolom Created At -->
+        <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
+        <td>
+            <form method="POST" action="{{ route('deleteleaderboard', $item->id) }}">
+                            @csrf
+                            <input name="_method" type="hidden" value="DELETE">
+                            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red" ></i></button>
+                        </form> </td>
         <!-- Kolom lainnya -->
 
     </tr>
@@ -219,6 +226,7 @@
 
     // Panggil onRoleChange saat halaman dimuat ulang
     window.onload = onRoleChange;
+    
     // Panggil onRoleChange saat elemen select dengan id 'role' berubah
     document.getElementById('role').addEventListener('change', onRoleChange);
 </script>

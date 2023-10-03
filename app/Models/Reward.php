@@ -13,6 +13,8 @@ class Reward extends Model
         'role_id',
         'judul_reward',
         'poin_reward',
+        'deskripsi_reward',
+        'gambar_reward',
         'tanggal_mulai',
         'tanggal_selesai',
         'status',

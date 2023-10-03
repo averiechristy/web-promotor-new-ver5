@@ -12,7 +12,7 @@
                                     Tambah Reward Baru
                                     </div>
                                     <div class="card-body">
-                                       <form name="saveform" action="{{route('admin.reward.simpan')}}" method="post"  onsubmit="return validateForm()">
+                                       <form name="saveform" action="{{route('admin.reward.simpan')}}"  enctype="multipart/form-data" method="post"  onsubmit="return validateForm()">
                                              @csrf
                                              <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Role</label>
@@ -45,6 +45,48 @@
                                                     <p class="text-danger">{{$errors->first('poin_reward')}}</p>
                                                 @endif
                                             </div>
+
+                                            <div class="form-group mb-4">
+                                                <label for="" class="form-label">Deskripsi Reward</label>
+                                                <textarea name="deskripsi_reward" type="text" class="form-control {{$errors->has('deskripsi_reward') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" oninvalid="this.setCustomValidity('Deskripsi produk tidak boleh kosong')" oninput="setCustomValidity('')">{{old('deskripsi_reward')}}</textarea>
+
+                                                @if ($errors->has('deskripsi_reward'))
+                                                    <p class="text-danger">{{$errors->first('deskripsi_reward')}}</p>
+                                                @endif
+                                            </div>
+
+                                            <div class="form-group">
+                                                  <label for="exampleFormControlFile1">Upload Gambar (PNG atau JPG, maksimum 5 MB):</label>
+                                                  <input  name="gambar_reward" type="file"  class="form-control-file {{$errors->has('gambar_reward') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('gambar_reward')}}"  oninvalid="this.setCustomValidity('Gambar artikel tidak boleh kosong')" oninput="setCustomValidity('')"  accept=".png, .jpg, .jpeg" 
+               title="Hanya file dengan ekstensi .png, .jpg, atau .jpeg yang diterima" 
+               size="5000" onchange="previewImage(this)" accept="image/*">
+               <img id="image-preview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+
+                                                  @if ($errors->has('gambar_reward'))
+                                                    <p class="text-danger">{{$errors->first('gambar_reward')}}</p>
+                                                @endif
+                                                </div>
+                                                
+                                                <script>
+                                                  function previewImage(input) {
+    var preview = document.getElementById('image-preview');
+    var file = input.files[0];
+
+    if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+                                                </script>
                                             
                                             <div class="form-group mb-4">
                             <label for="tanggal_mulai">Tanggal Mulai</label>
@@ -86,6 +128,8 @@ function validateForm() {
   let koderole = document.forms["saveform"]["role_id"].value;
   let judul_reward = document.forms["saveform"]["judul_reward"].value;
   let poin_reward = document.forms["saveform"]["poin_reward"].value;
+  let deskripsi_reward = document.forms["saveform"]["deskripsi_reward"].value;
+  let gambar_reward = document.forms["saveform"]["gambar_reward"].value;
   let tanggal_mulai = document.forms["saveform"]["tanggal_mulai"].value;
   let tanggal_selesai = document.forms["saveform"]["tanggal_selesai"].value;
 
@@ -97,6 +141,12 @@ function validateForm() {
     return false;
   } else if (poin_reward == "") {
     alert("Poin reward tidak boleh kosong");
+    return false;
+  }else if (deskripsi_reward == "") {
+    alert("Deskripsi reward tidak boleh kosong");
+    return false;
+  }else if (gambar_reward == "") {
+    alert("Gambar reward tidak boleh kosong");
     return false;
   } else if (tanggal_mulai == "") {
     alert("Tanggal mulai tidak boleh kosong");

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\LeaderBoard;
 use App\Models\Product;
+use DateTime;
 use App\Models\User;
 use App\Models\UserRole;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Http\Request;
 
@@ -36,46 +38,70 @@ class LeaderBoardController extends Controller
     
 
     public function exportExcel(Request $request)
-{
-    // Buat objek Spreadsheet
-    $selectedRoleId = $request->input('role_id');
+    {
+        // Buat objek Spreadsheet
+        $selectedRoleId = $request->input('role_id');
+    
+        // Ambil produk sesuai dengan role yang dipilih
+        // Buat objek Spreadsheet
+        $spreadsheet = new Spreadsheet();
+    
+        // Ambil sheet aktif
+        $sheet = $spreadsheet->getActiveSheet();
+    
+        // Ambil produk sesuai dengan role yang dipilih
+        $produk = Product::where('role_id', $selectedRoleId)->get();
+    
+        // Isi header tabel dari blade.php
+        $header = ['No', 'Tanggal', 'Nama', 'Kode Sales']; // Menambahkan "Tanggal" di antara "No" dan "Nama"
+    
+        // Isi header produk dari $produk (jika perlu)
+        foreach ($produk as $item) {
+            $header[] = $item->nama_produk;
+        }
+    
+        // Tambahkan header ke sheet
+        $sheet->fromArray([$header]);
+    
+        // Mendapatkan kolom yang perlu dikunci (header)
+        $headerColumnCount = count($header);
+        $headerRange = 'A1:' . $sheet->getCellByColumnAndRow($headerColumnCount, 1)->getColumn() . '1';
+    
+      
+        // Mengunci sel-sel header
 
- // Ambil produk sesuai dengan role yang dipilih
-  // Buat objek Spreadsheet
-  $spreadsheet = new Spreadsheet();
+        $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+        $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
+        $sheet->getStyle($headerRange)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
 
-  // Ambil sheet aktif
-  $sheet = $spreadsheet->getActiveSheet();
 
-  // Ambil produk sesuai dengan role yang dipilih
-  $produk = Product::where('role_id', $selectedRoleId)->get();
-
-    // Isi header tabel dari blade.php
-    $header = ['No', 'Nama', 'Kode Sales'];
-
-    // Isi header produk dari $produk (jika perlu)
-    foreach ($produk as $item) {
-        $header[] = $item->nama_produk;
+    
+        // Buat response untuk file Excel
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'data_leaderboard_template.xlsx';
+    
+        // Set Content-Security-Policy header untuk melarang modifikasi header oleh JavaScript
+        header('Content-Security-Policy: default-src \'none\'; script-src \'self\'');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+    
+        // Menambahkan validasi format "dd/mm/yyyy" untuk kolom "Tanggal"
+    
+        $writer->save('php://output');
     }
+    
+    
 
-    $sheet->fromArray([$header]);
-
-    // Tidak perlu mengisi data tabel
-
-    // Buat response untuk file Excel
-    $writer = new Xlsx($spreadsheet);
-    $filename = 'data_leaderboard_template.Xlsx';
-
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="' . $filename . '"');
-    header('Cache-Control: max-age=0');
-
-    $writer->save('php://output');
-}
+    
 
 public function importDataFromExcel(Request $request)
 {
     $file = $request->file('file');
+
+    $currentDate = now()->toDateString();
+
+    
 
     try {
         $spreadsheet = IOFactory::load($file);
@@ -92,11 +118,33 @@ public function importDataFromExcel(Request $request)
        // ...
 // ...
 // Ambil daftar nama yang ada di database
-$existingNames = User::pluck('nama')->toArray();
+
 
 for ($i = 1; $i < count($data); $i++) {
     $rowData = $data[$i];
-    $kodeSales = $rowData[2]; // Kolom 'Kode Sales'
+
+
+
+    $kodeSales = $rowData[3]; // Kolom 'Kode Sales'
+
+    $existingNames = User::pluck('nama')->toArray();
+
+
+    $currentDate = now()->toDateString();
+
+    // Cek apakah data dengan nama atau kode sales yang sama sudah ada pada hari yang sama
+    $existingData = LeaderBoard::where('created_at', $currentDate)
+        ->whereIn('nama', $existingNames) // Sesuaikan dengan kolom yang sesuai
+        ->orWhere('kode_sales', $kodeSales) // Gantilah dengan nama kolom yang sesuai
+        ->first();
+    
+    if ($existingData) {
+        // Tangani kesalahan jika data duplikat ditemukan
+        $request->session()->flash('error', 'Data dengan nama atau kode sales yang sama sudah diimport di hari ini.');
+        return redirect(route('admin.leaderboard.index'))->withInput();
+    }
+
+
 
     $role_id = $request->input('role_id');
 
@@ -119,7 +167,8 @@ for ($i = 1; $i < count($data); $i++) {
     }
 
     // Periksa apakah nama ada dalam daftar nama yang ada di database
-    $importedName = $rowData[1]; // Kolom 'Nama' dari data yang diimpor
+    $importedName = $rowData[2]; // Kolom 'Nama' dari data yang diimpor
+    
 
     if (!in_array($importedName, $existingNames)) {
         // Tangani kesalahan jika nama tidak sesuai
@@ -127,22 +176,46 @@ for ($i = 1; $i < count($data); $i++) {
         return redirect(route('admin.leaderboard.index'))->withInput();
     }
 
+    $tanggalString = $rowData[1];
+   
+    $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
+
+    if (!$tanggalObj) {
+        // Tangani kesalahan jika tanggal tidak sesuai format
+        $request->session()->flash('error', 'Format tanggal tidak valid. Gunakan format "dd/mm/yyyy".');
+        return redirect(route('admin.leaderboard.index'))->withInput();
+    }
+
+    $tanggal = $tanggalObj->format('Y-m-d');
+
+    $rowData[1] = $tanggal;
+
+
     // Inisialisasi array asosiatif untuk data pencapaian
     $pencapaian = [];
 
     // Inisialisasi total
     $total = 0;
 
-for ($j = 3; $j < count($headerRow); $j++) {
+for ($j = 4; $j < count($headerRow); $j++) {
     $pencapaian[$headerRow[$j]] = $rowData[$j];
 
     $namaProduk = $headerRow[$j]; // Nama produk dari header
-    $jumlah = intval($rowData[$j]);
+   $jumlah = $rowData[$j];
+
+    // Memeriksa apakah $jumlah adalah angka
+    if (!is_numeric($jumlah)) {
+        // Tangani kesalahan jika $jumlah bukan angka
+        $request->session()->flash('error', 'Jumlah produk harus berupa angka.');
+        return redirect(route('admin.leaderboard.index'))->withInput();
+    }
+
+    $jumlah = intval($jumlah); // Mengonversi ke integer setelah memastikan itu adalah angka
 
     // Cek apakah nilai negatif
     if ($jumlah < 0) {
         // Tangani nilai negatif sesuai dengan kebutuhan Anda.
-        $request->session()->flash('error', 'Nilai tidak boleh negatif.');
+        $request->session()->flash('error', 'Jumlah produk tidak boleh negatif.');
         return redirect(route('admin.leaderboard.index'))->withInput();
     }
 
@@ -198,7 +271,9 @@ elseif ($kodeRole == 'ms') {
         'no' => $rowData[0], // Kolom 'No'
         'role_id' => $request->input('role_id'), // Role ID yang dipilih sebelumnya
         'user_id' => $rowData['user_id'], // Kolom 'user_id' (ID Pengguna)
-        'nama' => $rowData[1], // Kolom 'Nama'
+        'nama' => $rowData[2], // Kolom 'Nama'
+        'kode_sales' => $rowData[3],
+        'tanggal' => $tanggal, // Kolom 'Tanggal'
         'income' => $hasil,
         'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
         'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
@@ -284,8 +359,12 @@ public function getLeaderboardData(Request $request)
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
-        //
-    }
+        $leaderboard = LeaderBoard::find($id);
+        $leaderboard->delete();
+ 
+        $request->session()->flash('error', 'Leaderboard berhasil dihapus.');
+        return redirect(route('admin.leaderboard.index'))->withInput();
+        }
 }

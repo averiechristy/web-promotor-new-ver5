@@ -73,9 +73,10 @@
 <!--  -->
 
         <div class="row portfolio-container"  data-aos-delay="200">
-        @php
-        $latestArtikel = $artikel->take(6); // Mengambil 6 artikel terbaru
+      @php
+      $latestArtikel = $artikel->take(6); // Mengambil 6 artikel terbaru
       @endphp
+
       @foreach ($artikel as $artikel)
           <div class="col-lg-4 portfolio-item ">
           <a href="{{ route('user.artikelread', $artikel->id) }}">
@@ -84,12 +85,13 @@
               <hr class="solid">
               <div class="info">
                 <h4>{{$artikel->judul_artikel}}</h4>
-                <p>baca lebih lengkap</p>
+                <p class="card-text"><small class="text-muted">Created {{ $artikel->created_at->diffForHumans() }}</small></p>
+
               </div>
             </div>
-</a>
+          </a>
           </div>
-          @endforeach
+        @endforeach
 
           <div class="more-button">
       <button class="btn-lain"><a href="{{route('user.artikel')}}">Lihat promo lebih banyak</a></button>
@@ -108,16 +110,17 @@
 <section id="leaderboard" class="leaderboard">
   <div class="container">
     <div class="section-title">
-      <h2>
-      3 Besar Ranking per tanggal {{ now()->subDay()->format('d-m-Y') }}
-      </h2>
+    <h2>
+  3 Besar Ranking per bulan {{ now()->format('F') }}
+</h2>
+
       <p>Leaderboard</p>
     </div>
     @if (count($leaderboardData) > 0)
     <div class="row">
     @foreach ($leaderboardData as $leader)
-        <div class="col-lg-4 col-md-6 @if ($loop->first) col-lg-offset-4 @endif">
-            <div class="leaderboard-card @if ($loop->first) leaderboard-first @endif">
+    <div class="col-lg-4 col-md-6 @if ($loop->first) col-lg-offset-4 @endif">
+        <div class="leaderboard-card @if ($loop->first) leaderboard-first @elseif ($loop->iteration == 2) leaderboard-second @elseif ($loop->iteration == 3) leaderboard-third @endif">
                 <div class="leaderboard-rank">
                     <span class="rank-number">#{{ $loop->iteration }}</span>
                 </div>
@@ -166,6 +169,20 @@
         /* Gaya kartu untuk peringkat pertama */
         border: 4px solid #FFD700; /* Warna border lebih tebal untuk peringkat pertama */
         padding: 20px; /* Lebih besar padding untuk peringkat pertama */
+        background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
+    }
+
+    .leaderboard-second {
+        /* Gaya kartu untuk peringkat pertama */
+        border: 4px solid #d6d6d6; /* Warna border lebih tebal untuk peringkat pertama */
+        padding: 20px; /* Lebih besar padding untuk peringkat pertama */
+        background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
+    }
+
+    .leaderboard-third {
+        /* Gaya kartu untuk peringkat pertama */
+        border: 4px solid #CD7F32; /* Warna perunggu (bronze) */
+                padding: 20px; /* Lebih besar padding untuk peringkat pertama */
         background-color: #E6E8FA; /* Warna latar belakang berbeda untuk peringkat pertama */
     }
 

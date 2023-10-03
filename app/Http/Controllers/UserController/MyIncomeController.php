@@ -24,7 +24,7 @@ class MyIncomeController extends Controller
 
         $currentRole = auth()->user()->role; // Gantilah ini dengan cara Anda mengambil peran pengguna saat ini
         $activeReward = Reward::where('role_id', $currentRole->id)
-        ->where('status', '1')
+        ->where('status', 'Sedang berjalan')
             ->first();
 
         

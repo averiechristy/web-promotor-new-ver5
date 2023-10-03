@@ -68,7 +68,7 @@ class ArtikelController extends Controller
 
         ]);
 
-          $nm = $request->gambar_artikel;
+        $nm = $request->gambar_artikel;
         $namaFile = $nm->getClientOriginalName();
 
         $loggedInUser = auth()->user();
