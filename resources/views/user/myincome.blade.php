@@ -62,31 +62,6 @@
 
 
         
-@if ($activeReward)
-<div class="progress" style="height: 20px;">
-    @php
-    $progressWidth = ($totalPointsThisMonth >= $activeReward->poin_reward) ? '100%' : ($totalPointsThisMonth / $activeReward->poin_reward * 100) . '%';
-    @endphp
-    <div class="progress-bar" role="progressbar" style="width: {{ $progressWidth }};" aria-valuenow="{{ $totalPointsThisMonth }}" aria-valuemin="0" aria-valuemax="{{ $activeReward->poin_reward }}">
-        <span class="progress-label"> {{ $totalPointsThisMonth }} poin</span>
-    </div>
-    @if ($totalPointsThisMonth >= $activeReward->poin_reward)
-    @else
-        <span class="poin-reward-info">{{ $activeReward->poin_reward }} poin reward</span>
-    @endif
-</div>
-
-<!-- Informasi berapa lagi poin yang harus dicapai bulan ini -->
-<p class="remaining-points">
-    @if ($totalPointsThisMonth >= $activeReward->poin_reward)
-        Selamat!, poin Anda sudah mencukupi untuk target reward bulan ini.
-    @else
-        Sisa {{ $activeReward->poin_reward - $totalPointsThisMonth }} poin untuk mencapai target bulan ini.
-    @endif
-</p>
-@else
-<p>Tidak ada reward yang sedang berjalan saat ini.</p>
-@endif
 
     @endif
 

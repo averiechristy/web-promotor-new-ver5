@@ -38,10 +38,10 @@
         <i class="bi bi-chevron-down"></i>
     </a>
     <ul>
-    <li><a href="{{ route('user.myincome') }}">Pendapatan Saya</a></li>
+    <li><a class="{{ Request::is('user/userdashboard') ? 'active' : '' }} " href="{{ route('user.userdashboard') }}">Dashboard Saya</a></li>
 
-        <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
-        <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
+        <li><a class= "{{ Request::is('user/editprofil') ? 'active' : '' }} "  href="{{ route('edit-profile') }}">Edit Profile</a></li>
+        <li><a class="{{ Request::is('user/changepassword') ? 'active' : '' }} " href="{{ route('password-change-user') }}">Change Password</a></li>
         <li>
             <a href="#" data-toggle="modal" data-target="#logoutModal">
                 Logout

@@ -19,6 +19,7 @@ class LeaderBoard extends Model
             ->get();
     }
 
+    
  public static function getLeaderboardUser($role)
     {
         return self::whereDate('created_at', now()->toDateString())
@@ -27,6 +28,50 @@ class LeaderBoard extends Model
             ->take(10) // Ambil 10 leaderboard
             ->get();
     }
+
+    public static function getLeaderboardUserDasboard($role)
+    {
+        return self::whereDate('created_at', now()->toDateString())
+            ->where('role_id', $role)
+            ->orderBy('total', 'desc')
+            ->get();
+    }
+
+    public static function getTotalUsersWithSameRole($role)
+{
+    return self::whereDate('created_at', now()->toDateString())
+        ->where('role_id', $role)
+        ->count();
+}
+
+
+public static function getRankForUser($userId, $role)
+{
+    // Check if there is any data for the given role in the database.
+    $roleDataExists = self::whereDate('created_at', now()->toDateString())
+        ->where('role_id', $role)
+        ->exists();
+
+    if (!$roleDataExists) {
+        // Handle the case where no data exists for the given role.
+        return null; // You can return null or an appropriate value indicating no data.
+    }
+
+    $userTotal = self::whereDate('created_at', now()->toDateString())
+        ->where('role_id', $role)
+        ->where('user_id', $userId)
+        ->value('total');
+
+    $rank = self::whereDate('created_at', now()->toDateString())
+        ->where('role_id', $role)
+        ->where('total', '>', $userTotal)
+        ->count();
+
+    // Karena peringkat dimulai dari 1, tambahkan 1 ke hasil perhitungan.
+    return $rank + 1;
+}
+
+
 
     protected $fillable = [
         'no',

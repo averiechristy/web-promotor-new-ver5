@@ -19,9 +19,9 @@
       Income
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class="dropdown-item" href="{{route ('user.kalkulator')}}">Kalkulator</a></li>
+      <li><a class=" {{ Request::is('user/kalkulator') ? 'active' : '' }} " href="{{route ('user.kalkulator')}}">Kalkulator</a></li>
       
-      <li><a class="dropdown-item" href="{{route ('user.package')}}">Paket Pendapatan</a></li>
+      <li><a class=" {{ Request::is('user/package') ? 'active' : '' }} " href="{{route ('user.package')}}">Paket Pendapatan</a></li>
      
     </ul>
   </li>      
@@ -45,10 +45,11 @@
         <i class="bi bi-chevron-down"></i>
     </a>
     <ul>
-    <li><a href="{{ route('user.myincome') }}">Pendapatan Saya</a></li>
+    <li><a class="{{ Request::is('user/userdashboard') ? 'active' : '' }} " href="{{ route('user.userdashboard') }}">Dashboard Saya</a></li>
 
-        <li><a href="{{ route('edit-profile') }}">Edit Profile</a></li>
-        <li><a href="{{ route('password-change-user') }}">Change Password</a></li>
+
+        <li><a class="{{ Request::is('user/editprofil') ? 'active' : '' }} " href="{{ route('edit-profile') }}">Edit Profile</a></li>
+        <li><a  class="{{ Request::is('user/changepassword') ? 'active' : '' }} " href="{{ route('password-change-user') }}">Change Password</a></li>
         <li>
             <a href="#" data-toggle="modal" data-target="#logoutModal">
                 Logout

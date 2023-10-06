@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Akses;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -11,8 +13,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard');
-    }
+        $role = UserRole::all();
+        
+
+        return view ('admin.dashboard',[
+            'role' => $role,
+        ]);
+      }
+
+      
 
     /**
      * Show the form for creating a new resource.

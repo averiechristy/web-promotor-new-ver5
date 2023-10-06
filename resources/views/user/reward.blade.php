@@ -98,7 +98,7 @@
 
             <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
             <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-                <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+            <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
             <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
           </div>
           <div class="modal-footer">

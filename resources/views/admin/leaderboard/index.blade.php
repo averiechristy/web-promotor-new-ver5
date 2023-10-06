@@ -118,6 +118,7 @@
     @endforeach
 </ul>
 </td>      
+
         <td>{{ $item->total }} poin</td>
     <?php
     $formattedHasil = 'Rp. ' . number_format($item->income, 0, ',', '.') . ',-';

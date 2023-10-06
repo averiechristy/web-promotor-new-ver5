@@ -23,6 +23,7 @@ class LeaderBoardController extends Controller
         // Mengambil semua data produk dan role untuk keperluan tampilan dropdown
         $produk = Product::all();
         $role = UserRole::all();
+        
     
         // Mengambil data leaderboard berdasarkan role_id yang dipilih (jika ada)
     
@@ -95,215 +96,180 @@ class LeaderBoardController extends Controller
 
     
 
-public function importDataFromExcel(Request $request)
-{
-    $file = $request->file('file');
-
-    $currentDate = now()->toDateString();
-
+    public function importDataFromExcel(Request $request)
+    {
+        $file = $request->file('file');
     
 
-    try {
-        $spreadsheet = IOFactory::load($file);
-        $worksheet = $spreadsheet->getActiveSheet();
-        $data = $worksheet->toArray();
-        
-        // Mengambil baris header (baris pertama) untuk mendapatkan nama kolom
-        $headerRow = $data[0];
-
-        // Ambil nomor terbesar yang sudah ada di database
-        $maxNo = LeaderBoard::max('no');
-
-        // Mulai dari baris kedua (indeks 1) karena baris pertama adalah header
-       // ...
-// ...
-// Ambil daftar nama yang ada di database
-
-
-for ($i = 1; $i < count($data); $i++) {
-    $rowData = $data[$i];
-
-
-
-    $kodeSales = $rowData[3]; // Kolom 'Kode Sales'
-
-    $existingNames = User::pluck('nama')->toArray();
-
-
-    $currentDate = now()->toDateString();
-
-    // Cek apakah data dengan nama atau kode sales yang sama sudah ada pada hari yang sama
-    $existingData = LeaderBoard::where('created_at', $currentDate)
-        ->whereIn('nama', $existingNames) // Sesuaikan dengan kolom yang sesuai
-        ->orWhere('kode_sales', $kodeSales) // Gantilah dengan nama kolom yang sesuai
-        ->first();
+        try {
+            $spreadsheet = IOFactory::load($file);
+            $worksheet = $spreadsheet->getActiveSheet();
+            $data = $worksheet->toArray();
     
-    if ($existingData) {
-        // Tangani kesalahan jika data duplikat ditemukan
-        $request->session()->flash('error', 'Data dengan nama atau kode sales yang sama sudah diimport di hari ini.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-
-
-    $role_id = $request->input('role_id');
-
-    $role = UserRole::find($role_id);
-
-    if (!$role) {
-        // Tangani kesalahan jika role tidak ditemukan
-        $request->session()->flash('error', 'Role tidak ditemukan.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-    $kodeRole = strtolower($role->kode_role);
-
-
-    $user = User::where('username', $kodeSales)->first();
-
-    if (!$user) {
-        // Tangani kesalahan jika kode sales tidak sesuai
-        $request->session()->flash('error', 'Kode Sales tidak sesuai dengan pengguna yang ada di database.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-    // Periksa apakah nama ada dalam daftar nama yang ada di database
-    $importedName = $rowData[2]; // Kolom 'Nama' dari data yang diimpor
+            // Mengambil baris header (baris pertama) untuk mendapatkan nama kolom
+            $headerRow = $data[0];
     
-
-    if (!in_array($importedName, $existingNames)) {
-        // Tangani kesalahan jika nama tidak sesuai
-        $request->session()->flash('error', 'Terdapat nama yang tidak sesuai dengan yang ada di database user.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-    $tanggalString = $rowData[1];
-   
-    $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
-
-    if (!$tanggalObj) {
-        // Tangani kesalahan jika tanggal tidak sesuai format
-        $request->session()->flash('error', 'Format tanggal tidak valid. Gunakan format "dd/mm/yyyy".');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-    $tanggal = $tanggalObj->format('Y-m-d');
-
-    $rowData[1] = $tanggal;
-
-
-    // Inisialisasi array asosiatif untuk data pencapaian
-    $pencapaian = [];
-
-    // Inisialisasi total
-    $total = 0;
-
-for ($j = 4; $j < count($headerRow); $j++) {
-    $pencapaian[$headerRow[$j]] = $rowData[$j];
-
-    $namaProduk = $headerRow[$j]; // Nama produk dari header
-   $jumlah = $rowData[$j];
-
-    // Memeriksa apakah $jumlah adalah angka
-    if (!is_numeric($jumlah)) {
-        // Tangani kesalahan jika $jumlah bukan angka
-        $request->session()->flash('error', 'Jumlah produk harus berupa angka.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-    $jumlah = intval($jumlah); // Mengonversi ke integer setelah memastikan itu adalah angka
-
-    // Cek apakah nilai negatif
-    if ($jumlah < 0) {
-        // Tangani nilai negatif sesuai dengan kebutuhan Anda.
-        $request->session()->flash('error', 'Jumlah produk tidak boleh negatif.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-    // Dapatkan poin produk dari tabel master produk
-    $product = Product::where('nama_produk', $namaProduk)->first();
-
-    if (!$product) {
-        // Tangani kesalahan jika produk tidak ditemukan
-        $request->session()->flash('error', 'Produk tidak ditemukan dalam database.');
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    }
-
-    // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
-    $total += $product->poin_produk * $jumlah;
-}
-if ($kodeRole == 'mr') {
-if ($total < 72) {
-    $hasil = 3600000; 
-
-} else if ($total >72 && $total < 120) {
-    $insentif = ($total - 72) * 40000;
-    $hasil = $insentif + 3600000;
-
-} else if ($total == 72) {
-    $hasil = 3600000;
+            // Ambil nomor terbesar yang sudah ada di database
+            $maxNo = LeaderBoard::max('no');
+                   
+            // Mulai dari baris kedua (indeks 1) karena baris pertama adalah header
+            for ($i = 1; $i < count($data); $i++) {
+                $rowData = $data[$i];
     
-}elseif ($total == 120) {
-    $hasil = 6000000;
+                $kodeSales = $rowData[3]; // Kolom 'Kode Sales'
+                $importedName = $rowData[2]; // Kolom 'Nama' dari data yang diimpor
+    
+                // Periksa apakah data dengan nama dan kode sales yang sama sudah ada pada hari yang sama
+                $existingData = LeaderBoard::where('kode_sales', $kodeSales)
+                    ->whereDate('created_at', now()) // Menyaring berdasarkan tanggal hari ini
+                    ->first();
+    
+                if ($existingData) {
+                    // Tangani kesalahan jika data sudah ada
+                    $request->session()->flash('error', 'Data dengan nama dan kode sales yang sama pada hari yang sama sudah ada.');
+                    return redirect(route('admin.leaderboard.index'))->withInput();
+                }
+    
+                $existingNames = User::pluck('nama')->toArray();
+    
+                $role_id = $request->input('role_id');
+    
+                $role = UserRole::find($role_id);
+    
+                if (!$role) {
+                    // Tangani kesalahan jika role tidak ditemukan
+                    $request->session()->flash('error', 'Role tidak ditemukan.');
+                    return redirect(route('admin.leaderboard.index'))->withInput();
+                }
 
-} elseif ($total > 120) {
-    $insentif = ($total - 120) * 40000;
-    $hasil = $insentif + 6000000;
-        
-}
-} elseif ($kodeRole == 'tm') {
-  $hasil =0;
-}
-elseif ($kodeRole == 'ms') {
-    $hasil =0;
-  }
+                $kodeRole = strtolower($role->kode_role);
+    
+                $user = User::where('username', $kodeSales)->first();
+    
+                if (!$user) {
+                    // Tangani kesalahan jika kode sales tidak sesuai
+                    $request->session()->flash('error', 'Kode Sales tidak sesuai dengan pengguna yang ada di database.');
+                    return redirect(route('admin.leaderboard.index'))->withInput();
+                }
+    
+                // Periksa apakah nama ada dalam daftar nama yang ada di database user
+                if (!in_array($importedName, $existingNames)) {
+                    // Tangani kesalahan jika nama tidak sesuai
+                    $request->session()->flash('error', 'Terdapat nama yang tidak sesuai dengan yang ada di database user.');
+                    return redirect(route('admin.leaderboard.index'))->withInput();
+                }
+    
+                $tanggalString = $rowData[1];
+                $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
+    
+                if (!$tanggalObj) {
+                    // Tangani kesalahan jika tanggal tidak sesuai format
+                    $request->session()->flash('error', 'Format tanggal tidak valid. Gunakan format "dd/mm/yyyy".');
+                    return redirect(route('admin.leaderboard.index'))->withInput();
+                }
+    
+                $tanggal = $tanggalObj->format('Y-m-d');
+                $rowData[1] = $tanggal;
+    
+                // Inisialisasi array asosiatif untuk data pencapaian
+                $pencapaian = [];
+                
+    
+                // Inisialisasi total
+                $total = 0;
+    
+                for ($j = 4; $j < count($headerRow); $j++) {
+                    $pencapaian[$headerRow[$j]] = $rowData[$j];
+    
+                    $namaProduk = $headerRow[$j]; // Nama produk dari header
+                    $jumlah = $rowData[$j];
+    
+                    // Memeriksa apakah $jumlah adalah angka
+                    if (!is_numeric($jumlah)) {
+                        // Tangani kesalahan jika $jumlah bukan angka
+                        $request->session()->flash('error', 'Jumlah produk harus berupa angka.');
+                        return redirect(route('admin.leaderboard.index'))->withInput();
+                    }
+    
+                    $jumlah = intval($jumlah); // Mengonversi ke integer setelah memastikan itu adalah angka
+    
+                    // Cek apakah nilai negatif
+                    if ($jumlah < 0) {
+                        // Tangani nilai negatif sesuai dengan kebutuhan Anda.
+                        $request->session()->flash('error', 'Jumlah produk tidak boleh negatif.');
+                        return redirect(route('admin.leaderboard.index'))->withInput();
+                    }
+    
+                    // Dapatkan poin produk dari tabel master produk
+                    $product = Product::where('nama_produk', $namaProduk)->first();
+    
+                    if (!$product) {
+                        // Tangani kesalahan jika produk tidak ditemukan
+                        $request->session()->flash('error', 'Produk tidak ditemukan dalam database.');
+                        return redirect(route('admin.leaderboard.index'))->withInput();
+                    }
+    
+                    // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
+                    $total += $product->poin_produk * $jumlah;
+                }
+    
+                if ($kodeRole == 'mr') {
+                    if ($total < 72) {
+                        $hasil = 3600000;
+                    } else if ($total > 72 && $total < 120) {
+                        $insentif = ($total - 72) * 40000;
+                        $hasil = $insentif + 3600000;
+                    } else if ($total == 72) {
+                        $hasil = 3600000;
+                    } elseif ($total == 120) {
+                        $hasil = 6000000;
+                    } elseif ($total > 120) {
+                        $insentif = ($total - 120) * 40000;
+                        $hasil = $insentif + 6000000;
+                    }
 
-    // Tambahkan nilai total ke dalam array $rowData
-    $rowData[] = $total;
-
-    // Tambahkan nomor terbesar yang sudah ada di database ke kolom 'no'
-    $rowData[0] = $maxNo + 1;
-
-    // Simpan user_id pada baris saat ini
-    $rowData['user_id'] = $user->id;
-
-
-    LeaderBoard::create([
-        'no' => $rowData[0], // Kolom 'No'
-        'role_id' => $request->input('role_id'), // Role ID yang dipilih sebelumnya
-        'user_id' => $rowData['user_id'], // Kolom 'user_id' (ID Pengguna)
-        'nama' => $rowData[2], // Kolom 'Nama'
-        'kode_sales' => $rowData[3],
-        'tanggal' => $tanggal, // Kolom 'Tanggal'
-        'income' => $hasil,
-        'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
-        'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
-    ]);
-
-    // Increment nomor terbesar
-    $maxNo++;
-}
-
-
-
-
-// Now you can dd($total) outside of the loop if you want to see the final total for each row
-// dd($total);
-// ...
-
-// ...
-
-        $request->session()->flash('success', 'Data berhasil diimport.');
-
-        return redirect(route('admin.leaderboard.index'))->withInput();
-    } catch (\Exception $e) {
-
-        $request->session()->flash('error', 'Terjadi kesalahan.');
-
-        // Notifikasi kesalahan dalam format JSON
-        return redirect(route('admin.leaderboard.index'))->withInput();
+                } elseif ($kodeRole == 'tm') {
+                    $hasil = 0;
+                } elseif ($kodeRole == 'ms') {
+                    $hasil = 0;
+                }
+    
+                // Tambahkan nilai total ke dalam array $rowData
+                $rowData[] = $total;
+    
+                // Tambahkan nomor terbesar yang sudah ada di database ke kolom 'no'
+                $rowData[0] = $maxNo + 1;
+    
+                // Simpan user_id pada baris saat ini
+                $rowData['user_id'] = $user->id;
+    
+                LeaderBoard::create([
+                    'no' => $rowData[0], // Kolom 'No'
+                    'role_id' => $request->input('role_id'), // Role ID yang dipilih sebelumnya
+                    'user_id' => $rowData['user_id'], // Kolom 'user_id' (ID Pengguna)
+                    'nama' => $rowData[2], // Kolom 'Nama'
+                    'kode_sales' => $rowData[3],
+                    'tanggal' => $tanggal, // Kolom 'Tanggal'
+                    'income' => $hasil,
+                    'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
+                    'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
+                ]);
+    
+                // Increment nomor terbesar
+                $maxNo++;
+            }
+    
+            $request->session()->flash('success', 'Data berhasil diimport.');
+    
+            return redirect(route('admin.leaderboard.index'))->withInput();
+        } catch (\Exception $e) {
+            $request->session()->flash('error', 'Terjadi kesalahan.');
+    
+            // Notifikasi kesalahan dalam format JSON
+            return redirect(route('admin.leaderboard.index'))->withInput();
+        }
     }
-}
-
+    
 public function getLeaderboardData(Request $request)
 {
     // Mendapatkan role_id dari permintaan POST

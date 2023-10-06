@@ -34,12 +34,12 @@ class MyIncomeController extends Controller
             // Menghitung total pendapatan dan total poin pada bulan berjalan
             $currentMonth = now()->format('Y-m');
             $totalIncomeThisMonth = Leaderboard::where('user_id', $userId)
-                ->whereYear('created_at', now()->year)
-                ->whereMonth('created_at', now()->month)
+                ->whereYear('tanggal', now()->year)
+                ->whereMonth('tanggal', now()->month)
                 ->sum('income');
             $totalPointsThisMonth = Leaderboard::where('user_id', $userId)
-                ->whereYear('created_at', now()->year)
-                ->whereMonth('created_at', now()->month)
+                ->whereYear('tanggal', now()->year)
+                ->whereMonth('tanggal', now()->month)
                 ->sum('total');
     
             // Menghitung poin yang dibutuhkan lagi untuk mencapai reward

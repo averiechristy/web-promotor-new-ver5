@@ -9,6 +9,12 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+  <!-- New CSS -->
+
+    <!-- ========== All CSS files linkup ========= -->
+
+
+
   <!-- Favicons -->
   <link href="assets/img/logoexa.png" rel="icon">
   <link href="assets/img/logoexa.png" rel="">
@@ -29,6 +35,10 @@
   <link href="{{asset('vendor2/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
   <link href="{{asset('vendor2/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
   <link href="{{asset('vendor2/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
+  <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('css/lineicons.css')}}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{asset('css/materialdesignicons.min.css')}}" rel="stylesheet" type="text/css" />
 
   <!-- Template Main CSS File -->
   <link href="{{asset('css/style.css')}}" rel="stylesheet">

@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\MyIncomeController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
+use App\Http\Controllers\UserController\UserDashboardController;
 use App\Http\Controllers\UserController\UserIncomeController;
 use App\Http\Controllers\UserController\UserLeaderboardController;
 use App\Http\Controllers\UserController\UserPaketController;
@@ -246,6 +247,7 @@ Route::get('/detailproduct/{id}',[ProductController::class,'detailproduct'])->na
 Route::get('/detailreward/{id}',[RewardController::class,'detailreward'])->name('detailreward');
 
 
+
 });
 
 Route::get('getProduct/{id}', function ($id) {
@@ -283,6 +285,9 @@ Route::get('user/leaderboard', [UserLeaderboardController::class,'index'])->name
 Route::get('user/myincome', [MyIncomeController::class,'index'])->name('user.myincome');
 
 Route::post('/filter-income', [MyIncomeController::class,'filterIncome']);
+
+Route::get('user/userdashboard', [UserDashboardController::class,'index'])->name('user.userdashboard');
+
 
 // routes/web.php
 
