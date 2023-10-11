@@ -24,6 +24,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController\UserRewardController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\AllRankController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -246,6 +247,13 @@ Route::get('/detailproduct/{id}',[ProductController::class,'detailproduct'])->na
 
 Route::get('/detailreward/{id}',[RewardController::class,'detailreward'])->name('detailreward');
 
+Route::get('/get-leaderboard/{role_id}', [DashboardController::class,'getLeaderboard']);
+
+Route::get('/leaderboard/{role_id}', [LeaderboardController::class,'getLeaderboardData']);
+
+// web.php
+
+Route::get('admin/allrank/index',[AllRankController::class,'index'])->name('admin.allrank.index');
 
 
 });

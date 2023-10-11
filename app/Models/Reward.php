@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Reward extends Model
 {
@@ -42,6 +43,24 @@ class Reward extends Model
         
             // Set kolom "updated_by" dengan ID pengguna yang sedang masuk
             $item->updated_by = $loggedInUsername;
+        });
+    }
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::saving(function ($reward) {
+            $currentDate = now();
+            $endDate = Carbon::parse($reward->tanggal_selesai)->endOfDay();
+
+            if ($currentDate >= $reward->tanggal_mulai && $currentDate <= $endDate) {
+                $reward->status = 'Sedang berjalan';
+            } elseif ($currentDate < $reward->tanggal_mulai) {
+                $reward->status = 'Akan datang';
+            } else {
+                $reward->status = 'Tidak Aktif';
+            }
         });
     }
 }

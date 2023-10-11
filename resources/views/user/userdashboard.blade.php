@@ -62,12 +62,12 @@
             <i class="lni lni-revenue"></i>
         </div>                    <div class="card-body mt-3">
                         <h5 class="card-title">Pendapatan</h5>
-                        <h4 class="text-bold mb-10 mt-2">Rp. {{ number_format($totalIncomeThisMonth, 0, ',', '.') }},-</h4>
+                        <h4 class="text-bold mb-10 mt-2">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }},-</h4>
                         
                         @php
                 $incomeChangePercent = 0;
-                if ($totalIncomeLastMonth !== 0) {
-                    $incomeChangePercent = (($totalIncomeThisMonth - $totalIncomeLastMonth) / $totalIncomeLastMonth) * 100/100;
+                if ($totalIncomeYesterday !== 0) {
+                    $incomeChangePercent = (($totalIncomeToday - $totalIncomeYesterday) / $totalIncomeYesterday) * 100;
                 }
             @endphp
 
@@ -78,7 +78,7 @@
                     <span class="text-gray">Meningkat dari bulan lalu </span>
                 @elseif ($incomeChangePercent < 0)
                     <i class="lni lni-arrow-down"></i> {{ number_format(abs($incomeChangePercent), 2) }}%
-                    <span class="text-gray">Menurun dari bulan lalu</span>
+                    <span class="text-gray">Menurun dari kemarin</span>
                 @else
                     <span class="text-gray">Tidak ada penurunan atau penaikan</span>
                 @endif
@@ -99,11 +99,11 @@
             <i class="lni lni-database"></i>
         </div>                    <div class="card-body mt-3">
                         <h5 class="card-title">Poin</h5>
-                        <h4 class="text-bold mb-10 mt-2">{{ $totalPointsThisMonth }} poin</h4>
+                        <h4 class="text-bold mb-10 mt-2">{{ $totalPointsToday }} poin</h4>
         @php
                 $pointsChangePercent = 0;
-                if ($totalPointsLastMonth !== 0) {
-                    $pointsChangePercent = (($totalPointsThisMonth - $totalPointsLastMonth) / $totalPointsLastMonth) * 100/100;
+                if ($totalPointsYesterday !== 0) {
+                    $pointsChangePercent = (($totalPointsToday - $totalPointsYesterday) / $totalPointsYesterday) * 100;
                 }
             @endphp
             <p class="text-sm @if ($pointsChangePercent > 0) text-success @elseif ($pointsChangePercent < 0) text-danger @endif">
@@ -112,7 +112,7 @@
                     <span class="text-gray">Meningkat dari bulan lalu</span>
                 @elseif ($pointsChangePercent < 0)
                     <i class="lni lni-arrow-down"></i> {{ number_format(abs($pointsChangePercent), 2) }}%
-                    <span class="text-gray">Menurun dari bulan lalu</span>
+                    <span class="text-gray">Menurun dari kemarin</span>
                 @else
                     <span class="text-gray">Tidak ada penurunan atau penaikan</span>
                 @endif

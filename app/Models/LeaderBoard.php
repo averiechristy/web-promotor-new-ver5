@@ -19,8 +19,27 @@ class LeaderBoard extends Model
             ->get();
     }
 
+    public function getAllLeaderboardToday()
+{
+    $leaderboardData = LeaderBoard::whereDate('created_at', now()->toDateString())
+        ->orderBy('total', 'desc')
+        ->take(10) // Ambil 10 leaderboard
+        ->get();
+
+    return $leaderboardData;
+}
     
  public static function getLeaderboardUser($role)
+    {
+        return self::whereDate('created_at', now()->toDateString())
+            ->where('role_id', $role)
+            ->orderBy('total', 'desc')
+            ->take(10) // Ambil 10 leaderboard
+            ->get();
+    }
+
+
+    public static function getLeaderboardUserAdminDashboard($role)
     {
         return self::whereDate('created_at', now()->toDateString())
             ->where('role_id', $role)
@@ -61,6 +80,10 @@ public static function getRankForUser($userId, $role)
         ->where('role_id', $role)
         ->where('user_id', $userId)
         ->value('total');
+
+    if ($userTotal === null) {
+        return null;
+    }
 
     $rank = self::whereDate('created_at', now()->toDateString())
         ->where('role_id', $role)

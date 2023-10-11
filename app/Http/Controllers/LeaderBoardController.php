@@ -92,25 +92,22 @@ class LeaderBoardController extends Controller
         $writer->save('php://output');
     }
     
-    
-
-    
-
     public function importDataFromExcel(Request $request)
     {
         $file = $request->file('file');
-    
-
+        
         try {
             $spreadsheet = IOFactory::load($file);
             $worksheet = $spreadsheet->getActiveSheet();
             $data = $worksheet->toArray();
     
+            
             // Mengambil baris header (baris pertama) untuk mendapatkan nama kolom
             $headerRow = $data[0];
     
             // Ambil nomor terbesar yang sudah ada di database
             $maxNo = LeaderBoard::max('no');
+            
                    
             // Mulai dari baris kedua (indeks 1) karena baris pertama adalah header
             for ($i = 1; $i < count($data); $i++) {
@@ -143,6 +140,7 @@ class LeaderBoardController extends Controller
                 }
 
                 $kodeRole = strtolower($role->kode_role);
+              
     
                 $user = User::where('username', $kodeSales)->first();
     
@@ -151,6 +149,15 @@ class LeaderBoardController extends Controller
                     $request->session()->flash('error', 'Kode Sales tidak sesuai dengan pengguna yang ada di database.');
                     return redirect(route('admin.leaderboard.index'))->withInput();
                 }
+
+                $userRole = strtolower($user->role->kode_role);
+            
+
+                if ($kodeRole != $userRole) {
+                    $request->session()->flash('error', 'Peran yang Anda pilih tidak sesuai dengan peran yang dimiliki oleh pengguna ini.');
+                    return redirect(route('admin.leaderboard.index'))->withInput();
+                }
+    
     
                 // Periksa apakah nama ada dalam daftar nama yang ada di database user
                 if (!in_array($importedName, $existingNames)) {
@@ -173,8 +180,7 @@ class LeaderBoardController extends Controller
     
                 // Inisialisasi array asosiatif untuk data pencapaian
                 $pencapaian = [];
-                
-    
+                    
                 // Inisialisasi total
                 $total = 0;
     
@@ -207,8 +213,7 @@ class LeaderBoardController extends Controller
                         // Tangani kesalahan jika produk tidak ditemukan
                         $request->session()->flash('error', 'Produk tidak ditemukan dalam database.');
                         return redirect(route('admin.leaderboard.index'))->withInput();
-                    }
-    
+                    }    
                     // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
                     $total += $product->poin_produk * $jumlah;
                 }
@@ -254,14 +259,14 @@ class LeaderBoardController extends Controller
                     'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
                     'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
                 ]);
-    
+
                 // Increment nomor terbesar
                 $maxNo++;
             }
-    
+          
             $request->session()->flash('success', 'Data berhasil diimport.');
     
-            return redirect(route('admin.leaderboard.index'))->withInput();
+        return redirect(route('admin.leaderboard.index'))->withInput();
         } catch (\Exception $e) {
             $request->session()->flash('error', 'Terjadi kesalahan.');
     

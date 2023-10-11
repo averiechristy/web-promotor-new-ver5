@@ -1,27 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\UserController;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Reward;
-use Auth;
+use App\Models\LeaderBoard;
+use App\Models\UserRole;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class UserRewardController extends Controller
+class AllRankController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $reward = Reward::orderBy('created_at', 'desc')->get();
-    
-    return view('user.reward', [
-        'reward' => $reward,
-    ]);
+        $role = UserRole::all();
+        $today = Carbon::today();
+
+        $leaderboardData = LeaderBoard::whereDate('created_at', $today)
+        ->orderBy('total', 'desc')
+        ->get();
+
+        return view('admin.allrank', [
+            'leaderboardData' => $leaderboardData,
+            'role' => $role,
+        ]);
     }
 
-    
     /**
      * Show the form for creating a new resource.
      */

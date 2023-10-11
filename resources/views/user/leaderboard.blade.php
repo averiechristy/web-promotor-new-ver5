@@ -9,6 +9,34 @@
     <h2>10 Besar Ranking per bulan {{ now()->format('F') }}</h2>
       <p>Leaderboard</p>
     </div>
+    <div class="card mb-3">
+  <div class="card-body">
+  @if($leaderboardData->isEmpty())
+                    <p class="text-sm">
+               
+                    <small class="text-muted">
+                        Belum ada peringkat
+                    </small>
+
+                    </p>  
+
+                    @else
+                    
+                    <h4 class="text-bold mb-10 mt-2">
+                        <span class="user-rank"> Ranking Anda : {{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
+                        </h4>
+
+                        <p class="text-sm">
+                <small class="text-muted">
+                Anda menduduki posisi ke {{$userRank}} dari {{$totalUsersWithSameRole}}
+            </small>
+
+            </p>  
+                        @endif  </div>
+</div>
+
+<hr class="solid">
+
     @if (count($leaderboardData) > 0)
     <ul class="leaderboard-list">
       @foreach ($leaderboardData as $leader)
@@ -58,13 +86,34 @@
 
 <style>
 
+hr.solid {
+  border-top: 2px solid  #FF5733; 
+  margin-bottom : 15px;
+}
+.user-rank {
+    font-size: 34px; /* Ubah ukuran teks sesuai preferensi Anda */
+    color: #FF5733; /* Ubah warna teks sesuai preferensi Anda */
+    font-weight: bold; /* Membuat teks menjadi tebal */
+    margin-right: 5px; /* Memberikan jarak sebelum tanda "/" */
+}
+
+.total-user {
+    font-size: 30px;
+    color: gray; 
+
+}
+
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+  }
+
+
     /* Mengatur tampilan daftar leaderboard */
 .leaderboard-list {
   list-style: none;
   padding: 0;
 }
-
-
 
 .leaderboard-item {
   border: 2px solid #01004C; /* Warna border item leaderboard */

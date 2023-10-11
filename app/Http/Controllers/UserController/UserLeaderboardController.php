@@ -15,10 +15,18 @@ class UserLeaderboardController extends Controller
     public function index()
     {
         $userRole = Auth::user()->role_id;
+        $userId = auth()->user()->id;
         $leaderboardData = LeaderBoard::getLeaderboardUser($userRole);
+        $userRank = LeaderBoard::getRankForUser($userId, $userRole);
+        $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRole($userRole);
+
+
 
         return view('user.leaderboard',[
-            'leaderboardData' => $leaderboardData
+            'leaderboardData' => $leaderboardData,
+            'userRank' => $userRank,
+            'totalUsersWithSameRole' => $totalUsersWithSameRole,
+
 
         ]);
     }

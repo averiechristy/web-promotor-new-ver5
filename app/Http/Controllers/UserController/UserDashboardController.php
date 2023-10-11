@@ -19,13 +19,13 @@ class UserDashboardController extends Controller
     {
         $userId = auth()->user()->id;
         $currentRole = auth()->user()->role;
-    
+            
         // Mengambil semua reward dengan status "Sedang berjalan"
         $activeRewards = Reward::where('role_id', $currentRole->id)
             ->where('status', 'Sedang berjalan')
-            ->where('tanggal_selesai', '>=', now())
+            ->where('tanggal_selesai', '>=', now()->endOfDay())
             ->get();
-    
+             
         // Menghitung total pendapatan bulan ini
         $totalIncomeThisMonth = LeaderBoard::where('user_id', $userId)
             ->whereYear('tanggal', now()->year)
@@ -50,12 +50,36 @@ class UserDashboardController extends Controller
             ->whereYear('tanggal', $lastMonth->year)
             ->whereMonth('tanggal', $lastMonth->month)
             ->sum('total');
+
+        
     
+
+            $totalIncomeToday = LeaderBoard::where('user_id', $userId)
+            ->whereDate('created_at', now()) // Mengambil data hanya untuk hari ini
+            ->sum('income');
+    
+            
+        // Menghitung total poin hari ini
+        $totalPointsToday = LeaderBoard::where('user_id', $userId)
+            ->whereDate('created_at', now()) // Mengambil data hanya untuk hari ini
+            ->sum('total');
+
+
+            $yesterday = now()->subDay();
+            $totalIncomeYesterday = LeaderBoard::where('user_id', $userId)
+                ->whereDate('created_at', $yesterday) // Mengambil data hanya untuk hari kemarin
+                ->sum('income');
+        
+            // Menghitung total poin hari kemarin
+            $totalPointsYesterday = LeaderBoard::where('user_id', $userId)
+                ->whereDate('created_at', $yesterday) // Mengambil data hanya untuk hari kemarin
+                ->sum('total');
+
         // Menentukan apakah total pendapatan naik atau turun dibandingkan dengan bulan lalu
-        $incomeChange = ($totalIncomeThisMonth > $totalIncomeLastMonth) ? 'Naik' : 'Turun';
-    
-        // Menentukan apakah total poin naik atau turun dibandingkan dengan bulan lalu
-        $pointsChange = ($totalPointsThisMonth > $totalPointsLastMonth) ? 'Naik' : 'Turun';
+         $incomeChange = ($totalIncomeToday > $totalIncomeYesterday) ? 'Naik' : 'Turun';
+
+    // Menentukan apakah total poin naik atau turun dibandingkan dengan hari kemarin
+    $pointsChange = ($totalPointsToday > $totalPointsYesterday) ? 'Naik' : 'Turun';
     
         // Menghitung poin yang diperlukan untuk mencapai reward
         $requiredPoints = [];
@@ -90,11 +114,12 @@ foreach ($activeRewards as $activeReward) {
         ->where('tanggal', '<=', $activeReward->tanggal_selesai)
         ->sum('total');
 
+        
     // Simpan total poin untuk reward ini dalam array
     $totalPointsRewardPeriod[$activeReward->id] = $totalPointsReward;
 
     // Menghitung persentase poin yang sudah dicapai untuk reward ini
-    $progressWidth = ($totalPointsReward >= $activeReward->poin_reward) ? '100%' : ($totalPointsReward / $activeReward->poin_reward * 100) . '%';
+    $progressWidth = ($totalPointsReward >= $activeReward->poin_reward) ? '100%' : number_format(($totalPointsReward / $activeReward->poin_reward * 100), 1) . '%';
 
     // Simpan progressWidth untuk reward ini dalam array dengan ID reward sebagai kunci
     $progressWidthPerReward[$activeReward->id] = $progressWidth;
@@ -110,23 +135,28 @@ foreach ($activeRewards as $activeReward) {
         $userRank = LeaderBoard::getRankForUser($userId, $userRole);
         $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRole($userRole);
 
+        
 
         
         return view('user.userdashboard', [
-            'totalIncomeThisMonth' => $totalIncomeThisMonth,
-            'totalPointsThisMonth' => $totalPointsThisMonth,
+            'totalIncomeThisMonth' => $totalIncomeToday,
+            'totalPointsThisMonth' => $totalPointsToday,
             'activeRewards' => $activeRewards,
             'requiredPoints' => $requiredPoints,
             'incomeChange' => $incomeChange,
             'pointsChange' => $pointsChange,
             'totalIncomeLastMonth' => $totalIncomeLastMonth,
             'totalPointsLastMonth' => $totalPointsLastMonth,
-            'remainingTime' => $remainingTime, // Tambahkan ini
+            'totalIncomeToday' => $totalIncomeToday,
+         'totalIncomeYesterday' =>   $totalIncomeYesterday,
+         'totalPointsToday' => $totalPointsToday,
+         'totalPointsYesterday' =>   $totalPointsYesterday,
+            'remainingTime' => $remainingTime,
             'leaderboardData' => $leaderboardData,
             'userRank' => $userRank,
             'totalUsersWithSameRole' => $totalUsersWithSameRole,
-          'totalPointsRewardPeriod' => $totalPointsRewardPeriod,
-         'progressWidthPerReward' => $progressWidthPerReward,         
+            'totalPointsRewardPeriod' => $totalPointsRewardPeriod,
+            'progressWidthPerReward' => $progressWidthPerReward,
         ]);
     }
     

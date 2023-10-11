@@ -34,7 +34,9 @@
     </div>
 
     <!-- Pesan "Pilih salah satu kode role" -->
-    <div id="selectRoleMessage" class="text-danger" style="display: block;">Pilih kode role terlebih dahulu</div>
+    <div id="selectRoleMessage" class="alert alert-warning mt-3">
+    Silakan memilih peran terlebih dahulu untuk melihat data.
+</div>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -56,30 +58,62 @@
     </div>
 
     <div class="card-body">
+        
+
+  
+
+<div class="dataTables_length mb-3" id="myDataTable_length">
+<label for="entries"> Show
+<select id="entries" name="myDataTable_length" aria-controls="myDataTable"  onchange="changeEntries()" class>
+<option value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+<option value="100">100</option>
+</select>
+entries
+</label>
+</div>
+
+
+<div id="myDataTable_filter" class="dataTables_filter">
+<label>
+Search
+<input type="text" id="search"  placeholder>
+</label>
+</div>
+
+
 
     <!-- Tabel -->
     <div class="table-responsive" id="tableContainer" style="display: none;">
-        <table id="myDataTable" class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
+        <table id="myTable" class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
+      
+      
         <thead>
+
+
+
+        
             
         <div style="display: flex; align-items: center;">
-        <div class="form-group" style="margin-right: 10px;">
-            <label for="start_date">Tanggal Mulai</label>
-            <input type="date" id="start_date" name="start_date" class="form-control" >
-        </div>
-
-        <div class="form-group" style="margin-right: 10px;">
-            <label for="end_date">Tanggal Akhir</label>
-            <input type="date" id="end_date" name="end_date" class="form-control" >
-        </div>
-
-        <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterData()">Filter Data</button>
+    <div class="form-group" style="margin-right: 10px;">
+        <label for="start_date">Tanggal Mulai</label>
+        <input type="date" id="start_date" name="start_date" class="form-control">
     </div>
+
+    <div class="form-group" style="margin-right: 10px;">
+        <label for="end_date">Tanggal Akhir</label>
+        <input type="date" id="end_date" name="end_date" class="form-control">
+    </div>
+
+    <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterData()">Filter Data</button>
+</div>
+
 
             
             <tr>
                 <th>Role</th>
-                <th>Nama</th>
+                <th id="sortNama">Nama</th>
                 <th>Kode Sales</th>
                 <th>Pencapaian Penjualan Produk</th>
                 <th>Total Poin</th>
@@ -136,39 +170,119 @@
     </tr>
     @endforeach
 </tbody>
+
         </table>
-    </div>
-</div>
+
+        
+
+        <div class="dataTables_info" id="dataTableInfo" role="status" aria-live="polite">
+    Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalEntries">0</span> entries
 </div>
 
+        
+        <div class ="dataTables_paginate paging_simple_numbers" id="myDataTable_paginate">
+
+    <a href="#" class="paginate_button" id="prevButton"  onclick="previousPage()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+    
+    <span>
+    <a  id="pageNumbers" aria-controls="myDataTable" role="link" aria-current="page" data-dt-idx="0" tabindex="0"></a>
+</span>
+
+
+<a href="#"  class="paginate_button" id="nextButton"  onclick="nextPage()"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+</div>
+
+</div>
+    </div>
+
+    
+
+
+</div>
+
+<style>
+
+.dataTables_paginate{float:right;text-align:right;padding-top:.25em}
+.paginate_button{box-sizing:border-box;display:inline-block;min-width:1.5em;padding:.5em 1em;margin-left:2px;text-align:center;text-decoration:none !important;cursor:pointer;color:inherit !important;border:1px solid transparent;border-radius:2px;background:transparent}
+.dataTables_length{float:left}.dataTables_wrapper .dataTables_length select{border:1px solid #aaa;border-radius:3px;padding:5px;background-color:transparent;color:inherit;padding:4px}
+.dataTables_info{clear:both;float:left;padding-top:.755em}    
+.dataTables_filter{float:right;text-align:right}
+.dataTables_filter input{border:1px solid #aaa;border-radius:3px;padding:5px;background-color:transparent;color:inherit;margin-left:3px}
+
+</style>
 <!-- Modal Import -->
 <!-- Modal Import -->
 <script>
     // Fungsi ini akan dipanggil saat pilihan peran berubah
 
-    function filterData() {
-    var startDate = document.getElementById('start_date').value;
-    var endDate = document.getElementById('end_date').value;
-    var selectedRole = document.getElementById('role').value; // Ambil peran yang dipilih
+  
+    var itemsPerPage = 10; // Change this value to set the number of items per page
+var currentPage = 1;
+var filteredData = [];
 
-    // Ambil semua baris data dalam tbody
-    var allRows = document.querySelectorAll('#tableBody tr');
-
-    // Loop melalui semua baris data dan tampilkan hanya yang sesuai dengan tanggal dan peran yang dipilih
-    allRows.forEach(function (row) {
-        var createdAt = row.querySelector('td:last-child').textContent; // Ambil nilai kolom "Created At"
-        var role = row.getAttribute('data-role'); // Ambil peran dari atribut data-role
-
-        // Format tanggal dari kolom "Created At" ke format "YYYY-MM-DD"
-        var createdDate = new Date(createdAt).toISOString().split('T')[0];
-
-        if ((startDate <= createdDate && createdDate <= endDate) && (selectedRole === '' || selectedRole === role)) {
-            row.style.display = 'table-row'; // Tampilkan baris data yang sesuai
-        } else {
-            row.style.display = 'none'; // Sembunyikan baris data yang tidak sesuai
-        }
-    });
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+    }
 }
+
+function nextPage() {
+    var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+    }
+}
+
+function updatePagination() {
+    // Calculate the start and end indexes for the current page
+    var startIndex = (currentPage - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
+
+    // Hide all rows
+    filteredData.forEach(function (row) {
+        row.style.display = 'none';
+    });
+
+    // Display the rows for the current page
+    for (var i = startIndex; i < endIndex && i < filteredData.length; i++) {
+        filteredData[i].style.display = 'table-row';
+    }
+
+    // Update page numbers
+    var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    var pageNumbers = document.getElementById('pageNumbers');
+    pageNumbers.innerHTML = '';
+
+    var startIndex = (currentPage - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
+    var totalEntries = filteredData.length;
+
+    document.getElementById('showingStart').textContent = startIndex + 1;
+    document.getElementById('showingEnd').textContent = Math.min(endIndex, totalEntries);
+    document.getElementById('totalEntries').textContent = totalEntries;
+
+    for (var i = 1; i <= totalPages; i++) {
+        var pageButton = document.createElement('button');
+        pageButton.className = 'btn btn-primary btn-sm mr-2';
+        pageButton.textContent = i;
+        pageButton.onclick = function () {
+            currentPage = parseInt(this.textContent);
+            updatePagination();
+        };
+        pageNumbers.appendChild(pageButton);
+    }
+
+    // Update pagination controls (optional)
+    // You can add next and previous buttons to navigate through pages.
+    // Example:
+    // var prevButton = document.getElementById('prevButton');
+    // var nextButton = document.getElementById('nextButton');
+    // prevButton.disabled = currentPage === 1;
+    // nextButton.disabled = endIndex >= filteredData.length;
+}
+
 
 
     function onRoleChange() {
@@ -194,6 +308,8 @@
         selectedRoleRows.forEach(function (row) {
             row.style.display = 'table-row';
         });
+
+        
 
         // Menampilkan tombol "Import Data"
         var importDataBtn = document.querySelector('.btn-primary.btn-sm');
@@ -222,8 +338,94 @@
         var importFile = document.querySelector('.form');
         importFile.style.display = 'none';
     }
+
+    currentPage = 1;
+
+// Populate filteredData with data for the selected role
+filteredData = [];
+var selectedRoleRows = document.querySelectorAll('#tableBody tr[data-role="' + selectedRole + '"]');
+selectedRoleRows.forEach(function (row) {
+    filteredData.push(row);
+});
+
+// Update pagination
+updatePagination();
+search();
 }
 
+function filterData() {
+    var startDate = document.getElementById('start_date').value;
+    var endDate = document.getElementById('end_date').value;
+    var selectedRole = document.getElementById('role').value; // Ambil peran yang dipilih
+
+    
+    var allRows = document.querySelectorAll('#tableBody tr');
+    allRows.forEach(function (row) {
+        var tanggalColumn = row.querySelector('td:nth-child(7)');
+        var tanggal = tanggalColumn.textContent;
+        var role = row.getAttribute('data-role');
+        
+        // Ubah format tanggal ke YYYY-MM-DD
+        var dateParts = tanggal.split('-');
+        var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+
+        if (startDate && endDate) {
+            if ((formattedDate >= startDate && formattedDate <= endDate) && (selectedRole === '' || selectedRole === role)) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        } else {
+            // Jika salah satu tanggal kosong, tampilkan semua baris
+            row.style.display = 'table-row';
+        }
+    })
+}
+
+function changeEntries() {
+        var entriesSelect = document.getElementById('entries');
+        var selectedEntries = parseInt(entriesSelect.value);
+
+        // Update the 'itemsPerPage' variable with the selected number of entries
+        itemsPerPage = selectedEntries;
+
+        // Reset the current page to 1 when changing the number of entries
+        currentPage = 1;
+
+        // Update pagination based on the new number of entries
+        updatePagination();
+    }
+
+    function search() {
+        var keyword = document.getElementById('search').value.toLowerCase();
+        var selectedRole = document.getElementById('role').value;
+
+        // Semua baris data dalam tabel
+        var allRows = document.querySelectorAll('#tableBody tr');
+
+        // Lakukan iterasi pada setiap baris dan periksa apakah kata kunci cocok
+        allRows.forEach(function (row) {
+            var roleColumn = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            var namaColumn = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            var kodeSalesColumn = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            var roleValue = row.getAttribute('data-role');
+
+            if (
+                (roleValue === selectedRole || selectedRole === "") &&
+                (roleColumn.includes(keyword) || namaColumn.includes(keyword) || kodeSalesColumn.includes(keyword))
+            ) {
+                row.style.display = 'table-row';
+                
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        
+    }
+
+    // Panggil fungsi search saat input pencarian berubah
+    document.getElementById('search').addEventListener('input', search);
 
     // Panggil onRoleChange saat halaman dimuat ulang
     window.onload = onRoleChange;
@@ -231,6 +433,7 @@
     // Panggil onRoleChange saat elemen select dengan id 'role' berubah
     document.getElementById('role').addEventListener('change', onRoleChange);
 </script>
+
 
 
 @endsection
