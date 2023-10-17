@@ -349,6 +349,10 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
     Route::post('/avatar/update',[ProfileController::class,'updateAvatar'])->name('update-avatar');
     Route::get('/profile/delete-photo', [ProfileController::class,'deletePhoto'])->name('profile.delete-photo');
 
+
+    Route::post('/filter-income', [MyIncomeController::class,'filterIncome']);
+
+
 });
 
 Route::middleware('auth')->group(function (){

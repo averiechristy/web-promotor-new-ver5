@@ -6,7 +6,7 @@
 <section id="leaderboard" class="leaderboard">
   <div class="container">
     <div class="section-title">
-    <h2>10 Besar Ranking per bulan {{ now()->format('F') }}</h2>
+    <h2>10 Besar Peringkat per bulan {{ now()->format('F') }}</h2>
       <p>Leaderboard</p>
     </div>
     <div class="card mb-3">
@@ -23,7 +23,7 @@
                     @else
                     
                     <h4 class="text-bold mb-10 mt-2">
-                        <span class="user-rank"> Ranking Anda : {{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
+                        <span class="user-rank"> Peringkat Anda : {{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
                         </h4>
 
                         <p class="text-sm">

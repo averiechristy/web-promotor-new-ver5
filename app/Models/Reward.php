@@ -18,7 +18,6 @@ class Reward extends Model
         'gambar_reward',
         'tanggal_mulai',
         'tanggal_selesai',
-        'status',
         'created_by',
         'updated_by',
 
@@ -50,17 +49,5 @@ class Reward extends Model
     {
         parent::booted();
 
-        static::saving(function ($reward) {
-            $currentDate = now();
-            $endDate = Carbon::parse($reward->tanggal_selesai)->endOfDay();
-
-            if ($currentDate >= $reward->tanggal_mulai && $currentDate <= $endDate) {
-                $reward->status = 'Sedang berjalan';
-            } elseif ($currentDate < $reward->tanggal_mulai) {
-                $reward->status = 'Akan datang';
-            } else {
-                $reward->status = 'Tidak Aktif';
-            }
-        });
     }
 }

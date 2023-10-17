@@ -21,18 +21,32 @@ class DashboardController extends Controller
         $role = UserRole::all();
         $userRole = Auth::user()->role_id;
        
-        $today = Carbon::today();
+
+        $today = Carbon::now();
+
+        if ($today->isMonday()) {
+            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+            $dateToQuery = $today->subDays(3)->toDateString();
+        }else {
+            // Jika hari biasa, ambil data dari hari sebelumnya.
+            $dateToQuery = $today->subDay()->toDateString();
+        }
     
-        $leaderboardData = LeaderBoard::whereDate('created_at', $today)
+        $leaderboardData = LeaderBoard::whereDate('tanggal', $dateToQuery)
             ->orderBy('total', 'desc')
             ->get();
     
-        $activeRewards = Reward::where('status', 'Sedang berjalan')
-            ->where('tanggal_selesai', '>=', now()->endOfDay())
+        $activeRewards = Reward::where(function($query) {
+            $today = now();
+            $query->whereDate('tanggal_mulai', '<=', $today->toDateString())
+                  ->whereDate('tanggal_selesai', '>=', $today->toDateString());
+        })
             ->get();
     
         // Inisialisasi array untuk menyimpan informasi pengguna yang mencapai 50% target poin
         $usersReached50Percent = [];
+
+        $totalUsersReached50Percent = 0;
     
         // Loop melalui setiap reward yang sedang berjalan
         foreach ($activeRewards as $reward) {
@@ -65,6 +79,8 @@ class DashboardController extends Controller
                         'nama' => $user->nama,
                         'progressPercentage' => $progressPercentage,
                     ];
+
+                    $totalUsersReached50Percent += count($userIds);
                 }
             }
         }
@@ -74,6 +90,7 @@ class DashboardController extends Controller
             'leaderboardData' => $leaderboardData,
             'activeRewards' => $activeRewards,
             'usersReached50Percent' => $usersReached50Percent,
+            'totalUsersReached50Percent' => $totalUsersReached50Percent, 
         ]);
     }
     

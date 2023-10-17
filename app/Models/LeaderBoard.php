@@ -4,24 +4,51 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class LeaderBoard extends Model
 {
 
     use HasFactory;
 
- public static function getLeaderboardForRole($role)
-    {
-        return self::whereDate('created_at', now()->toDateString())
-            ->where('role_id', $role)
-            ->orderBy('total', 'desc')
-            ->take(3) // Ambil 3 pemimpin teratas.
-            ->get();
+
+
+public static function getLeaderboardForRole($role)
+{
+    $today = Carbon::now();
+
+    if ($today->isMonday()) {
+        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+        $dateToQuery = $today->subDays(3)->toDateString();
+    }else {
+        // Jika hari biasa, ambil data dari hari sebelumnya.
+        $dateToQuery = $today->subDay()->toDateString();
     }
+
+    return self::whereDate('tanggal', $dateToQuery)
+        ->where('role_id', $role)
+        ->orderBy('total', 'desc')
+        ->take(3) // Ambil 3 pemimpin teratas.
+        ->get();
+}
+
+
+
 
     public function getAllLeaderboardToday()
 {
-    $leaderboardData = LeaderBoard::whereDate('created_at', now()->toDateString())
+    $today = Carbon::now();
+
+    if ($today->isMonday()) {
+        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+        $dateToQuery = $today->subDays(3)->toDateString();
+    }else {
+        // Jika hari biasa, ambil data dari hari sebelumnya.
+        $dateToQuery = $today->subDay()->toDateString();
+    }
+    
+    $leaderboardData = LeaderBoard::whereDate('tanggal', $dateToQuery)
         ->orderBy('total', 'desc')
         ->take(10) // Ambil 10 leaderboard
         ->get();
@@ -31,7 +58,18 @@ class LeaderBoard extends Model
     
  public static function getLeaderboardUser($role)
     {
-        return self::whereDate('created_at', now()->toDateString())
+
+        $today = Carbon::now();
+
+        if ($today->isMonday()) {
+            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+            $dateToQuery = $today->subDays(3)->toDateString();
+        }else {
+            // Jika hari biasa, ambil data dari hari sebelumnya.
+            $dateToQuery = $today->subDay()->toDateString();
+        }
+
+        return self::whereDate('tanggal', $dateToQuery)
             ->where('role_id', $role)
             ->orderBy('total', 'desc')
             ->take(10) // Ambil 10 leaderboard
@@ -41,7 +79,16 @@ class LeaderBoard extends Model
 
     public static function getLeaderboardUserAdminDashboard($role)
     {
-        return self::whereDate('created_at', now()->toDateString())
+        $today = Carbon::now();
+
+        if ($today->isMonday()) {
+            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+            $dateToQuery = $today->subDays(3)->toDateString();
+        }else {
+            // Jika hari biasa, ambil data dari hari sebelumnya.
+            $dateToQuery = $today->subDay()->toDateString();
+        }
+        return self::whereDate('tanggal', $dateToQuery)
             ->where('role_id', $role)
             ->orderBy('total', 'desc')
             ->take(10) // Ambil 10 leaderboard
@@ -50,7 +97,16 @@ class LeaderBoard extends Model
 
     public static function getLeaderboardUserDasboard($role)
     {
-        return self::whereDate('created_at', now()->toDateString())
+        $today = Carbon::now();
+
+        if ($today->isMonday()) {
+            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+            $dateToQuery = $today->subDays(3)->toDateString();
+        }else {
+            // Jika hari biasa, ambil data dari hari sebelumnya.
+            $dateToQuery = $today->subDay()->toDateString();
+        }
+        return self::whereDate('tanggal', $dateToQuery)
             ->where('role_id', $role)
             ->orderBy('total', 'desc')
             ->get();
@@ -58,7 +114,16 @@ class LeaderBoard extends Model
 
     public static function getTotalUsersWithSameRole($role)
 {
-    return self::whereDate('created_at', now()->toDateString())
+    $today = Carbon::now();
+
+    if ($today->isMonday()) {
+        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+        $dateToQuery = $today->subDays(3)->toDateString();
+    }else {
+        // Jika hari biasa, ambil data dari hari sebelumnya.
+        $dateToQuery = $today->subDay()->toDateString();
+    }
+    return self::whereDate('tanggal', $dateToQuery)
         ->where('role_id', $role)
         ->count();
 }
@@ -66,8 +131,17 @@ class LeaderBoard extends Model
 
 public static function getRankForUser($userId, $role)
 {
+    $today = Carbon::now();
+
+    if ($today->isMonday()) {
+        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+        $dateToQuery = $today->subDays(3)->toDateString();
+    }else {
+        // Jika hari biasa, ambil data dari hari sebelumnya.
+        $dateToQuery = $today->subDay()->toDateString();
+    }
     // Check if there is any data for the given role in the database.
-    $roleDataExists = self::whereDate('created_at', now()->toDateString())
+    $roleDataExists = self::whereDate('tanggal', $dateToQuery)
         ->where('role_id', $role)
         ->exists();
 
@@ -76,16 +150,16 @@ public static function getRankForUser($userId, $role)
         return null; // You can return null or an appropriate value indicating no data.
     }
 
-    $userTotal = self::whereDate('created_at', now()->toDateString())
+    $userTotal = self::whereDate('tanggal', $dateToQuery)
         ->where('role_id', $role)
         ->where('user_id', $userId)
         ->value('total');
 
     if ($userTotal === null) {
-        return null;
+        return '-';
     }
 
-    $rank = self::whereDate('created_at', now()->toDateString())
+    $rank = self::whereDate('tanggal', $dateToQuery)
         ->where('role_id', $role)
         ->where('total', '>', $userTotal)
         ->count();

@@ -19,12 +19,24 @@ class UserDashboardController extends Controller
     {
         $userId = auth()->user()->id;
         $currentRole = auth()->user()->role;
-            
-        // Mengambil semua reward dengan status "Sedang berjalan"
+        
+             $today = Carbon::now();
+
+        if ($today->isMonday()) {
+            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+            $dateToQuery = $today->subDays(3)->toDateString();
+        }else {
+            // Jika hari biasa, ambil data dari hari sebelumnya.
+            $dateToQuery = $today->subDay()->toDateString();
+        }
         $activeRewards = Reward::where('role_id', $currentRole->id)
-            ->where('status', 'Sedang berjalan')
-            ->where('tanggal_selesai', '>=', now()->endOfDay())
-            ->get();
+        ->where(function($query) {
+            $today = now();
+            $query->whereDate('tanggal_mulai', '<=', $today->toDateString())
+                  ->whereDate('tanggal_selesai', '>=', $today->toDateString());
+        })
+        ->get();
+    
              
         // Menghitung total pendapatan bulan ini
         $totalIncomeThisMonth = LeaderBoard::where('user_id', $userId)
@@ -38,6 +50,8 @@ class UserDashboardController extends Controller
             ->whereMonth('tanggal', now()->month)
             ->sum('total');
     
+
+            
         // Menghitung total pendapatan bulan lalu
         $lastMonth = now()->subMonth();
         $totalIncomeLastMonth = LeaderBoard::where('user_id', $userId)
@@ -51,8 +65,6 @@ class UserDashboardController extends Controller
             ->whereMonth('tanggal', $lastMonth->month)
             ->sum('total');
 
-        
-    
 
             $totalIncomeToday = LeaderBoard::where('user_id', $userId)
             ->whereDate('created_at', now()) // Mengambil data hanya untuk hari ini
@@ -100,9 +112,11 @@ class UserDashboardController extends Controller
         $remainingTime = [];
 
         foreach ($activeRewards as $reward) {
-            $endDate = Carbon::parse($reward->tanggal_selesai)->endOfDay(); // Akhiri hari pada tanggal selesai
-       $remainingTime[$reward->id] = now()->diffInMonths($endDate) . ' bulan ' . now()->diffInDays($endDate) . ' hari';
+            $endDate = Carbon::parse($reward->tanggal_selesai)->endOfDay(); // Akhiri hari pada tanggal selesai (pukul 23:59:59)
+            $remainingTime[$reward->id] =  now()->diffInDays($endDate) . ' hari';
         }
+
+       
     
         $totalPointsRewardPeriod = [];
 
@@ -135,9 +149,9 @@ foreach ($activeRewards as $activeReward) {
         $userRank = LeaderBoard::getRankForUser($userId, $userRole);
         $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRole($userRole);
 
-        
 
-        
+                
+
         return view('user.userdashboard', [
             'totalIncomeThisMonth' => $totalIncomeToday,
             'totalPointsThisMonth' => $totalPointsToday,

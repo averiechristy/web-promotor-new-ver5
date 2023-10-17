@@ -40,26 +40,22 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Rank</th>
+                                    <th>Peringkat</th>
                                     <th>Nama</th>
                                     <th>Kode Sales</th>
-                                    <th>Pendapatan</th>
                                     <th>Poin</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
                               
                             </tbody>
-
-                       
                         </table>
 
                         <div id="lihatSeluruhRanking" class="more-leaderboard">
 
                         <a href="{{route('admin.allrank.index')}}">
-  <button id="allrank" class="btn btn-link center-text"> Lihat seluruh ranking </button>
+  <button id="allrank" class="btn btn-link center-text"> Lihat seluruh peringkat </button>
 </a>
-
                         </div>
                     </div>
                 </div>
@@ -80,6 +76,7 @@
                   
                 </ul>
             </div>
+            
         </div>
     </div>
 </div>
@@ -159,6 +156,7 @@
         const rewardList = document.getElementById('rewardList');
         const rewardsData = @json($activeRewards);
         const usersReached50PercentData = @json($usersReached50Percent);
+        
 
         roleSelect.addEventListener('change', function () {
             const selectedRoleId = roleSelect.value;
@@ -255,7 +253,6 @@
                     <td>${index + 1}</td>
                     <td>${leader.nama}</td>
                     <td>${leader.kode_sales}</td>
-                    <td>Rp. ${numberWithCommas(leader.income)},-</td>
                     <td>${leader.total}</td>
                     
                 `;

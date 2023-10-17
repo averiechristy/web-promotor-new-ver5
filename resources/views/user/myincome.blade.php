@@ -2,174 +2,127 @@
 @extends('layouts.user.app2')
 
 @section('content2')
+
 <main id="main">
-    <section id="myincome" class="myincome">
+<section id="myincome" class="myincome d-flex align-items-center">
         <div class="container">
-            
-            <div class="row">
-                <!-- Filter Form -->
-                <div class="col-md-6 offset-md-3">
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Filter Pendapatan</h5>
-                            <form id="filter-form" method="GET">
-                                <div class="form-group">
-                                    <label for="start_date">Mulai Tanggal</label>
-                                    <input type="date" class="form-control" id="start_date" name="start_date"
-                                        value="{{ request('start_date') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="end_date">Sampai Tanggal</label>
-                                    <input type="date" class="form-control" id="end_date" name="end_date"
-                                        value="{{ request('end_date') }}">
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
-                                    <a href="{{ route('user.myincome') }}" class="btn btn-secondary">Reset Tanggal</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+  
+          <div class="row justify-content-between">
+            <h3></h3>
+            <div class="col-lg-5 d-flex align-items-center justify-content-center income-img">
+                
+                
+                <img src="{{asset ('img/myincomeillus2.png')}}" class="img-myincome" alt="">
             </div>
-            <div class="row mt-4">
-                <!-- Pendapatan Saya -->
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                            @endif
-                            <h5 class="card-title">Pendapatan Saya</h5>
-                            <div id="pendapatan-list">
-                            @if(isset($incomePoints))
-<div class="total-info">
-    <h5>Total Pendapatan:</h5>
-    <p>Rp. {{ number_format($incomePoints->total_pendapatan, 0, ',', '.') }},-</p>
-    <h5>Total Poin:</h5>
-    <p>{{ $incomePoints->total_poin }} poin</p>
-</div>
-@else
-<div class="total-info">
-    <h5>Total Pendapatan bulan {{ date('F') }}:</h5>
-    <p>Rp. {{ number_format($totalIncomeThisMonth, 0, ',', '.') }},-</p>
-    <h5>Total Poin bulan {{ date('F') }}:</h5>
-    <p>{{ $totalPointsThisMonth }} poin</p>
-</div>
+           
 
-
-        
-
-    @endif
-
-
-                                <!-- Tampilkan detail pendapatan dan poin sesuai kebutuhan -->
-                            </div>
-
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="col-lg-6 pt-5 pt-lg-0">
+ 
+        <div class="filter-section ">
+        <h4 id="income-title">Pendapatan bulan {{ date('F') }} tahun {{ date('Y') }}</h4>
+    <form id="income-filter-form">
+        <div class="form-group mt-5">
+            <label for="bulan">Bulan:</label>
+            <input type="month" id="bdaymonth" name="bdaymonth" class="form-control">
         </div>
-    </section>
+        <button type="submit" class="btn btn-primary btn-sm mt-3">Terapkan</button>
+    </form>
+</div>
+
+<div class="card-section mt-3">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Pendapatan </h5>
+            <p class="card-text" id="income-amount">Rp. {{ number_format($totalIncomeThisMonth, 0, ',', '.') }},-</p>
+            
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Poin </h5>
+            <p class="card-text" id="point-amount">{{ $totalPointsThisMonth }} poin</p>
+        </div>
+    </div>
+</div>
+   <!-- Pada bagian ini buatlah filter bulan dan tahun dan dibawah form filter terdapat card untuk memunculkan income-->     
+</div>
+
+      </section>
+      <!-- End Kalkulator Section -->
+
 </main>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const incomeFilterForm = document.getElementById('income-filter-form');
+        const incomeTitle = document.getElementById('income-title');
+        const incomeAmount = document.getElementById('income-amount');
+        const pointAmount = document.getElementById('point-amount');
+
+        incomeFilterForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const selectedMonth = incomeFilterForm.bdaymonth.value;
+            const selectedYear = new Date(selectedMonth).getFullYear();
+            const selectedMonthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(selectedMonth));
+
+            // Kirim permintaan ke server dengan data bulan dan tahun yang dipilih
+            fetch('/filter-income', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    selectedMonth: selectedMonth,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Format pendapatan menjadi rupiah
+                const formattedIncome = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                }).format(data.totalIncome);
+
+                incomeTitle.textContent = `Pendapatan bulan ${selectedMonthName} tahun ${selectedYear}`;
+                incomeAmount.textContent = formattedIncome;
+                pointAmount.textContent = `${data.totalPoints} poin`;
+            });
+        });
+    });
+</script>
+
 @endsection
 
 <style>
 
-    /* Style the progress bar and labels */
-.progress {
-    height: 30px;
-}
-
-.progress-bar {
-    font-weight: bold;
-}
-
-
-/* Style the remaining points info */
-.remaining-points {
-    text-align: center;
-    margin-top: 10px;
-}
-
-    /* myincome.css */
-
-    /* Style the main section */
-    #myincome {
-        padding: 50px 0;
-        background-color: #f8f8f8;
+    .card-section .card-title {
+        font-size : 13pt;
     }
 
-    /* Style the section title */
-    .section-title {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    /* Style the filter card */
-    .card {
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        padding: 20px;
-    }
-
-    .card-title {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        color: #333;
-    }
-
-    /* Style the filter form */
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    /* Style the buttons in the filter form */
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: #fff;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-        color: #fff;
-    }
-
-    /* Style the income and points section */
-    #pendapatan-list {
-        margin-top: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-    }
-
-    /* Style the total income and total points */
-    .total-info h5 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
+    .card-section .card-text {
+        font-size : 16pt;
+        color:#FF9029;
         font-weight: bold;
     }
 
-    /* Style the success message */
-    .alert-success {
-        background-color: #28a745;
-        color: #fff;
+.filter-section {
+    margin-top:50px;
+}
+    .card-section .card {
+        border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Warna latar belakang card */
+
     }
 
-    /* Style the error message */
-    .alert-danger {
-        background-color: #dc3545;
-        color: #fff;
-    }
+.myincome .img-myincome {
+    width: 135%;
+    
+}
 
-    /* Add additional styling as needed */
 </style>
+

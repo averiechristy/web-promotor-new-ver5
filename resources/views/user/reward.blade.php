@@ -14,147 +14,207 @@
       <div class="row" data-aos-delay="100">
         <div class="col-lg-12">
           <ul id="portfolio-flters">
-            <li data-filter="*" class="filter-active">Semua</li>
-            <li data-filter=".filter-app">Tidak Aktif</li>
-            <li data-filter=".filter-card">Sedang Berjalan</li>
+            <li data-filter=".filter-card" class="filter-active">Sedang Berjalan</li>
             <li data-filter=".filter-web">Akan Datang</li>
+            <li data-filter=".filter-app">Tidak Aktif</li>
+
           </ul>
         </div>
       </div>
 
-      <div class="row portfolio-container" data-aos-delay="200">
-      <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-        @foreach ($reward as $rewardItem)
-        @if ($rewardItem->status === 'Tidak Aktif')
-        
-          <div class="card-deck " >
-            <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
-            <span class="badge badge-danger">{{ $rewardItem->status }}</span> <!-- Badge status -->
-              <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
-              <div class="card-body mt-3">
-                <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
-                <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-                <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
-              </div>
-            </div>
-          </div>
+<div class="container" >       
+  
+<!--  -->
+        <div class="row portfolio-container"  data-aos-delay="200">
 
-          <div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="rewardModalLabel">{{ $rewardItem->judul_reward }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
+        @php
+    $today = now(); // Ambil tanggal saat ini
+  @endphp
 
-          <div class="modal-body">
-          <img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
-            <!-- Isi modal dengan informasi dari $rewardItem -->
+  @foreach ($reward as $rewardItem)
+    @php
+      $startDate = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
+      $endDate = \Carbon\Carbon::parse($rewardItem->tanggal_selesai);
+    @endphp
 
-            <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-            <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-                <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
-            <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
-          </div>
-          <div class="modal-footer">
-            <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
-          </div>
-        </div>
-      </div>
+    @if ($today->gte($startDate) && $today->lte($endDate))
+      <!-- Tampilkan reward yang berada dalam periode tanggal mulai dan tanggal selesai -->
+      <div class="col-lg-4 portfolio-item filter-card">
+      <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
+
+@php
+$selesai = \Carbon\Carbon::parse($rewardItem->tanggal_selesai)->endOfDay();
+$mulai = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
+$sekarang = \Carbon\Carbon::now();
+
+if ($selesai->isPast()) {
+  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Tidak Aktif</span>';
+} elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+  echo '<span class="badge badge-success">Sedang Berjalan</span>';
+} elseif ($sekarang < $mulai) {
+  echo '<span class="badge badge-info">Akan Datang</span>';
+} else {
+  echo '<span class="badge badge-danger">Tidak Aktif</span>';
+}
+@endphp
+
+  <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
+  <div class="card-body mt-3">
+      <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
+      <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
+      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
     </div>
-  @endif
-        @endforeach
-      </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-        @foreach ($reward as $rewardItem)
-        @if ($rewardItem->status === 'Sedang berjalan')
-          <div class="card-deck">
-            <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
-            <span class="badge badge-success">{{ $rewardItem->status }}</span> <!-- Badge status -->
-
-              <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
-              <div class="card-body mt-3">
-                <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
-                <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-                <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
-              </div>
-            </div>
-          </div>
-          <div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="rewardModalLabel">{{ $rewardItem->judul_reward }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-          <img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
-            <!-- Isi modal dengan informasi dari $rewardItem -->
-
-            <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-            <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-            <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
-            <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
-          </div>
-          <div class="modal-footer">
-            <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
-          </div>
-        </div>
-      </div>
-    </div>
-  @endif
-  @endforeach
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-@foreach ($reward as $rewardItem)
-        @if ($rewardItem->status === 'Akan datang')
-          <div class="card-deck">
-            <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
-            <span class="badge badge-info">{{ $rewardItem->status }}</span> <!-- Badge status -->
-
-              <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
-              <div class="card-body mt-3">
-                <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
-                <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-                <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
-              </div>
-            </div>
-          </div> 
-          
-          <div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="rewardModalLabel">{{ $rewardItem->judul_reward }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-          <img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
-            <!-- Isi modal dengan informasi dari $rewardItem -->
-
-            <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-            <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-                <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
-            <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
-          </div>
-          <div class="modal-footer">
-            <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
-          </div>
-        </div>
-      </div>
-    </div>
-  @endif
-  @endforeach
-        </div>
+  </div>
 
 </div>
+
+<div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+  <h5 class="modal-title" id="rewardModalLabel">{{ $rewardItem->judul_reward }}</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+<img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
+  <!-- Isi modal dengan informasi dari $rewardItem -->
+
+  <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
+  <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
+      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+  <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
+</div>
+<div class="modal-footer">
+  <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
+</div>
+</div>
+</div>      </div>
+    @endif
+
+
+    @if ($today->lt($startDate))
+          <!-- Tampilkan reward yang berada dalam periode tanggal mulai dan tanggal selesai -->
+      <div class="col-lg-4 portfolio-item filter-web">
+      <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
+
+@php
+$selesai = \Carbon\Carbon::parse($rewardItem->tanggal_selesai)->endOfDay();
+$mulai = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
+$sekarang = \Carbon\Carbon::now();
+
+if ($selesai->isPast()) {
+  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Tidak Aktif</span>';
+} elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+  echo '<span class="badge badge-success">Sedang Berjalan</span>';
+} elseif ($sekarang < $mulai) {
+  echo '<span class="badge badge-info">Akan Datang</span>';
+} else {
+  echo '<span class="badge badge-danger">Tidak Aktif</span>';
+}
+@endphp
+
+  <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
+  <div class="card-body mt-3">
+      <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
+      <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
+      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+  <h5 class="modal-title" id="rewardModalLabel">{{ $rewardItem->judul_reward }}</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+<img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
+  <!-- Isi modal dengan informasi dari $rewardItem -->
+
+  <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
+  <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
+      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+  <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
+</div>
+<div class="modal-footer">
+  <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
+</div>
+</div>
+</div>      </div>
+    @endif
+
+
+    @if ($today->gt($endDate))      <!-- Tampilkan reward yang berada dalam periode tanggal mulai dan tanggal selesai -->
+      <div class="col-lg-4 portfolio-item filter-app">
+      <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
+
+@php
+$selesai = \Carbon\Carbon::parse($rewardItem->tanggal_selesai)->endOfDay();
+$mulai = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
+$sekarang = \Carbon\Carbon::now();
+
+if ($selesai->isPast()) {
+  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Tidak Aktif</span>';
+} elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+  echo '<span class="badge badge-success">Sedang Berjalan</span>';
+} elseif ($sekarang < $mulai) {
+  echo '<span class="badge badge-info">Akan Datang</span>';
+} else {
+  echo '<span class="badge badge-danger">Tidak Aktif</span>';
+}
+@endphp
+
+  <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
+  <div class="card-body mt-3">
+      <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
+      <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
+      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+  <h5 class="modal-title" id="rewardModalLabel">{{ $rewardItem->judul_reward }}</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+<img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
+  <!-- Isi modal dengan informasi dari $rewardItem -->
+
+  <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
+  <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
+      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+  <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
+</div>
+<div class="modal-footer">
+  <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
+</div>
+</div>
+</div>      </div>
+    @endif
+
+  @endforeach
+        
+     
+        </div>
+      </div>
+
 
   </section>
 </main>
@@ -169,6 +229,7 @@
     background-color: #fff; /* Warna latar belakang card */
     transition: transform 0.3s;
 }
+
 .card-style h5.card-title {
     font-size: 18px;
     font-weight: bold;
@@ -226,38 +287,28 @@ border-radius :5px;
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
 $(document).ready(function() {
-  // Saat halaman dimuat, tampilkan semua proyek (filter aktif)
-  $(".portfolio-item").show();
+  // Memfilter kartu saat halaman dimuat, menampilkan yang "Sedang Berjalan"
+  filterCards(".filter-card");
 
-  // Ketika salah satu filter diklik
-  $("#portfolio-flters li").click(function() {
-    // Menghapus kelas 'filter-active' dari semua elemen filter
-    $("#portfolio-flters li").removeClass('filter-active');
-    // Menambahkan kelas 'filter-active' ke elemen filter yang diklik
-    $(this).addClass('filter-active');
-
-    // Mendapatkan nilai data-filter dari filter yang diklik
-    var filterValue = $(this).attr('data-filter');
-
-    // Menyembunyikan semua proyek
-    $(".portfolio-item").hide();
-
-    // Menampilkan proyek yang sesuai dengan filter yang dipilih
-    if (filterValue == "*") {
-      $(".portfolio-item").show();
-    } else {
-      $(".portfolio-item" + filterValue).show();
-    }
+  // Memfilter kartu saat filter diubah
+  $("#portfolio-flters li").on("click", function() {
+    $("#portfolio-flters li").removeClass("filter-active");
+    $(this).addClass("filter-active");
+    
+    var selectedFilter = $(this).data("filter");
+    filterCards(selectedFilter);
   });
 
-  
- 
+  function filterCards(filter) {
+    // Menampilkan kartu sesuai dengan filter yang dipilih
+    $(".portfolio-item").hide();
+    $(filter).show();
+  }
 });
-
 </script>
+
 
 
 

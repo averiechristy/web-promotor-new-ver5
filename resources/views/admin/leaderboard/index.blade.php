@@ -41,19 +41,39 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-<!-- Tombol Download Template -->
-<a href="{{ route('export.excel') }}" class="btn btn-warning btn-sm" id="downloadTemplateBtn" style="display: none;">Download Template</a>
-<!-- Ini adalah token CSRF untuk melindungi formulir dari serangan Cross-Site Request Forgery -->
+    @include('components.alert')
 
-<div class="mb-3 mt-3">
-@include('components.alert')
+
+    <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card-leaderboard" data-aos-delay="100">
+                <i class="bx bx-calculator"></i>
+                <h4>Download Template</h4>
+                <a href="{{ route('export.excel') }}" class="btn btn-warning btn-sm" id="downloadTemplateBtn" style="display: none;">Download Template</a>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <div class="card-leaderboard" data-aos-delay="200">
+             
+              
+                <h4>Import Data</h4>
+                <div class="mb-3 mt-3">
 
 <input class="form" id="formFileSm" type="file" name="file" style="display: none;" required accept=".xls, .xlsx">
 
 </div>
 
-<button type="submit" class="btn btn-primary btn-sm" style="display: none;">Import Data</button>
+<button type="submit" class="btn btn-primary btn-sm" style="display: none;">Import Data</button>              </a>
+            </div>
+          </div>
+        </div>
+    
+<!-- Tombol Download Template -->
 </form>
+
+
+
 
     </div>
 
@@ -90,34 +110,24 @@ Search
       
       
         <thead>
-
-
-
-        
-            
+     
         <div style="display: flex; align-items: center;">
+  
     <div class="form-group" style="margin-right: 10px;">
-        <label for="start_date">Tanggal Mulai</label>
-        <input type="date" id="start_date" name="start_date" class="form-control">
+        <label for="month">Filter Bulan</label>
+        <input type="month" id="end_date" name="end_date" class="form-control">
     </div>
 
-    <div class="form-group" style="margin-right: 10px;">
-        <label for="end_date">Tanggal Akhir</label>
-        <input type="date" id="end_date" name="end_date" class="form-control">
-    </div>
-
-    <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterData()">Filter Data</button>
+    <button type="button" class="btn btn-success btn-sm mt-3" >Terapkan</button>
 </div>
 
 
-            
             <tr>
                 <th>Role</th>
                 <th id="sortNama">Nama</th>
                 <th>Kode Sales</th>
                 <th>Pencapaian Penjualan Produk</th>
                 <th>Total Poin</th>
-                <th>Income</th>
                 <th>Tanggal</th>
                 <th>Action</th>
                 <!-- Kolom lainnya -->
@@ -141,8 +151,7 @@ Search
     // Ambil nomor urut untuk peran dan kemudian tambahkan satu
     $roleNumber = $roleCounter[$role_id]++;
     @endphp
-    <tr data-role="{{ $item->role_id }}">
-        <!-- <td>{{ $roleNumber  }}</td> Nomor urutan -->
+    <tr data-row-id="{{ $item->id }}" data-role="{{ $item->role_id }}">        <!-- <td>{{ $roleNumber  }}</td> Nomor urutan -->
         <td>{{ $item->Role->jenis_role }}</td> <!-- Kolom Role -->
         <td>{{ $item->nama }}</td> <!-- Kolom Nama -->
         <td>{{ $item->User->username }}</td> <!-- Kolom Role -->
@@ -154,10 +163,7 @@ Search
 </td>      
 
         <td>{{ $item->total }} poin</td>
-    <?php
-    $formattedHasil = 'Rp. ' . number_format($item->income, 0, ',', '.') . ',-';
-    ?>
-        <td>{{ $formattedHasil}} </td>
+    
         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
         <td>
             <form method="POST" action="{{ route('deleteleaderboard', $item->id) }}">
@@ -296,6 +302,8 @@ function updatePagination() {
         row.style.display = 'none';
     });
 
+    
+
     if (selectedRole !== "") {
         // Sembunyikan pesan "Pilih Kode Role"
         document.getElementById('selectRoleMessage').style.display = 'none';
@@ -309,8 +317,7 @@ function updatePagination() {
             row.style.display = 'table-row';
         });
 
-        
-
+    
         // Menampilkan tombol "Import Data"
         var importDataBtn = document.querySelector('.btn-primary.btn-sm');
         importDataBtn.style.display = 'inline-block';
@@ -353,34 +360,6 @@ updatePagination();
 search();
 }
 
-function filterData() {
-    var startDate = document.getElementById('start_date').value;
-    var endDate = document.getElementById('end_date').value;
-    var selectedRole = document.getElementById('role').value; // Ambil peran yang dipilih
-
-    
-    var allRows = document.querySelectorAll('#tableBody tr');
-    allRows.forEach(function (row) {
-        var tanggalColumn = row.querySelector('td:nth-child(7)');
-        var tanggal = tanggalColumn.textContent;
-        var role = row.getAttribute('data-role');
-        
-        // Ubah format tanggal ke YYYY-MM-DD
-        var dateParts = tanggal.split('-');
-        var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-
-        if (startDate && endDate) {
-            if ((formattedDate >= startDate && formattedDate <= endDate) && (selectedRole === '' || selectedRole === role)) {
-                row.style.display = 'table-row';
-            } else {
-                row.style.display = 'none';
-            }
-        } else {
-            // Jika salah satu tanggal kosong, tampilkan semua baris
-            row.style.display = 'table-row';
-        }
-    })
-}
 
 function changeEntries() {
         var entriesSelect = document.getElementById('entries');
@@ -419,9 +398,8 @@ function changeEntries() {
             } else {
                 row.style.display = 'none';
             }
+  
         });
-
-        
     }
 
     // Panggil fungsi search saat input pencarian berubah

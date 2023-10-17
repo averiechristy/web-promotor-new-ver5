@@ -110,8 +110,9 @@
 <section id="leaderboard" class="leaderboard">
   <div class="container">
     <div class="section-title">
+      
     <h2>
-  3 Besar Ranking per bulan {{ now()->format('F') }}
+  3 Besar Peringkat per bulan {{ now()->format('F') }}
 </h2>
 
       <p>Leaderboard</p>

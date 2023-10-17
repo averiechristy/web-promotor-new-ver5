@@ -78,13 +78,24 @@
 <td>{{$item->poin_reward}} </td>
 <td> {{$item->tanggal_mulai}}</td>
 <td>  {{$item->tanggal_selesai}}</td>
-<td>    @if ($item->status === 'Sedang berjalan')
-                                            <span class="badge badge-success">Sedang Berjalan</span>
-                                        @elseif($item->status === 'Akan datang')
-                                            <span class="badge badge-warning">Akan Datang</span>
-                                            @else 
-                                            <span class="badge badge-danger">Tidak Aktif</span>
-                                        @endif</td>
+<td>
+    @php
+        $selesai = \Carbon\Carbon::parse($item->tanggal_selesai)->endOfDay();
+        $mulai = \Carbon\Carbon::parse($item->tanggal_mulai);
+        $sekarang = \Carbon\Carbon::now();
+
+        if ($selesai->isPast()) {
+            echo '<span class="badge badge-secondary">Berakhir</span>';
+        } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+            echo '<span class="badge badge-success">Sedang Berjalan</span>';
+        } elseif ($sekarang < $mulai) {
+            echo '<span class="badge badge-warning">Akan Datang</span>';
+        } else {
+            echo '<span class="badge badge-danger">Tidak Aktif</span>';
+        }
+    @endphp
+</td>
+
 <td> {{$item->created_at}}</td>
 <td> @if ($item->created_by)
                 {{ $item->created_by }}
@@ -98,19 +109,29 @@
                Belum ada pembaruan
             @endif</td>
 
-                                           <td> 
-                                           <div class="row">
-                                           @if ($item->status === 'Tidak Aktif')
-                                           <button class="btn" data-toggle="tooltip" title='Tidak dapat edit data yang sudah tidak aktif' disabled><i class="fas fa-fw fa-edit" style="color:gray"></i></button>            @else
-                <a href="{{ route('tampilreward', $item->id) }}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange"></i></a>
-            @endif
-                                       <form method="POST" action="{{ route('deletereward', $item->id) }}">
-                            @csrf
-                            <input name="_method" type="hidden" value="DELETE">
-                            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red" ></i></button>
-                        </form>                                              
-                            </div>
-                                                </td> 
+            <td> 
+    <div class="row">
+        @php
+            $selesai = \Carbon\Carbon::parse($item->tanggal_selesai)->endOfDay();
+            $sekarang = \Carbon\Carbon::now();
+
+            if ($selesai->isPast()) {
+                // Tanggal selesai sudah lewat
+                echo '<button class="btn" data-toggle="tooltip" title="Tidak dapat edit data yang sudah tidak aktif" disabled><i class="fas fa-fw fa-edit" style="color:gray"></i></button>';
+            } else {
+                // Tanggal selesai belum lewat
+                echo '<a href="' . route('tampilreward', $item->id) . '" class="btn" data-toggle="tooltip" title="Edit"><i class="fas fa-fw fa-edit" style="color:orange"></i></a>';
+            }
+        @endphp
+
+        <form method="POST" action="{{ route('deletereward', $item->id) }}">
+            @csrf
+            <input name="_method" type="hidden" value="DELETE">
+            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title="Hapus"><i class="fas fa-fw fa-trash" style="color:red"></i></button>
+        </form>                                              
+    </div>
+</td>
+
                                             
                                         </tr>
 @endforeach

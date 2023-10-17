@@ -65,6 +65,7 @@ class UserRoleController extends Controller
         'created_by' => $loggedInUsername,
         
         
+        
     ]);
 
     $request->session()->flash('success', 'User Role berhasil ditambahkan.');

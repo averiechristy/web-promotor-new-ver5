@@ -52,15 +52,17 @@
     <div class="container">
 
 
-
+    
 <div class="row portfolio-container" data-aos-delay="200">
 
         <div class="col-lg-4 col-md-6 portfolio-item">
             <div class="card-deck">
             <div class="icon-card">
     <div class="icon success">
-            <i class="lni lni-revenue"></i>
-        </div>                    <div class="card-body mt-3">
+            <img class="img-icon" src="{{asset('img/indonesian-rupiah.png')}}" alt="">
+        </div>                    
+           
+        <div class="card-body mt-3">
                         <h5 class="card-title">Pendapatan</h5>
                         <h4 class="text-bold mb-10 mt-2">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }},-</h4>
                         
@@ -74,13 +76,19 @@
             <p class="text-sm @if ($incomeChangePercent > 0) text-success @elseif ($incomeChangePercent < 0) text-danger @endif">
                 
                 @if ($incomeChangePercent > 0)
+                <small >
                     <i class="lni lni-arrow-up"></i> {{ number_format($incomeChangePercent, 2) }}%
                     <span class="text-gray">Meningkat dari bulan lalu </span>
+            </small>
                 @elseif ($incomeChangePercent < 0)
+                <small >
                     <i class="lni lni-arrow-down"></i> {{ number_format(abs($incomeChangePercent), 2) }}%
                     <span class="text-gray">Menurun dari kemarin</span>
+            </small>
                 @else
+                <small class="text-muted">
                     <span class="text-gray">Tidak ada penurunan atau penaikan</span>
+            </small>
                 @endif
                 
             </p>
@@ -96,7 +104,7 @@
             <div class="card-deck">
             <div class="icon-card">
             <div class="icon primary">
-            <i class="lni lni-database"></i>
+            <img class="img-icon" src="{{asset('img/bonus.png')}}" alt="">
         </div>                    <div class="card-body mt-3">
                         <h5 class="card-title">Poin</h5>
                         <h4 class="text-bold mb-10 mt-2">{{ $totalPointsToday }} poin</h4>
@@ -106,18 +114,26 @@
                     $pointsChangePercent = (($totalPointsToday - $totalPointsYesterday) / $totalPointsYesterday) * 100;
                 }
             @endphp
+
             <p class="text-sm @if ($pointsChangePercent > 0) text-success @elseif ($pointsChangePercent < 0) text-danger @endif">
                 @if ($pointsChangePercent > 0)
+                <small >
                     <i class="lni lni-arrow-up"></i> {{ number_format($pointsChangePercent, 2) }}%
                     <span class="text-gray">Meningkat dari bulan lalu</span>
+            </small >
                 @elseif ($pointsChangePercent < 0)
+                <small >
                     <i class="lni lni-arrow-down"></i> {{ number_format(abs($pointsChangePercent), 2) }}%
                     <span class="text-gray">Menurun dari kemarin</span>
+            </small>
                 @else
+                <small class="text-muted">
                     <span class="text-gray">Tidak ada penurunan atau penaikan</span>
+            </small>
                 @endif
             </p>  
 
+            
             <a href="{{route('user.myincome')}}"> <button class="btn  btn-sm btn-link"> Lihat riwayat poin  </button></a>
     </div>
                 </div>
@@ -128,10 +144,10 @@
     <div class="card-deck">
         <div class="icon-card">
             <div class="icon orange">
-                <i class="lni lni-star-fill"></i>
+            <img class="img-icon" src="{{asset('img/top-three.png')}}" alt="">
             </div>
             <div class="card-body mt-3">
-                <h5 class="card-title">Rank Leaderboard</h5>
+                <h5 class="card-title">Peringkat Leaderboard</h5>
             
                     @if($leaderboardData->isEmpty())
                     <p class="text-sm">
@@ -142,7 +158,7 @@
                         </small>
             </p>  
 
-                    @else
+                    @else 
                     <h4 class="text-bold mb-10 mt-2">
                         <span class="user-rank">{{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
                         </h4>
@@ -151,20 +167,18 @@
                 <small class="text-muted">
                 Anda menduduki posisi ke {{$userRank}} dari {{$totalUsersWithSameRole}}
             </small>
-                                    <a href="{{route('user.leaderboard')}}"> <button class="btn  btn-sm btn-link"> Lihat ranking 10 besar  </button></a>
 
             </p>  
                         @endif
-             
+                        <a href="{{route('user.leaderboard')}}"> <button class="btn  btn-sm btn-link"> Lihat ranking 10 besar  </button></a>
+
 
             </div>
         </div>
     </div>
 </div>
 </div>
-
-   
-
+  
 <div class="row portfolio-container" data-aos-delay="200">
     <h4 class="mt-2">Reward</h4>
 
@@ -206,6 +220,11 @@
 
 
 <style> 
+.icon .img-icon {
+    width:35px;
+    height:35px;
+}
+
 .card-img-dashboard {
     width:100%;
     border-radius :8px;

@@ -15,6 +15,7 @@ class RewardController extends Controller
     public function index()
     {
         $reward = Reward::all();
+        
         return view ('admin.reward.index',[
             'reward' => $reward,
         ]);
@@ -76,16 +77,7 @@ class RewardController extends Controller
     
         // Menghitung status berdasarkan tanggal mulai dan tanggal selesai
 
-        $currentDate = now();
-        $endDate = Carbon::parse($reward->tanggal_selesai)->endOfDay(); // Mengambil akhir hari dari tanggal selesai
-        
-        if ($currentDate >= $reward->tanggal_mulai && $currentDate <= $endDate) {
-            $reward->status = 'Sedang berjalan'; // Sedang Berjalan
-        } elseif ($currentDate < $reward->tanggal_mulai) {
-            $reward->status = 'Akan datang'; // Akan Datang
-        } else {
-            $reward->status = 'Tidak Aktif'; // Tidak Aktif
-        }
+    
     
         // Menyimpan reward
        
@@ -128,7 +120,7 @@ class RewardController extends Controller
 
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified resource.getRankForUser
      */
     public function edit(string $id)
     {
@@ -149,9 +141,16 @@ class RewardController extends Controller
     $request->validate([
         'judul_reward' => 'required|string',
         'poin_reward' => 'required|integer',
+        'gambar_reward' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
         'deskripsi_reward' => 'required',
         'tanggal_mulai' => 'required|date',
         'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+    ], [
+      
+        'gambar_reward.required' => 'Upload Gambar Produk dahulu.',
+        'gambar_reward.image' => 'File harus berupa gambar.',
+        'gambar_reward.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+        'gambar_reward.max' => 'Ukuran gambar tidak boleh lebih dari 5MB.',
     ]);
 
     $loggedInUser = auth()->user();
@@ -172,17 +171,7 @@ class RewardController extends Controller
         $filename = $reward->gambar_reward;
     }
 
-    $currentDate = now();
-    $endDate = Carbon::parse($request->input('tanggal_selesai'))->endOfDay();
-
-    if ($currentDate >= $request->input('tanggal_mulai') && $currentDate <= $endDate) {
-        $status = 'Sedang berjalan';
-    } elseif ($currentDate < $request->input('tanggal_mulai')) {
-        $status = 'Akan datang';
-    } else {
-        $status = 'Tidak Aktif';
-    }
-
+   
     $reward->update([
         'judul_reward' => $request->input('judul_reward'),
         'poin_reward' => $request->input('poin_reward'),
@@ -191,7 +180,6 @@ class RewardController extends Controller
         'tanggal_selesai' => $request->input('tanggal_selesai'),
         'role_id' => $request->input('role_id'),
         'updated_by' => $loggedInUsername,
-        'status' => $status,
         'gambar_reward' => $filename,
     ]);
 

@@ -4,7 +4,7 @@
 @section('content')
 <div class="container">
 
-<h1 class="h3 mb-2 text-gray-800">Leaderboard Ranking</h1>
+<h1 class="h3 mb-2 text-gray-800">Peringkat Leaderboard</h1>
     <div class="form-group mb-4">
         <label for="" class="form-label">Kode Role</label>
         <select id="role" name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example" oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
@@ -20,8 +20,6 @@
         @endif
     </div>
     
-   
-
     <div class="row">
     <div class="container-fluid">
         
@@ -32,7 +30,6 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 
 
-                
                     <h6 class="m-0 font-weight-bold text-primary">Leaderboard</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -60,10 +57,9 @@ entries
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Rank</th>
+                                    <th>Peringkat</th>
                                     <th>Nama</th>
                                     <th>Kode Sales</th>
-                                    <th>Pendapatan</th>
                                     <th>Poin</th>
                                 </tr>
                             </thead>
@@ -234,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${i + 1}</td>
                 <td>${leader.nama}</td>
                 <td>${leader.kode_sales}</td>
-                <td>Rp. ${numberWithCommas(leader.income)},-</td>
                 <td>${leader.total}</td>
             `;
             tableBody.appendChild(row);

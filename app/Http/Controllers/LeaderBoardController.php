@@ -36,8 +36,6 @@ class LeaderBoardController extends Controller
         ]);
     }
     
-    
-
     public function exportExcel(Request $request)
     {
         // Buat objek Spreadsheet
@@ -70,6 +68,7 @@ class LeaderBoardController extends Controller
     
       
         // Mengunci sel-sel header
+
 
         $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
         $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
@@ -108,80 +107,86 @@ class LeaderBoardController extends Controller
             // Ambil nomor terbesar yang sudah ada di database
             $maxNo = LeaderBoard::max('no');
             
-                   
+            $validData = [];
+
             // Mulai dari baris kedua (indeks 1) karena baris pertama adalah header
+            $errorDetails = array();
+
             for ($i = 1; $i < count($data); $i++) {
                 $rowData = $data[$i];
-    
-                $kodeSales = $rowData[3]; // Kolom 'Kode Sales'
-                $importedName = $rowData[2]; // Kolom 'Nama' dari data yang diimpor
-    
-                // Periksa apakah data dengan nama dan kode sales yang sama sudah ada pada hari yang sama
-                $existingData = LeaderBoard::where('kode_sales', $kodeSales)
-                    ->whereDate('created_at', now()) // Menyaring berdasarkan tanggal hari ini
-                    ->first();
-    
-                if ($existingData) {
-                    // Tangani kesalahan jika data sudah ada
-                    $request->session()->flash('error', 'Data dengan nama dan kode sales yang sama pada hari yang sama sudah ada.');
-                    return redirect(route('admin.leaderboard.index'))->withInput();
-                }
-    
-                $existingNames = User::pluck('nama')->toArray();
-    
-                $role_id = $request->input('role_id');
-    
-                $role = UserRole::find($role_id);
-    
-                if (!$role) {
-                    // Tangani kesalahan jika role tidak ditemukan
-                    $request->session()->flash('error', 'Role tidak ditemukan.');
-                    return redirect(route('admin.leaderboard.index'))->withInput();
-                }
-
-                $kodeRole = strtolower($role->kode_role);
-              
-    
-                $user = User::where('username', $kodeSales)->first();
-    
-                if (!$user) {
-                    // Tangani kesalahan jika kode sales tidak sesuai
-                    $request->session()->flash('error', 'Kode Sales tidak sesuai dengan pengguna yang ada di database.');
-                    return redirect(route('admin.leaderboard.index'))->withInput();
-                }
-
-                $userRole = strtolower($user->role->kode_role);
+                $rowNumber = $i + 1;
             
-
-                if ($kodeRole != $userRole) {
-                    $request->session()->flash('error', 'Peran yang Anda pilih tidak sesuai dengan peran yang dimiliki oleh pengguna ini.');
-                    return redirect(route('admin.leaderboard.index'))->withInput();
-                }
-    
-    
-                // Periksa apakah nama ada dalam daftar nama yang ada di database user
-                if (!in_array($importedName, $existingNames)) {
-                    // Tangani kesalahan jika nama tidak sesuai
-                    $request->session()->flash('error', 'Terdapat nama yang tidak sesuai dengan yang ada di database user.');
-                    return redirect(route('admin.leaderboard.index'))->withInput();
-                }
-    
+                $kodeSales = trim($rowData[3]); // Kolom 'Kode Sales'
+                $importedName = trim($rowData[2]); 
+            
+                // Periksa apakah data dengan nama dan kode sales yang sama sudah ada pada hari yang sama
                 $tanggalString = $rowData[1];
                 $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
-    
+            
                 if (!$tanggalObj) {
-                    // Tangani kesalahan jika tanggal tidak sesuai format
-                    $request->session()->flash('error', 'Format tanggal tidak valid. Gunakan format "dd/mm/yyyy".');
-                    return redirect(route('admin.leaderboard.index'))->withInput();
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber : Format tanggal tidak valid. Gunakan format 'dd/mm/yyyy'.";
+                    continue;
                 }
-    
+            
+                list($day, $month, $year) = explode('/', $tanggalString);
+                if (!checkdate($month, $day, $year)) {
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber : Tanggal tidak valid.";
+                    continue;
+                }
+            
                 $tanggal = $tanggalObj->format('Y-m-d');
                 $rowData[1] = $tanggal;
-    
-                // Inisialisasi array asosiatif untuk data pencapaian
+            
+                $tanggalSekarang = new DateTime();
+                if ($tanggalObj > $tanggalSekarang) {
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber : Tanggal yang diinput belum berjalan.";
+                    continue;
+                }
+            
+                $existingNames = User::pluck('nama')->toArray();
+            
+                $role_id = $request->input('role_id');
+            
+                $role = UserRole::find($role_id);
+            
+                if (!$role) {
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber: Role tidak ditemukan.";
+                    continue;
+                }
+            
+                $kodeRole = strtolower($role->kode_role);
+            
+                if (!in_array($importedName, $existingNames)) {
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber : Terdapat nama yang tidak sesuai dengan yang ada di database user.";
+                    continue;
+                }
+            
+                $user = User::where('username', $kodeSales)->first();
+            
+                if (!$user) {
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber: Kode Sales tidak sesuai dengan pengguna yang ada di database.";
+                    continue;
+                }
+            
+                $userRole = strtolower($user->role->kode_role);
+            
+                if ($kodeRole != $userRole) {
+                    $errorDetails[] = "Peran yang Anda pilih tidak sesuai dengan peran yang dimiliki oleh pengguna ini.";
+                    continue;
+                }
+            
+                $existingData = LeaderBoard::where('kode_sales', $kodeSales)
+                    ->whereDate('tanggal', today()->subDays(1)->toDateString())
+                    ->first();
+            
+
+
+                if ($existingData) {
+                    $errorDetails[] = "Kesalahan pada baris $rowNumber: Data dengan nama dan kode sales yang sama pada hari yang sama sudah ada.";
+                    continue;
+                }
+            
                 $pencapaian = [];
-                    
-                // Inisialisasi total
                 $total = 0;
     
                 for ($j = 4; $j < count($headerRow); $j++) {
@@ -215,9 +220,45 @@ class LeaderBoardController extends Controller
                         return redirect(route('admin.leaderboard.index'))->withInput();
                     }    
                     // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
+                }
+
+                $rowData[0] = $maxNo + 1;
+                $rowData['user_id'] = $user->id;
+            
+                $validData[] = $rowData;
+            }
+            
+            if (!empty($errorDetails)) {
+                $errorMessages = implode('<br>', $errorDetails);
+                $request->session()->flash('error', $errorMessages);
+                return redirect(route('admin.leaderboard.index'))->withInput();
+            }
+
+            foreach ($validData as $rowData) {
+
+                $maxNo = LeaderBoard::max('no');
+                // Lakukan semua perubahan yang diperlukan sebelum menyimpan data ke dalam database
+
+                $rowData[0] = $maxNo + 1;
+                // Simpan data ke dalam database
+                $pencapaian = [];
+                $total = 0;
+
+                for ($j = 4; $j < count($headerRow); $j++) {
+                    $pencapaian[$headerRow[$j]] = $rowData[$j];
+    
+                    $namaProduk = $headerRow[$j]; // Nama produk dari header
+                    $jumlah = $rowData[$j];
+    
+                  
+                    // Dapatkan poin produk dari tabel master produk
+                    $product = Product::where('nama_produk', $namaProduk)->first();
+    
+                    
+                    // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
                     $total += $product->poin_produk * $jumlah;
                 }
-    
+
                 if ($kodeRole == 'mr') {
                     if ($total < 72) {
                         $hasil = 3600000;
@@ -241,13 +282,8 @@ class LeaderBoardController extends Controller
     
                 // Tambahkan nilai total ke dalam array $rowData
                 $rowData[] = $total;
-    
-                // Tambahkan nomor terbesar yang sudah ada di database ke kolom 'no'
-                $rowData[0] = $maxNo + 1;
-    
-                // Simpan user_id pada baris saat ini
-                $rowData['user_id'] = $user->id;
-    
+                
+
                 LeaderBoard::create([
                     'no' => $rowData[0], // Kolom 'No'
                     'role_id' => $request->input('role_id'), // Role ID yang dipilih sebelumnya
@@ -259,11 +295,10 @@ class LeaderBoardController extends Controller
                     'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
                     'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
                 ]);
-
+    
                 // Increment nomor terbesar
                 $maxNo++;
             }
-          
             $request->session()->flash('success', 'Data berhasil diimport.');
     
         return redirect(route('admin.leaderboard.index'))->withInput();
