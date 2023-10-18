@@ -74,7 +74,6 @@ class LeaderBoardController extends Controller
         $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
         $sheet->getStyle($headerRange)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
 
-
     
         // Buat response untuk file Excel
         $writer = new Xlsx($spreadsheet);
@@ -121,6 +120,7 @@ class LeaderBoardController extends Controller
             
                 // Periksa apakah data dengan nama dan kode sales yang sama sudah ada pada hari yang sama
                 $tanggalString = $rowData[1];
+                
                 $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
             
                 if (!$tanggalObj) {
@@ -142,6 +142,17 @@ class LeaderBoardController extends Controller
                     $errorDetails[] = "Kesalahan pada baris $rowNumber : Tanggal yang diinput belum berjalan.";
                     continue;
                 }
+
+
+                $existingData = LeaderBoard::where('nama', $importedName)
+                ->where('kode_sales', $kodeSales)
+                ->whereDate('tanggal', $tanggal)
+                ->first();
+        
+            if ($existingData) {
+                $errorDetails[] = "Kesalahan pada baris $rowNumber : Data dengan nama dan kode sales yang sama sudah ada pada tanggal yang sama.";
+                continue;
+            }
             
                 $existingNames = User::pluck('nama')->toArray();
             
@@ -175,16 +186,7 @@ class LeaderBoardController extends Controller
                     continue;
                 }
             
-                $existingData = LeaderBoard::where('kode_sales', $kodeSales)
-                    ->whereDate('tanggal', today()->subDays(1)->toDateString())
-                    ->first();
-            
-
-
-                if ($existingData) {
-                    $errorDetails[] = "Kesalahan pada baris $rowNumber: Data dengan nama dan kode sales yang sama pada hari yang sama sudah ada.";
-                    continue;
-                }
+                
             
                 $pencapaian = [];
                 $total = 0;

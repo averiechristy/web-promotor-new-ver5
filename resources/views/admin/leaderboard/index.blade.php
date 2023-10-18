@@ -115,10 +115,10 @@ Search
   
     <div class="form-group" style="margin-right: 10px;">
         <label for="month">Filter Bulan</label>
-        <input type="month" id="end_date" name="end_date" class="form-control">
+        <input type="month" id="month" name="month" class="form-control">
     </div>
 
-    <button type="button" class="btn btn-success btn-sm mt-3" >Terapkan</button>
+    <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterDataByMonth()">Terapkan</button>
 </div>
 
 
@@ -289,13 +289,13 @@ function updatePagination() {
     // nextButton.disabled = endIndex >= filteredData.length;
 }
 
-
-
     function onRoleChange() {
     var roleSelect = document.getElementById('role');
     var selectedRole = roleSelect.options[roleSelect.selectedIndex].value;
     var downloadLink = "{{ route('export.excel') }}?role_id=" + selectedRole;
 
+
+    
     // Sembunyikan semua baris data dalam tbody
     var allRows = document.querySelectorAll('#tableBody tr');
     allRows.forEach(function (row) {
@@ -358,7 +358,34 @@ selectedRoleRows.forEach(function (row) {
 // Update pagination
 updatePagination();
 search();
+filterDataByMonth();
 }
+
+
+function filterDataByMonth() {
+    var selectedMonth = document.getElementById('month').value;
+    console.log(selectedMonth);
+    var selectedRole = document.getElementById('role').value;
+    var allRows = document.querySelectorAll('#tableBody tr');
+
+    // Lakukan iterasi pada setiap baris dan periksa apakah bulan cocok
+    allRows.forEach(function (row) {
+        var roleValue = row.getAttribute('data-role');
+        var tanggalColumn = row.querySelector('td:nth-child(6)').textContent;
+        var rowMonth = tanggalColumn.split('-')[1] + '-' + tanggalColumn.split('-')[0]; // Format 'mm-yyyy'
+       
+
+        if (
+            (roleValue === selectedRole || selectedRole === "") &&
+            (selectedMonth === "" || rowMonth === selectedMonth)
+        ) {
+            row.style.display = 'table-row';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
 
 
 function changeEntries() {

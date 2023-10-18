@@ -62,7 +62,17 @@ if ($selesai->isPast()) {
   <div class="card-body mt-3">
       <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
       <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+<?php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
+$tanggal_mulai = $rewardItem->tanggal_mulai;
+$tanggal_selesai = $rewardItem->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+?>
+
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
     </div>
   </div>
 
@@ -84,7 +94,17 @@ if ($selesai->isPast()) {
 
   <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
   <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+<?php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
+$tanggal_mulai = $rewardItem->tanggal_mulai;
+$tanggal_selesai = $rewardItem->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+?>
+
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
   <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">
@@ -120,11 +140,22 @@ if ($selesai->isPast()) {
   <div class="card-body mt-3">
       <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
       <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+      <?php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
+$tanggal_mulai = $rewardItem->tanggal_mulai;
+$tanggal_selesai = $rewardItem->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+?>
+
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
     </div>
   </div>
-
 </div>
+
+
 
 <div class="modal fade" id="rewardModal{{ $rewardItem->id }}" tabindex="-1" role="dialog" aria-labelledby="rewardModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
@@ -142,7 +173,17 @@ if ($selesai->isPast()) {
 
   <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
   <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+  <?php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
+$tanggal_mulai = $rewardItem->tanggal_mulai;
+$tanggal_selesai = $rewardItem->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+?>
+
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
   <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">
@@ -153,8 +194,8 @@ if ($selesai->isPast()) {
     @endif
 
 
-    @if ($today->gt($endDate))      <!-- Tampilkan reward yang berada dalam periode tanggal mulai dan tanggal selesai -->
-      <div class="col-lg-4 portfolio-item filter-app">
+    @if ($today->gt($endDate) && $today->diffInDays($endDate) <= 7)
+          <div class="col-lg-4 portfolio-item filter-app">
       <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
 
 @php
@@ -171,13 +212,24 @@ if ($selesai->isPast()) {
 } else {
   echo '<span class="badge badge-danger">Tidak Aktif</span>';
 }
+
 @endphp
 
   <img class="card-img-top mt-3" src="{{asset('img/'.$rewardItem->gambar_reward)}}" alt="{{ $rewardItem->title }}">
   <div class="card-body mt-3">
       <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
       <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
-      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+<?php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
+$tanggal_mulai = $rewardItem->tanggal_mulai;
+$tanggal_selesai = $rewardItem->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+?>
+
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
     </div>
   </div>
 
@@ -199,7 +251,17 @@ if ($selesai->isPast()) {
 
   <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
   <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
-      <p class="card-text"><small class="text-muted">Periode : {{$rewardItem->tanggal_mulai}} - {{$rewardItem->tanggal_selesai}}</small></p>
+  <?php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
+$tanggal_mulai = $rewardItem->tanggal_mulai;
+$tanggal_selesai = $rewardItem->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+?>
+
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
   <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">

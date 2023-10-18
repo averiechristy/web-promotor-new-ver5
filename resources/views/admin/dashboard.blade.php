@@ -76,7 +76,6 @@
                   
                 </ul>
             </div>
-            
         </div>
     </div>
 </div>
@@ -172,7 +171,7 @@
                     <div class="reward-item">
                         <span class="reward-title">Reward: ${reward.judul_reward}</span>
                         <br>
-                        <span class="target-text">Pengguna yang Mencapai 50% Target Poin:</span>
+                        
                         <ul class="user-list">
                             ${getUserListHTML(usersReached50PercentData[reward.id])}
                         </ul>
@@ -191,28 +190,22 @@
 
         // Fungsi untuk menghasilkan HTML daftar pengguna yang mencapai target
         function getUserListHTML(users) {
-            let userListHTML = '';
-            for (const userId in users) {
-                if (users.hasOwnProperty(userId)) {
-                    const userData = users[userId];
-                    userListHTML += `
-                        <li>
-                            <div class="user-info">
-                                <span class="user-name">Nama User: ${userData.nama}</span>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: ${userData.progressPercentage};">
-                                    ${userData.progressPercentage}
-                                </div>
-                            </div>
-                        </li>
-                    `
-                    
-                    ;
-                }
-            }
-            return userListHTML;
-        }
+    let userListHTML = '';
+    const totalUsers = Object.keys(users).length;
+    userListHTML += `
+            <div class="user-info">
+                <span class="user-name">Total Pengguna yang Mencapai 50% </span> <br>
+                <span style="color:#01004C; font-size:20pt; font-weight: bold;">${totalUsers} </span>
+            </div>
+            <a href="#" id="allrank">
+            <button class="btn btn-link center-text" style="font-size:10pt;">Lihat detail</button>
+        </a>
+        
+    `;
+    
+    return userListHTML;
+}
+
     });
 </script>
 

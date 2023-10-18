@@ -76,8 +76,20 @@
     Lihat Deskripsi Reward
 </button></a>     </td>
 <td>{{$item->poin_reward}} </td>
-<td> {{$item->tanggal_mulai}}</td>
-<td>  {{$item->tanggal_selesai}}</td>
+@php
+// Mendapatkan tanggal mulai dan tanggal selesai dari $item
+$tanggal_mulai = $item->tanggal_mulai;
+$tanggal_selesai = $item->tanggal_selesai;
+
+// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
+$tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
+$tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
+@endphp
+
+<!-- Menampilkan tanggal dalam format baru -->
+<td> <?php echo $tanggal_mulai; ?></td>
+<td> <?php echo $tanggal_selesai; ?></td>
+
 <td>
     @php
         $selesai = \Carbon\Carbon::parse($item->tanggal_selesai)->endOfDay();

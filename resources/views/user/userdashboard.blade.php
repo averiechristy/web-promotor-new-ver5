@@ -69,7 +69,7 @@
                         @php
                 $incomeChangePercent = 0;
                 if ($totalIncomeYesterday !== 0) {
-                    $incomeChangePercent = (($totalIncomeToday - $totalIncomeYesterday) / $totalIncomeYesterday) * 100;
+                    $incomeChangePercent = (($totalIncomeToday - $totalIncomeYesterday) / $totalIncomeYesterday) * 100/100;
                 }
             @endphp
 
@@ -78,7 +78,7 @@
                 @if ($incomeChangePercent > 0)
                 <small >
                     <i class="lni lni-arrow-up"></i> {{ number_format($incomeChangePercent, 2) }}%
-                    <span class="text-gray">Meningkat dari bulan lalu </span>
+                    <span class="text-gray">Meningkat dari kemarin </span>
             </small>
                 @elseif ($incomeChangePercent < 0)
                 <small >
@@ -111,7 +111,7 @@
         @php
                 $pointsChangePercent = 0;
                 if ($totalPointsYesterday !== 0) {
-                    $pointsChangePercent = (($totalPointsToday - $totalPointsYesterday) / $totalPointsYesterday) * 100;
+                    $pointsChangePercent = (($totalPointsToday - $totalPointsYesterday) / $totalPointsYesterday) * 100/100;
                 }
             @endphp
 
@@ -119,7 +119,7 @@
                 @if ($pointsChangePercent > 0)
                 <small >
                     <i class="lni lni-arrow-up"></i> {{ number_format($pointsChangePercent, 2) }}%
-                    <span class="text-gray">Meningkat dari bulan lalu</span>
+                    <span class="text-gray">Meningkat dari kemarin</span>
             </small >
                 @elseif ($pointsChangePercent < 0)
                 <small >

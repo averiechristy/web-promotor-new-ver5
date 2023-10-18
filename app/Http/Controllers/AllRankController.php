@@ -15,11 +15,20 @@ class AllRankController extends Controller
     public function index()
     {
         $role = UserRole::all();
-        $today = Carbon::today();
+        $today = Carbon::now();
 
-        $leaderboardData = LeaderBoard::whereDate('created_at', $today)
-        ->orderBy('total', 'desc')
-        ->get();
+        if ($today->isMonday()) {
+            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
+            $dateToQuery = $today->subDays(3)->toDateString();
+        }else {
+            // Jika hari biasa, ambil data dari hari sebelumnya.
+            $dateToQuery = $today->subDay()->toDateString();
+        }
+    
+        $leaderboardData = LeaderBoard::whereDate('tanggal', $dateToQuery)
+            ->orderBy('total', 'desc')
+            ->get();
+    
 
         return view('admin.allrank', [
             'leaderboardData' => $leaderboardData,
