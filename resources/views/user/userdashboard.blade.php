@@ -65,7 +65,7 @@
         <div class="card-body mt-3">
                         <h5 class="card-title">Pendapatan</h5>
                         <h4 class="text-bold mb-10 mt-2">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }},-</h4>
-                        
+<!--                         
                         @php
                 $incomeChangePercent = 0;
                 if ($totalIncomeYesterday !== 0) {
@@ -91,7 +91,7 @@
             </small>
                 @endif
                 
-            </p>
+            </p> -->
             <a href="{{route('user.myincome')}}"> <button class="btn  btn-sm btn-link"> Lihat riwayat pendapatan </button></a>
 
     </div>
@@ -108,7 +108,7 @@
         </div>                    <div class="card-body mt-3">
                         <h5 class="card-title">Poin</h5>
                         <h4 class="text-bold mb-10 mt-2">{{ $totalPointsToday }} poin</h4>
-        @php
+        <!-- @php
                 $pointsChangePercent = 0;
                 if ($totalPointsYesterday !== 0) {
                     $pointsChangePercent = (($totalPointsToday - $totalPointsYesterday) / $totalPointsYesterday) * 100/100;
@@ -117,7 +117,7 @@
 
             <p class="text-sm @if ($pointsChangePercent > 0) text-success @elseif ($pointsChangePercent < 0) text-danger @endif">
                 @if ($pointsChangePercent > 0)
-                <small >
+                <small>
                     <i class="lni lni-arrow-up"></i> {{ number_format($pointsChangePercent, 2) }}%
                     <span class="text-gray">Meningkat dari kemarin</span>
             </small >
@@ -131,7 +131,7 @@
                     <span class="text-gray">Tidak ada penurunan atau penaikan</span>
             </small>
                 @endif
-            </p>  
+            </p>   -->
 
             
             <a href="{{route('user.myincome')}}"> <button class="btn  btn-sm btn-link"> Lihat riwayat poin  </button></a>
@@ -163,12 +163,12 @@
                         <span class="user-rank">{{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
                         </h4>
 
-                        <p class="text-sm">
+                        <!-- <p class="text-sm">
                 <small class="text-muted">
                 Anda menduduki posisi ke {{$userRank}} dari {{$totalUsersWithSameRole}}
             </small>
 
-            </p>  
+            </p>   -->
                         @endif
                         <a href="{{route('user.leaderboard')}}"> <button class="btn  btn-sm btn-link"> Lihat ranking 10 besar  </button></a>
 

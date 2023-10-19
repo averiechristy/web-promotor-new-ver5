@@ -53,9 +53,9 @@
 
                         <div id="lihatSeluruhRanking" class="more-leaderboard">
 
-                        <a href="{{route('admin.allrank.index')}}">
-  <button id="allrank" class="btn btn-link center-text"> Lihat seluruh peringkat </button>
-</a>
+                        
+  <button id="lihatSeluruhRangking" class="btn btn-link center-text"> Lihat seluruh peringkat </button>
+
                         </div>
                     </div>
                 </div>
@@ -220,6 +220,18 @@
         lihatSeluruhRankingButton.style.display = 'none';
 
         const rolepesan = document.getElementById('selectRoleMessage');
+
+        function navigateToAllRankPage(roleId) {
+            // Ganti 'route_name' dengan nama rute yang sesuai
+            window.location.href = `/admin/allrank/${roleId}`;
+        }
+
+        lihatSeluruhRankingButton.addEventListener('click', function () {
+            const selectedRoleId = roleSelect.value;
+            if (selectedRoleId !== 'role_id') { // Ganti 'role_id' dengan ID peran yang sesuai
+                navigateToAllRankPage(selectedRoleId);
+            }
+        });
 
 
         roleSelect.addEventListener('change', function () {

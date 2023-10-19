@@ -16,7 +16,7 @@
           <ul id="portfolio-flters">
             <li data-filter=".filter-card" class="filter-active">Sedang Berjalan</li>
             <li data-filter=".filter-web">Akan Datang</li>
-            <li data-filter=".filter-app">Tidak Aktif</li>
+            <li data-filter=".filter-app">Berakhir</li>
 
           </ul>
         </div>
@@ -48,13 +48,13 @@ $mulai = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
 $sekarang = \Carbon\Carbon::now();
 
 if ($selesai->isPast()) {
-  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Tidak Aktif</span>';
+  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Berakhir</span>';
 } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
   echo '<span class="badge badge-success">Sedang Berjalan</span>';
 } elseif ($sekarang < $mulai) {
   echo '<span class="badge badge-info">Akan Datang</span>';
 } else {
-  echo '<span class="badge badge-danger">Tidak Aktif</span>';
+  echo '<span class="badge badge-danger">Berakhir</span>';
 }
 @endphp
 
@@ -126,13 +126,13 @@ $mulai = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
 $sekarang = \Carbon\Carbon::now();
 
 if ($selesai->isPast()) {
-  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Tidak Aktif</span>';
+  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Berakhir</span>';
 } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
   echo '<span class="badge badge-success">Sedang Berjalan</span>';
 } elseif ($sekarang < $mulai) {
   echo '<span class="badge badge-info">Akan Datang</span>';
 } else {
-  echo '<span class="badge badge-danger">Tidak Aktif</span>';
+  echo '<span class="badge badge-danger">Berakhir</span>';
 }
 @endphp
 
@@ -204,13 +204,13 @@ $mulai = \Carbon\Carbon::parse($rewardItem->tanggal_mulai);
 $sekarang = \Carbon\Carbon::now();
 
 if ($selesai->isPast()) {
-  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Tidak Aktif</span>';
+  echo '<span class="badge badge-gray" style="color:white; background-color:gray;">Berakhir</span>';
 } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
   echo '<span class="badge badge-success">Sedang Berjalan</span>';
 } elseif ($sekarang < $mulai) {
   echo '<span class="badge badge-info">Akan Datang</span>';
 } else {
-  echo '<span class="badge badge-danger">Tidak Aktif</span>';
+  echo '<span class="badge badge-danger">Berakhir</span>';
 }
 
 @endphp

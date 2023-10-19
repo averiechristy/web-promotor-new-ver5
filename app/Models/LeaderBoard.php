@@ -61,13 +61,10 @@ public static function getLeaderboardForRole($role)
 
         $today = Carbon::now();
 
-        if ($today->isMonday()) {
-            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-            $dateToQuery = $today->subDays(3)->toDateString();
-        }else {
+     
             // Jika hari biasa, ambil data dari hari sebelumnya.
             $dateToQuery = $today->subDay()->toDateString();
-        }
+        
 
         return self::whereDate('tanggal', $dateToQuery)
             ->where('role_id', $role)
@@ -81,13 +78,11 @@ public static function getLeaderboardForRole($role)
     {
         $today = Carbon::now();
 
-        if ($today->isMonday()) {
-            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-            $dateToQuery = $today->subDays(3)->toDateString();
-        }else {
+
             // Jika hari biasa, ambil data dari hari sebelumnya.
             $dateToQuery = $today->subDay()->toDateString();
-        }
+        
+        
         return self::whereDate('tanggal', $dateToQuery)
             ->where('role_id', $role)
             ->orderBy('total', 'desc')
@@ -99,13 +94,10 @@ public static function getLeaderboardForRole($role)
     {
         $today = Carbon::now();
 
-        if ($today->isMonday()) {
-            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-            $dateToQuery = $today->subDays(3)->toDateString();
-        }else {
+     
             // Jika hari biasa, ambil data dari hari sebelumnya.
             $dateToQuery = $today->subDay()->toDateString();
-        }
+      
         return self::whereDate('tanggal', $dateToQuery)
             ->where('role_id', $role)
             ->orderBy('total', 'desc')
@@ -116,13 +108,10 @@ public static function getLeaderboardForRole($role)
 {
     $today = Carbon::now();
 
-    if ($today->isMonday()) {
-        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-        $dateToQuery = $today->subDays(3)->toDateString();
-    }else {
+   
         // Jika hari biasa, ambil data dari hari sebelumnya.
         $dateToQuery = $today->subDay()->toDateString();
-    }
+    
     return self::whereDate('tanggal', $dateToQuery)
         ->where('role_id', $role)
         ->count();
@@ -133,13 +122,10 @@ public static function getRankForUser($userId, $role)
 {
     $today = Carbon::now();
 
-    if ($today->isMonday()) {
-        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-        $dateToQuery = $today->subDays(3)->toDateString();
-    }else {
+ 
         // Jika hari biasa, ambil data dari hari sebelumnya.
         $dateToQuery = $today->subDay()->toDateString();
-    }
+    
     // Check if there is any data for the given role in the database.
     $roleDataExists = self::whereDate('tanggal', $dateToQuery)
         ->where('role_id', $role)

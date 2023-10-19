@@ -24,13 +24,9 @@ class DashboardController extends Controller
 
         $today = Carbon::now();
 
-        if ($today->isMonday()) {
-            // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-            $dateToQuery = $today->subDays(3)->toDateString();
-        }else {
             // Jika hari biasa, ambil data dari hari sebelumnya.
             $dateToQuery = $today->subDay()->toDateString();
-        }
+        
     
         $leaderboardData = LeaderBoard::whereDate('tanggal', $dateToQuery)
             ->orderBy('total', 'desc')

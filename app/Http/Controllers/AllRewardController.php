@@ -2,29 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LeaderBoard;
-use App\Models\UserRole;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AllRankController extends Controller
+class AllRewardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($role_id)
+    public function index()
     {
-
-        $today = Carbon::now();
-        $dateToQuery = $today->subDay()->toDateString();
-        
-       
-        // Ambil data peringkat berdasarkan $role_id
-        $rankings =LeaderBoard::where('role_id', $role_id)->orderBy('total', 'desc')->whereDate('tanggal', $dateToQuery)->get();
-
-        // Tampilkan tampilan "allrank" dengan data peringkat
-        return view('admin.allrank', ['rankings'=>$rankings]);
+        //
     }
+
     /**
      * Show the form for creating a new resource.
      */

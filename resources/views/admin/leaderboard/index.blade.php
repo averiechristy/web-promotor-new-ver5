@@ -98,7 +98,7 @@ entries
 <div id="myDataTable_filter" class="dataTables_filter">
 <label>
 Search
-<input type="text" id="search"  placeholder>
+<input id="search"  placeholder>
 </label>
 </div>
 
@@ -364,7 +364,7 @@ filterDataByMonth();
 
 function filterDataByMonth() {
     var selectedMonth = document.getElementById('month').value;
-    console.log(selectedMonth);
+   console.log(selectedMonth);
     var selectedRole = document.getElementById('role').value;
     var allRows = document.querySelectorAll('#tableBody tr');
 
@@ -372,7 +372,9 @@ function filterDataByMonth() {
     allRows.forEach(function (row) {
         var roleValue = row.getAttribute('data-role');
         var tanggalColumn = row.querySelector('td:nth-child(6)').textContent;
-        var rowMonth = tanggalColumn.split('-')[1] + '-' + tanggalColumn.split('-')[0]; // Format 'mm-yyyy'
+        
+        var rowMonth = tanggalColumn.split('-')[2] + '-' + tanggalColumn.split('-')[1]; // Format 'mm-yyyy'
+        console.log(rowMonth);
        
 
         if (
@@ -384,6 +386,7 @@ function filterDataByMonth() {
             row.style.display = 'none';
         }
     });
+
 }
 
 
@@ -414,11 +417,15 @@ function changeEntries() {
             var roleColumn = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
             var namaColumn = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
             var kodeSalesColumn = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            var jumlahcolumn = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+            var totalpoincolumn = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+            var tanggalcolumn = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+
             var roleValue = row.getAttribute('data-role');
 
             if (
                 (roleValue === selectedRole || selectedRole === "") &&
-                (roleColumn.includes(keyword) || namaColumn.includes(keyword) || kodeSalesColumn.includes(keyword))
+                (roleColumn.includes(keyword) || namaColumn.includes(keyword) || kodeSalesColumn.includes(keyword) || jumlahcolumn.includes(keyword) || totalpoincolumn.includes(keyword) || tanggalcolumn.includes(keyword))
             ) {
                 row.style.display = 'table-row';
                 
@@ -427,6 +434,8 @@ function changeEntries() {
             }
   
         });
+
+        
     }
 
     // Panggil fungsi search saat input pencarian berubah

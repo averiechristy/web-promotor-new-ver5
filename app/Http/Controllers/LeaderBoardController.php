@@ -263,7 +263,7 @@ class LeaderBoardController extends Controller
 
                 if ($kodeRole == 'mr') {
                     if ($total < 72) {
-                        $hasil = 3600000;
+                        $hasil = 0;
                     } else if ($total > 72 && $total < 120) {
                         $insentif = ($total - 72) * 40000;
                         $hasil = $insentif + 3600000;

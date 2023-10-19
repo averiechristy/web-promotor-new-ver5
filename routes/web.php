@@ -253,7 +253,8 @@ Route::get('/leaderboard/{role_id}', [LeaderboardController::class,'getLeaderboa
 
 // web.php
 
-Route::get('admin/allrank/index',[AllRankController::class,'index'])->name('admin.allrank.index');
+
+Route::get('/admin/allrank/{role_id}', [AllRankController::class,'index'])->name('admin.allrank.index');
 
 
 });

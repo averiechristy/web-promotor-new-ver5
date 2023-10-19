@@ -49,9 +49,7 @@ class UserDashboardController extends Controller
             ->whereYear('tanggal', now()->year)
             ->whereMonth('tanggal', now()->month)
             ->sum('total');
-    
 
-            
         // Menghitung total pendapatan bulan lalu
         $lastMonth = now()->subMonth();
         $totalIncomeLastMonth = LeaderBoard::where('user_id', $userId)
@@ -67,25 +65,29 @@ class UserDashboardController extends Controller
 
 
             $totalIncomeToday = LeaderBoard::where('user_id', $userId)
-            ->whereDate('created_at', now()) // Mengambil data hanya untuk hari ini
+            ->whereDate('tanggal', $dateToQuery) // Mengambil data hanya untuk hari ini
             ->sum('income');
     
             
         // Menghitung total poin hari ini
         $totalPointsToday = LeaderBoard::where('user_id', $userId)
-            ->whereDate('created_at', now()) // Mengambil data hanya untuk hari ini
+            ->whereDate('tanggal', $dateToQuery) // Mengambil data hanya untuk hari ini
             ->sum('total');
 
+            $yesterday = Carbon::parse($dateToQuery)->subDay();
 
-            $yesterday = now()->subDay();
             $totalIncomeYesterday = LeaderBoard::where('user_id', $userId)
-                ->whereDate('created_at', $yesterday) // Mengambil data hanya untuk hari kemarin
+                ->whereDate('tanggal', $yesterday) // Mengambil data hanya untuk hari kemarin
                 ->sum('income');
+
+                
         
             // Menghitung total poin hari kemarin
             $totalPointsYesterday = LeaderBoard::where('user_id', $userId)
-                ->whereDate('created_at', $yesterday) // Mengambil data hanya untuk hari kemarin
+                ->whereDate('tanggal', $yesterday) // Mengambil data hanya untuk hari kemarin
                 ->sum('total');
+
+
 
         // Menentukan apakah total pendapatan naik atau turun dibandingkan dengan bulan lalu
          $incomeChange = ($totalIncomeToday > $totalIncomeYesterday) ? 'Naik' : 'Turun';
