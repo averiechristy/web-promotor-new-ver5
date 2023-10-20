@@ -65,6 +65,7 @@ class LeaderBoardController extends Controller
         // Mendapatkan kolom yang perlu dikunci (header)
         $headerColumnCount = count($header);
         $headerRange = 'A1:' . $sheet->getCellByColumnAndRow($headerColumnCount, 1)->getColumn() . '1';
+        
     
       
         // Mengunci sel-sel header
@@ -75,6 +76,7 @@ class LeaderBoardController extends Controller
         $sheet->getStyle($headerRange)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
 
     
+        
         // Buat response untuk file Excel
         $writer = new Xlsx($spreadsheet);
         $filename = 'data_leaderboard_template.xlsx';
@@ -102,6 +104,8 @@ class LeaderBoardController extends Controller
             
             // Mengambil baris header (baris pertama) untuk mendapatkan nama kolom
             $headerRow = $data[0];
+
+            
     
             // Ambil nomor terbesar yang sudah ada di database
             $maxNo = LeaderBoard::max('no');
@@ -114,6 +118,8 @@ class LeaderBoardController extends Controller
             for ($i = 1; $i < count($data); $i++) {
                 $rowData = $data[$i];
                 $rowNumber = $i + 1;
+
+                
             
                 $kodeSales = trim($rowData[3]); // Kolom 'Kode Sales'
                 $importedName = trim($rowData[2]); 
@@ -200,8 +206,13 @@ class LeaderBoardController extends Controller
                     // Memeriksa apakah $jumlah adalah angka
                     if (!is_numeric($jumlah)) {
                         // Tangani kesalahan jika $jumlah bukan angka
-                        $request->session()->flash('error', 'Jumlah produk harus berupa angka.');
-                        return redirect(route('admin.leaderboard.index'))->withInput();
+                        $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk harus berupa angka.";
+                        continue;
+                    }
+
+                    if (intval($jumlah) != $jumlah || $jumlah <= 0) {
+                        $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk tidak boleh desimal.";
+                        continue;
                     }
     
                     $jumlah = intval($jumlah); // Mengonversi ke integer setelah memastikan itu adalah angka
@@ -209,8 +220,9 @@ class LeaderBoardController extends Controller
                     // Cek apakah nilai negatif
                     if ($jumlah < 0) {
                         // Tangani nilai negatif sesuai dengan kebutuhan Anda.
-                        $request->session()->flash('error', 'Jumlah produk tidak boleh negatif.');
-                        return redirect(route('admin.leaderboard.index'))->withInput();
+                        
+                        $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk tidak boleh negatif.";
+                        continue;
                     }
     
                     // Dapatkan poin produk dari tabel master produk
@@ -232,9 +244,11 @@ class LeaderBoardController extends Controller
             
             if (!empty($errorDetails)) {
                 $errorMessages = implode('<br>', $errorDetails);
+                $errorMessages = nl2br($errorMessages); // Gantikan baris baru dengan tag <br>
                 $request->session()->flash('error', $errorMessages);
                 return redirect(route('admin.leaderboard.index'))->withInput();
             }
+            
 
             foreach ($validData as $rowData) {
 

@@ -37,8 +37,7 @@
       $endDate = \Carbon\Carbon::parse($rewardItem->tanggal_selesai);
     @endphp
 
-    @if ($today->gte($startDate) && $today->lte($endDate))
-      <!-- Tampilkan reward yang berada dalam periode tanggal mulai dan tanggal selesai -->
+    @if ($today->gte($startDate) && $today->lte($endDate->endOfDay()))      <!-- Tampilkan reward yang berada dalam periode tanggal mulai dan tanggal selesai -->
       <div class="col-lg-4 portfolio-item filter-card">
       <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
 
@@ -194,8 +193,9 @@ $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
     @endif
 
 
-    @if ($today->gt($endDate) && $today->diffInDays($endDate) <= 7)
-          <div class="col-lg-4 portfolio-item filter-app">
+    
+    @if ($today->gte($endDate->endOfDay()) && $today->diffInDays($endDate) <= 7)
+              <div class="col-lg-4 portfolio-item filter-app">
       <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
 
 @php

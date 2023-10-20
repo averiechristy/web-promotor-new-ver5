@@ -118,7 +118,7 @@ class UserDashboardController extends Controller
             $remainingTime[$reward->id] =  now()->diffInDays($endDate) . ' hari';
         }
 
-       
+    //    
     
         $totalPointsRewardPeriod = [];
 
@@ -129,8 +129,7 @@ foreach ($activeRewards as $activeReward) {
         ->whereMonth('tanggal', '>=', now()->month)
         ->where('tanggal', '<=', $activeReward->tanggal_selesai)
         ->sum('total');
-
-        
+   
     // Simpan total poin untuk reward ini dalam array
     $totalPointsRewardPeriod[$activeReward->id] = $totalPointsReward;
 
@@ -150,9 +149,7 @@ foreach ($activeRewards as $activeReward) {
         $leaderboardData = LeaderBoard::getLeaderboardUserDasboard($userRole);
         $userRank = LeaderBoard::getRankForUser($userId, $userRole);
         $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRole($userRole);
-
-
-                
+        
 
         return view('user.userdashboard', [
             'totalIncomeThisMonth' => $totalIncomeToday,

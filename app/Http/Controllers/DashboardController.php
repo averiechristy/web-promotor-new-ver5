@@ -40,6 +40,8 @@ class DashboardController extends Controller
             ->get();
     
         // Inisialisasi array untuk menyimpan informasi pengguna yang mencapai 50% target poin
+
+        // Loop melalui setiap reward yang sedang berjalan
         $usersReached50Percent = [];
 
         $totalUsersReached50Percent = 0;
@@ -49,16 +51,25 @@ class DashboardController extends Controller
             // Menghitung target poin yang diperlukan untuk mencapai 50%
             $target50Percent = $reward->poin_reward / 2;
             
-            $userIds = LeaderBoard::where('total', '>=', $target50Percent)
-                ->where('tanggal', '<=', $reward->tanggal_selesai)
-                ->pluck('user_id')
-                ->toArray();
+            $userIds = LeaderBoard::select('user_id')
+            ->where('tanggal', '>=', $reward->tanggal_mulai) // Start date of the reward period
+            ->where('tanggal', '<=', $reward->tanggal_selesai) // End date of the reward period
+            ->groupBy('user_id')
+            ->havingRaw('SUM(total) >= ?', [$target50Percent])
+            ->pluck('user_id')
+            ->toArray();
     
+        
             // Mengambil pengguna yang telah mencapai 50% target poin untuk reward ini
             $usersReached50Percent[$reward->id] = [];
             foreach ($userIds as $userId) {
                 $user = User::find($userId);
                 if ($user) {
+
+                    $rewardRoleId = $reward->role_id;
+
+                    if ($user->role_id == $rewardRoleId) {
+
                     $totalPointsRewardPeriod = LeaderBoard::where('user_id', $userId)
                         ->whereYear('tanggal', '>=', now()->year)
                         ->whereMonth('tanggal', '>=', now()->month)
@@ -75,10 +86,11 @@ class DashboardController extends Controller
                         'nama' => $user->nama,
                         'progressPercentage' => $progressPercentage,
                     ];
-
                     $totalUsersReached50Percent += count($userIds);
                 }
             }
+            }
+           
         }
     
         return view('admin.dashboard', [
@@ -89,6 +101,7 @@ class DashboardController extends Controller
             'totalUsersReached50Percent' => $totalUsersReached50Percent, 
         ]);
     }
+    
     
     
 

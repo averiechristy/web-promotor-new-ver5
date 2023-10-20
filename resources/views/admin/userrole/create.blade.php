@@ -53,9 +53,8 @@
                         </div>
                     </div>
 
-
                 <!-- /.container-fluid -->
-
+                
             </div>
             <!-- End of Main Content -->
 
@@ -85,10 +84,6 @@ function validateForm() {
     return false;
   }
 }
-
 </script>
-
-
-    
     <!-- End of Page Wrapper -->
     @endsection

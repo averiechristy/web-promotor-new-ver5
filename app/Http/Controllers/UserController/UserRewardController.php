@@ -14,13 +14,19 @@ class UserRewardController extends Controller
      */
     public function index()
     {
-        $reward = Reward::orderBy('created_at', 'desc')->get();
+        // Mendapatkan role_id dari pengguna yang login
+        $role_id = auth()->user()->role_id;
     
-    return view('user.reward', [
-        'reward' => $reward,
-    ]);
+        // Query untuk mengambil Reward sesuai dengan role_id
+        $reward = Reward::where('role_id', $role_id)
+                       ->orderBy('created_at', 'desc')
+                       ->get();
+    
+        return view('user.reward', [
+            'reward' => $reward,
+        ]);
     }
-
+    
     
     /**
      * Show the form for creating a new resource.

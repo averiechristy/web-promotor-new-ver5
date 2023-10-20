@@ -67,15 +67,16 @@
         <!-- Card Header - Dropdown -->
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Reward</h6>
-            
         </div>
         <!-- Card Body -->
         <div class="card-body">
+
             <div  id="rewardData" class="mt-4 text-center small">
                 <ul  id="rewardList">
-                  
+                   
                 </ul>
             </div>
+
         </div>
     </div>
 </div>
@@ -161,6 +162,8 @@
             const selectedRoleId = roleSelect.value;
             const filteredRewards = filterRewardsByRole(rewardsData, selectedRoleId);
 
+            
+
             // Hapus isi daftar reward sebelum menambahkan data baru
             rewardList.innerHTML = '';
 
@@ -169,19 +172,37 @@
                 const rewardItem = document.createElement('li');
                 rewardItem.innerHTML = `
                     <div class="reward-item">
-                        <span class="reward-title">Reward: ${reward.judul_reward}</span>
+                        <span class="reward-title">${reward.judul_reward}</span>
                         <br>
                         
                         <ul class="user-list">
                             ${getUserListHTML(usersReached50PercentData[reward.id])}
                         </ul>
-                    </div>
 
+                        <a href="#" class="view-detail" data-reward-id="${reward.id}">
+                    <button class="btn btn-link center-text" style="font-size:10pt;">Lihat Detail</button>
+                </a>
+                    </div>
+                   
                     
                 `;
                 rewardList.appendChild(rewardItem);
+                const viewDetailButton = rewardItem.querySelector('.view-detail');
+            viewDetailButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                const rewardId = viewDetailButton.getAttribute('data-reward-id');
+                // Panggil fungsi untuk menampilkan detail reward
+                showRewardDetail(rewardId);
             });
+            });
+            
         });
+
+        function showRewardDetail(rewardId) {
+        // Ganti 'route_name' dengan nama rute yang sesuai untuk menampilkan detail reward
+        window.location.href = `/admin/allreward/${rewardId}`;
+    }
+        
 
         // Fungsi untuk mengambil reward berdasarkan peran yang dipilih
         function filterRewardsByRole(rewards, roleId) {
@@ -192,23 +213,18 @@
         function getUserListHTML(users) {
     let userListHTML = '';
     const totalUsers = Object.keys(users).length;
+    
     userListHTML += `
             <div class="user-info">
                 <span class="user-name">Total Pengguna yang Mencapai 50% </span> <br>
                 <span style="color:#01004C; font-size:20pt; font-weight: bold;">${totalUsers} </span>
             </div>
-            <a href="#" id="allrank">
-            <button class="btn btn-link center-text" style="font-size:10pt;">Lihat detail</button>
-        </a>
-        
     `;
-    
     return userListHTML;
 }
 
     });
 </script>
-
 
 
 <script>

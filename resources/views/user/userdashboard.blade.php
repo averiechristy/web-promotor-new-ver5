@@ -134,6 +134,8 @@
             </p>   -->
 
             
+
+            
             <a href="{{route('user.myincome')}}"> <button class="btn  btn-sm btn-link"> Lihat riwayat poin  </button></a>
     </div>
                 </div>
@@ -180,7 +182,19 @@
 </div>
   
 <div class="row portfolio-container" data-aos-delay="200">
-    <h4 class="mt-2">Reward</h4>
+   
+
+     <div class="row">
+    <div class="col">
+    <h4 >Reward</h4>
+
+    </div>
+    <div class="col" >
+        <a href="{{route('user.historyreward')}}">
+      <button class="btn btn-warning btn-sm" style=" float: right; color:white;">Lihat riwayat reward </button>
+      </a>
+    </div>
+  </div>
 
     @foreach ($activeRewards as $activeReward)
         <div class="col-lg-4 col-md-6 portfolio-item">

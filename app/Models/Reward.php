@@ -50,4 +50,7 @@ class Reward extends Model
         parent::booted();
 
     }
+    
+
+    
 }
