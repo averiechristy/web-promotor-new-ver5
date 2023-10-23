@@ -663,19 +663,18 @@ font-family: Nunito;
   border-radius: 4px;
 }
 .icon-card .icon {
-  max-width: 46px;
-  width: 100%;
-  height: 46px;
   border-radius: 10px;
   display: flex;
+  height: 100px;
   justify-content: center;
   align-items: center;
   font-size: 24px;
-  margin-right: 20px;
   background: rgba(54, 92, 245, 0.1);
   color: #365CF5;
   font-weight: 700;
+  
 }
+
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .icon-card .icon {
     margin-right: 10px;

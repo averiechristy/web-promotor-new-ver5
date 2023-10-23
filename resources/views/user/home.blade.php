@@ -63,12 +63,12 @@
 </section><!-- End About Section -->
 
   <!-- ======= Portfolio Section ======= -->
-  <section id="portfolio" class="portfolio">
+  <section id="portfolio" class="portfolio" style="background-color:#F6F8FD;">
       <div class="container" >
 
         <div class="section-title">
           <h2></h2>
-          <p>Promo</p>
+          <p>News</p>
         </div>
 <!--  -->
 
@@ -80,11 +80,11 @@
       @foreach ($artikel as $artikel)
           <div class="col-lg-4 portfolio-item ">
           <a href="{{ route('user.artikelread', $artikel->id) }}">
-            <div class="card">
+            <div class="card-news">
               <img src="{{asset('img/'.$artikel->gambar_artikel)}}" class="img-fluid" alt="">
               <hr class="solid">
               <div class="info">
-                <h4>{{$artikel->judul_artikel}}</h4>
+                <h5>{{$artikel->judul_artikel}}</h5>
                 <p class="card-text"><small class="text-muted">Created {{ $artikel->created_at->diffForHumans() }}</small></p>
 
               </div>
@@ -93,8 +93,48 @@
           </div>
         @endforeach
 
+        <style>
+
+          /* Membatasi jumlah karakter judul dan menampilkan titik-titik */
+.portfolio-item .info h5 {
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Nunito;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Atur lebar maksimum yang Anda inginkan */
+  cursor: pointer;
+}
+
+/* Menampilkan judul lengkap saat hover */
+.portfolio-item .info h5:hover {
+  white-space: normal;
+  max-width: none;
+}
+
+.card-news {
+  margin: 10px;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Warna latar belakang card */
+    transition: transform 0.3s;        
+}
+
+.card-news img {
+  width:100%;
+        height: 150px;
+}
+
+.info h5 {
+  color : #01004C;
+  font-weight : bold;
+  
+}
+
+        </style>
           <div class="more-button">
-      <button class="btn-lain"><a href="{{route('user.artikel')}}">Lihat promo lebih banyak</a></button>
+      <button class="btn-lain"><a href="{{route('user.artikel')}}">Lihat berita lebih banyak</a></button>
     </div>
 
         </div>

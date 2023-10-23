@@ -39,7 +39,7 @@
         <a class="nav-link " href="{{route('admin.useraccount.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-address-card" style="color: #01004C"></i>
-            <span style="color: #01004C">User Akun</span>
+            <span style="color: #01004C">User Account</span>
         </a>
         
     </li>
@@ -48,7 +48,7 @@
         <a class="nav-link " href="{{route('admin.product.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-box" style="color: #01004C"></i>
-            <span style="color: #01004C">Produk</span>
+            <span style="color: #01004C">Product</span>
         </a>
         
     </li>
@@ -57,7 +57,7 @@
         <a class="nav-link " href="{{route('admin.package.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-money-bill-wave-alt" style="color: #01004C"></i>
-            <span style="color: #01004C">Paket Pendapatan</span>
+            <span style="color: #01004C">Package Income</span>
         </a>
         
     </li>
@@ -66,7 +66,7 @@
         <a class="nav-link " href="{{route('admin.artikel.index')}}" data-toggle="" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="far fa-newspaper" style="color: #01004C"></i>
-            <span style="color: #01004C">Promo</span>
+            <span style="color: #01004C">News</span>
         </a>
         
     </li>

@@ -12,7 +12,6 @@
           <div class="col-lg-5 d-flex align-items-stretch">
             <div class="contact-text">
               <h2>Contact Us</h2>
-              <i class="fa fa-phone circle-icon" style="font-size:32px ; color: #FF9029;" > <p> +12345678 </p></i> <br>
               <i class="fa fa-envelope circle-icon1" style="font-size:28px ; color: #FF9029;" > <p> loremipsum@gmail.com </p></i>
                  </div>
 

@@ -19,7 +19,7 @@
             <div class="col-lg-6 pt-5 pt-lg-0">
  
         <div class="filter-section ">
-        <h4 id="income-title">Pendapatan bulan {{ date('F') }} tahun {{ date('Y') }}</h4>
+        <h4 id="income-title">Pendapatan bulan {{ date('F') }} {{ date('Y') }}</h4>
     <form id="income-filter-form">
         <div class="form-group mt-5">
             <label for="bulan">Bulan:</label>
@@ -86,7 +86,7 @@
                     currency: 'IDR',
                 }).format(data.totalIncome);
 
-                incomeTitle.textContent = `Pendapatan bulan ${selectedMonthName} tahun ${selectedYear}`;
+                incomeTitle.textContent = `Pendapatan bulan ${selectedMonthName} ${selectedYear}`;
                 incomeAmount.textContent = formattedIncome;
                 pointAmount.textContent = `${data.totalPoints} poin`;
             });

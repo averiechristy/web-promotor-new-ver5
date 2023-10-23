@@ -65,7 +65,6 @@ class LeaderBoardController extends Controller
         // Mendapatkan kolom yang perlu dikunci (header)
         $headerColumnCount = count($header);
         $headerRange = 'A1:' . $sheet->getCellByColumnAndRow($headerColumnCount, 1)->getColumn() . '1';
-        
     
       
         // Mengunci sel-sel header
@@ -260,6 +259,8 @@ class LeaderBoardController extends Controller
                 $pencapaian = [];
                 $total = 0;
 
+                
+
                 for ($j = 4; $j < count($headerRow); $j++) {
                     $pencapaian[$headerRow[$j]] = $rowData[$j];
     
@@ -277,7 +278,7 @@ class LeaderBoardController extends Controller
 
                 if ($kodeRole == 'mr') {
                     if ($total < 72) {
-                        $hasil = 0;
+                        $hasil = 3600000;
                     } else if ($total > 72 && $total < 120) {
                         $insentif = ($total - 72) * 40000;
                         $hasil = $insentif + 3600000;
@@ -306,7 +307,7 @@ class LeaderBoardController extends Controller
                     'user_id' => $rowData['user_id'], // Kolom 'user_id' (ID Pengguna)
                     'nama' => $rowData[2], // Kolom 'Nama'
                     'kode_sales' => $rowData[3],
-                    'tanggal' => $tanggal, // Kolom 'Tanggal'
+                    'tanggal' => $rowData[1], // Kolom 'Tanggal'
                     'income' => $hasil,
                     'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
                     'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)

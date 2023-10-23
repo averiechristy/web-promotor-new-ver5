@@ -71,17 +71,8 @@
     
 <!-- Tombol Download Template -->
 </form>
-
-
-
-
     </div>
-
     <div class="card-body">
-        
-
-  
-
 <div class="dataTables_length mb-3" id="myDataTable_length">
 <label for="entries"> Show
 <select id="entries" name="myDataTable_length" aria-controls="myDataTable"  onchange="changeEntries()" class>
@@ -93,7 +84,6 @@
 entries
 </label>
 </div>
-
 
 <div id="myDataTable_filter" class="dataTables_filter">
 <label>
@@ -120,8 +110,6 @@ Search
 
     <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterDataByMonth()">Terapkan</button>
 </div>
-
-
             <tr>
                 <th>Role</th>
                 <th id="sortNama">Nama</th>
@@ -161,9 +149,7 @@ Search
     @endforeach
 </ul>
 </td>      
-
         <td>{{ $item->total }} poin</td>
-    
         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
         <td>
             <form method="POST" action="{{ route('deleteleaderboard', $item->id) }}">
@@ -184,26 +170,20 @@ Search
         <div class="dataTables_info" id="dataTableInfo" role="status" aria-live="polite">
     Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalEntries">0</span> entries
 </div>
-
         
-        <div class ="dataTables_paginate paging_simple_numbers" id="myDataTable_paginate">
-
-    <a href="#" class="paginate_button" id="prevButton"  onclick="previousPage()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+<div class="dataTables_paginate paging_simple_numbers" id="myDataTable_paginate">
     
+    <a href="#" class="paginate_button" id="doublePrevButton" onclick="doublePreviousPage()"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+    <a href="#" class="paginate_button" id="prevButton" onclick="previousPage()"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
     <span>
-    <a  id="pageNumbers" aria-controls="myDataTable" role="link" aria-current="page" data-dt-idx="0" tabindex="0"></a>
-</span>
-
-
-<a href="#"  class="paginate_button" id="nextButton"  onclick="nextPage()"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        <a id="pageNumbers" aria-controls="myDataTable" role="link" aria-current="page" data-dt-idx="0" tabindex="0"></a>
+    </span>
+    <a href="#" class="paginate_button" id="nextButton" onclick="nextPage()"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+    <a href="#" class="paginate_button" id="doubleNextButton" onclick="doubleNextPage()"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 </div>
 
 </div>
     </div>
-
-    
-
-
 </div>
 
 <style>
@@ -215,16 +195,102 @@ Search
 .dataTables_filter{float:right;text-align:right}
 .dataTables_filter input{border:1px solid #aaa;border-radius:3px;padding:5px;background-color:transparent;color:inherit;margin-left:3px}
 
+
+.btn-active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Styling for paginasi container */
+.dataTables_paginate {
+        text-align: center;
+    }
+
+    /* Styling for each paginasi button */
+    .paginate_button {
+        display: inline-block;
+        margin: 5px;
+        text-align: center;
+
+    }
+        /* Styling for paginasi container */
+    .dataTables_paginate {
+        text-align: center;
+    }
+
+    /* Styling for each paginasi button */
+    .paginate_button {
+        display: inline-block;
+        margin: 5px;
+        text-align: center;
+        border: 1px solid #000; 
+        padding: 5px 10px;
+    }
+
+    /* Media query for small screens */
+    @media (max-width: 768px) {
+        .paginate_button {
+            padding: 3px 6px;
+        }
+    }
+
+    /* Media query for extra small screens */
+    @media (max-width: 576px) {
+        .dataTables_paginate {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .paginate_button {
+            padding: 2px 4px;
+            margin: 2px;
+            
+        }
+    }
+        
+
+    /* Media query for small screens */
+    @media (max-width: 768px) {
+        .paginate_button {
+            padding: 3px 6px;
+        }
+    }
+
+    /* Media query for extra small screens */
+    @media (max-width: 576px) {
+        .dataTables_paginate {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .paginate_button {
+            padding: 2px 4px;
+            margin: 2px;
+        }
+    }
+
 </style>
-<!-- Modal Import -->
-<!-- Modal Import -->
 <script>
     // Fungsi ini akan dipanggil saat pilihan peran berubah
-
-  
-    var itemsPerPage = 10; // Change this value to set the number of items per page
+var itemsPerPage = 10; // Change this value to set the number of items per page
 var currentPage = 1;
 var filteredData = [];
+
+
+function doublePreviousPage() {
+    if (currentPage > 1) {
+        currentPage = 1;
+        updatePagination();
+    }
+}
+
+function doubleNextPage() {
+    var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    if (currentPage < totalPages) {
+        currentPage = totalPages;
+        updatePagination();
+    }
+}
 
 function previousPage() {
     if (currentPage > 1) {
@@ -260,6 +326,7 @@ function updatePagination() {
     var totalPages = Math.ceil(filteredData.length / itemsPerPage);
     var pageNumbers = document.getElementById('pageNumbers');
     pageNumbers.innerHTML = '';
+    
 
     var startIndex = (currentPage - 1) * itemsPerPage;
     var endIndex = startIndex + itemsPerPage;
@@ -273,20 +340,15 @@ function updatePagination() {
         var pageButton = document.createElement('button');
         pageButton.className = 'btn btn-primary btn-sm mr-2';
         pageButton.textContent = i;
+        if (i === currentPage) {
+            pageButton.classList.add('btn-active'); // Menambahkan kelas btn-active untuk halaman aktif
+        }
         pageButton.onclick = function () {
             currentPage = parseInt(this.textContent);
             updatePagination();
         };
         pageNumbers.appendChild(pageButton);
     }
-
-    // Update pagination controls (optional)
-    // You can add next and previous buttons to navigate through pages.
-    // Example:
-    // var prevButton = document.getElementById('prevButton');
-    // var nextButton = document.getElementById('nextButton');
-    // prevButton.disabled = currentPage === 1;
-    // nextButton.disabled = endIndex >= filteredData.length;
 }
 
     function onRoleChange() {
@@ -294,8 +356,6 @@ function updatePagination() {
     var selectedRole = roleSelect.options[roleSelect.selectedIndex].value;
     var downloadLink = "{{ route('export.excel') }}?role_id=" + selectedRole;
 
-
-    
     // Sembunyikan semua baris data dalam tbody
     var allRows = document.querySelectorAll('#tableBody tr');
     allRows.forEach(function (row) {
@@ -303,7 +363,6 @@ function updatePagination() {
     });
 
     
-
     if (selectedRole !== "") {
         // Sembunyikan pesan "Pilih Kode Role"
         document.getElementById('selectRoleMessage').style.display = 'none';
@@ -364,31 +423,30 @@ filterDataByMonth();
 
 function filterDataByMonth() {
     var selectedMonth = document.getElementById('month').value;
-   console.log(selectedMonth);
     var selectedRole = document.getElementById('role').value;
     var allRows = document.querySelectorAll('#tableBody tr');
 
-    // Lakukan iterasi pada setiap baris dan periksa apakah bulan cocok
+    // Kosongkan filteredData sebelum mengisi ulang
+    filteredData = [];
+
     allRows.forEach(function (row) {
         var roleValue = row.getAttribute('data-role');
         var tanggalColumn = row.querySelector('td:nth-child(6)').textContent;
-        
-        var rowMonth = tanggalColumn.split('-')[2] + '-' + tanggalColumn.split('-')[1]; // Format 'mm-yyyy'
-        console.log(rowMonth);
-       
+        var rowMonth = tanggalColumn.split('-')[2] + '-' + tanggalColumn.split('-')[1];
 
         if (
             (roleValue === selectedRole || selectedRole === "") &&
             (selectedMonth === "" || rowMonth === selectedMonth)
         ) {
             row.style.display = 'table-row';
+            filteredData.push(row);
         } else {
             row.style.display = 'none';
         }
     });
 
+    updatePagination();
 }
-
 
 
 function changeEntries() {
@@ -406,41 +464,44 @@ function changeEntries() {
     }
 
     function search() {
-        var keyword = document.getElementById('search').value.toLowerCase();
-        var selectedRole = document.getElementById('role').value;
+    var keyword = document.getElementById('search').value.toLowerCase();
+    var selectedRole = document.getElementById('role').value;
 
-        // Semua baris data dalam tabel
-        var allRows = document.querySelectorAll('#tableBody tr');
+    // Semua baris data dalam tabel
+    var allRows = document.querySelectorAll('#tableBody tr');
+    filteredData = [];
 
-        // Lakukan iterasi pada setiap baris dan periksa apakah kata kunci cocok
-        allRows.forEach(function (row) {
-            var roleColumn = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
-            var namaColumn = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            var kodeSalesColumn = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-            var jumlahcolumn = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-            var totalpoincolumn = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
-            var tanggalcolumn = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+    // Lakukan iterasi pada setiap baris dan periksa apakah kata kunci cocok
+    allRows.forEach(function (row) {
+        var roleColumn = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+        var namaColumn = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        var kodeSalesColumn = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        var jumlahcolumn = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+        var totalpoincolumn = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+        var tanggalcolumn = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
 
-            var roleValue = row.getAttribute('data-role');
+        var roleValue = row.getAttribute('data-role');
 
-            if (
-                (roleValue === selectedRole || selectedRole === "") &&
-                (roleColumn.includes(keyword) || namaColumn.includes(keyword) || kodeSalesColumn.includes(keyword) || jumlahcolumn.includes(keyword) || totalpoincolumn.includes(keyword) || tanggalcolumn.includes(keyword))
-            ) {
-                row.style.display = 'table-row';
-                
-            } else {
-                row.style.display = 'none';
-            }
-  
-        });
-
-        
-    }
+        if (
+            (roleValue === selectedRole || selectedRole === "") &&
+            (roleColumn.includes(keyword) || namaColumn.includes(keyword) || kodeSalesColumn.includes(keyword) || jumlahcolumn.includes(keyword) || totalpoincolumn.includes(keyword) || tanggalcolumn.includes(keyword))
+        ) {
+            filteredData.push(row); // Menyimpan baris yang sesuai ke dalam filteredData
+            row.style.display = 'table-row';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    // Setelah pembaruan tampilan baris sesuai dengan pencarian, perbarui juga pagination
+    updatePagination();
+}
 
     // Panggil fungsi search saat input pencarian berubah
-    document.getElementById('search').addEventListener('input', search);
+    document.getElementById('search').addEventListener('input', function(){
+        search();
+        
 
+});
     // Panggil onRoleChange saat halaman dimuat ulang
     window.onload = onRoleChange;
     

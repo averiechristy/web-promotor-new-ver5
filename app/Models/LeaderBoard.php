@@ -12,29 +12,25 @@ class LeaderBoard extends Model
 
     use HasFactory;
 
-
-
-public static function getLeaderboardForRole($role)
-{
-    $today = Carbon::now();
-
-    if ($today->isMonday()) {
-        // Jika hari ini adalah Senin, ambil data dari Jumat sebelumnya.
-        $dateToQuery = $today->subDays(3)->toDateString();
-    }else {
-        // Jika hari biasa, ambil data dari hari sebelumnya.
-        $dateToQuery = $today->subDay()->toDateString();
+    
+    public static function getLeaderboardForRole($role)
+    {
+        $today = Carbon::now();
+    
+        // Ambil tanggal awal bulan ini
+        $startDate = $today->startOfMonth()->toDateString();
+    
+        // Ambil tanggal akhir bulan ini
+        $endDate = $today->endOfMonth()->toDateString();
+    
+        return self::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('role_id', $role)
+            ->orderBy('income', 'desc')
+            ->orderBy('total', 'desc') // Gantilah 'kriteria_lain' dengan nama kolom yang sesuai
+            ->take(3) // Ambil 3 pemimpin teratas.
+            ->get();
     }
-
-    return self::whereDate('tanggal', $dateToQuery)
-        ->where('role_id', $role)
-        ->orderBy('total', 'desc')
-        ->take(3) // Ambil 3 pemimpin teratas.
-        ->get();
-}
-
-
-
+    
 
     public function getAllLeaderboardToday()
 {

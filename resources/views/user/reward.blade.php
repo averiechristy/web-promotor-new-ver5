@@ -71,7 +71,7 @@ $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
-<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
     </div>
   </div>
 
@@ -103,7 +103,7 @@ $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
-<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
   <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">
@@ -149,7 +149,7 @@ $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
-<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
     </div>
   </div>
 </div>
@@ -182,7 +182,7 @@ $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
-<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
   <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">
@@ -229,7 +229,7 @@ $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
-<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
     </div>
   </div>
 
@@ -261,7 +261,7 @@ $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
-<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> - <?php echo $tanggal_selesai; ?></small></p>
+<p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
   <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">
@@ -292,9 +292,23 @@ $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
     transition: transform 0.3s;
 }
 
+
+
 .card-style h5.card-title {
-    font-size: 18px;
+  font-size: 18px;
     font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Nunito;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Atur lebar maksimum yang Anda inginkan */
+  cursor: pointer;
+}
+
+/* Menampilkan judul lengkap saat hover */
+.card-style h5.card-title:hover {
+  white-space: normal;
+  max-width: none;
 }
 
 .card-img-top {

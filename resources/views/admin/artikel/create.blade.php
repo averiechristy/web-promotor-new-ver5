@@ -12,13 +12,13 @@
                             <div class="col-8 offset-2">
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        Tambah Promo Baru
+                                        Tambah Berita Baru
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('admin.artikel.simpan')}}" method="post"  enctype="multipart/form-data" onsubmit="return validateForm()">
                                             @csrf
                                             <div class="form-group mb-4">
-                                                <label for="" class="form-label">Judul Promo</label>
+                                                <label for="" class="form-label">Judul Berita</label>
                                                 <input name="judul_artikel" type="text" class="form-control {{$errors->has('judul_artikel') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{old('judul_artikel')}}"  oninvalid="this.setCustomValidity('Judul artikel tidak boleh kosong')"  oninput="setCustomValidity('')" />
                                                 @if ($errors->has('judul_artikel'))
                                                     <p class="text-danger">{{$errors->first('judul_artikel')}}</p>

@@ -31,12 +31,39 @@
 
 <style>
 
+h5{
+    font-family: Nunito;
+    font-weight:bold;
+}
+
+.card-title {
+  white-space: nowrap;
+  font-size: 10px;
+   
+  overflow: hidden;
+  font-family: Nunito;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Atur lebar maksimum yang Anda inginkan */
+  cursor: pointer;
+}
+
+/* Menampilkan judul lengkap saat hover */
+.card-title:hover {
+  white-space: normal;
+  max-width: none;
+}
+    .card-img-dashboard{
+        width:100%;
+        height: 150px;
+    }
+
     .card-title {
         font-size : 16pt;
     }
 
     .card-text{
-        font-size : 12pt;
+        font-size : 10pt;
+        color:#FF9029;
     }
     .card-tes{
         margin: 10px;

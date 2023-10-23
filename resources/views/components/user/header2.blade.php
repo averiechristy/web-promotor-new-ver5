@@ -26,7 +26,7 @@
     </ul>
   </li>      
   
-  <li><a class="nav-link scrollto  {{ Request::is('user/artikel') ? 'active' : '' }} " href="{{route('user.artikel')}}">Promo</a></li>
+  <li><a class="nav-link scrollto  {{ Request::is('user/artikel') ? 'active' : '' }} " href="{{route('user.artikel')}}">News</a></li>
   <li><a class="nav-link scrollto  {{ Request::is('user/reward') ? 'active' : '' }} " href="{{route('user.reward')}}">Reward</a></li>
 
   <li><a class="nav-link scrollto  {{ Request::is('user/leaderboard') ? 'active' : '' }} " href="{{route('user.leaderboard')}}">Leaderboard</a></li>

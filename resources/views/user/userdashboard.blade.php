@@ -58,13 +58,13 @@
         <div class="col-lg-4 col-md-6 portfolio-item">
             <div class="card-deck">
             <div class="icon-card">
-    <div class="icon success">
-            <img class="img-icon" src="{{asset('img/indonesian-rupiah.png')}}" alt="">
-        </div>                    
-           
-        <div class="card-body mt-3">
+                
+        <div class="card-body">
                         <h5 class="card-title">Pendapatan</h5>
-                        <h4 class="text-bold mb-10 mt-2">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }},-</h4>
+                        <div class="icon success mt-3">
+            <img class="img-icon" src="{{asset('img/indonesian-rupiah.png')}}" alt="">
+        </div>    
+                        <h4 class="txt text-bold mb-10 mt-3">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }},-</h4>
 <!--                         
                         @php
                 $incomeChangePercent = 0;
@@ -92,22 +92,29 @@
                 @endif
                 
             </p> -->
-            <a href="{{route('user.myincome')}}"> <button class="btn  btn-sm btn-link"> Lihat riwayat pendapatan </button></a>
-
+            <div class="container">
+  <div class="row">
+    <div class="col text-center">
+      <a href="{{ route('user.myincome') }}">
+        <button class="btn btn-sm btn-link">Lihat riwayat pendapatan</button>
+      </a>
+    </div>
+  </div>
+</div>
     </div>
                 </div>
             </div>
         </div>
-
-
+        
         <div class="col-lg-4 col-md-6 portfolio-item">
             <div class="card-deck">
             <div class="icon-card">
-            <div class="icon primary">
-            <img class="img-icon" src="{{asset('img/bonus.png')}}" alt="">
-        </div>                    <div class="card-body mt-3">
+                            <div class="card-body ">
                         <h5 class="card-title">Poin</h5>
-                        <h4 class="text-bold mb-10 mt-2">{{ $totalPointsToday }} poin</h4>
+                        <div class="icon primary mt-3">
+            <img class="img-icon" src="{{asset('img/bonus.png')}}" alt="">
+        </div>    
+                        <h4 class="txt text-bold mb-10 mt-3">{{ $totalPointsToday }} poin</h4>
         <!-- @php
                 $pointsChangePercent = 0;
                 if ($totalPointsYesterday !== 0) {
@@ -133,11 +140,15 @@
                 @endif
             </p>   -->
 
-            
-
-            
-            <a href="{{route('user.myincome')}}"> <button class="btn  btn-sm btn-link"> Lihat riwayat poin  </button></a>
+            <div class="container">
+  <div class="row">
+    <div class="col text-center">
+      <a href="{{ route('user.myincome') }}">
+        <button class="btn btn-sm btn-link">Lihat riwayat poin</button>
+      </a>
     </div>
+  </div>
+</div>    </div>
                 </div>
             </div>
         </div>
@@ -145,24 +156,23 @@
         <div class="col-lg-4 col-md-6 portfolio-item">
     <div class="card-deck">
         <div class="icon-card">
-            <div class="icon orange">
+           
+            <div class="card-body ">
+                <h5 class="card-title">Peringkat Leaderboard</h5>
+                <div class="icon orange mt-3">
             <img class="img-icon" src="{{asset('img/top-three.png')}}" alt="">
             </div>
-            <div class="card-body mt-3">
-                <h5 class="card-title">Peringkat Leaderboard</h5>
             
                     @if($leaderboardData->isEmpty())
-                    <p class="text-sm">
+                    <p class="text-sm mt-2">
                
-                    <small class="text-muted">
-
+                    <small class="tes text-muted ">
                         Belum ada peringkat
                         </small>
             </p>  
-
                     @else 
-                    <h4 class="text-bold mb-10 mt-2">
-                        <span class="user-rank">{{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
+                    <h4 class="text-bold mb-10 mt-3">
+                        <span class="txt user-rank">{{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
                         </h4>
 
                         <!-- <p class="text-sm">
@@ -172,14 +182,24 @@
 
             </p>   -->
                         @endif
-                        <a href="{{route('user.leaderboard')}}"> <button class="btn  btn-sm btn-link"> Lihat ranking 10 besar  </button></a>
-
+                        <div class="container">
+  <div class="row">
+    <div class="col text-center">
+      <a href="{{ route('user.leaderboard') }}">
+        <button class="btn btn-sm btn-link">Lihat rangking 10 besar</button>
+      </a>
+    </div>
+  </div>
+</div>
 
             </div>
         </div>
     </div>
 </div>
 </div>
+
+
+<div class="card-reward">
   
 <div class="row portfolio-container" data-aos-delay="200">
    
@@ -189,9 +209,9 @@
     <h4 >Reward</h4>
 
     </div>
-    <div class="col" >
+    <div class="col " >
         <a href="{{route('user.historyreward')}}">
-      <button class="btn btn-warning btn-sm" style=" float: right; color:white;">Lihat riwayat reward </button>
+      <button class=" btn btn-warning btn-sm btn-reward " style=" float: right; color:white;">Lihat riwayat reward </button>
       </a>
     </div>
   </div>
@@ -203,7 +223,7 @@
                 <img class="card-img-dashboard mt-3" src="{{asset('img/'.$activeReward->gambar_reward)}}" alt="{{ $activeReward->title }}">
 
                     <div class="card-body mt-3">
-                        <h5 class="card-title mb-3 mt-3">{{ $activeReward->judul_reward }}</h5>
+                        <h5 class="card-title-reward mb-3 mt-3">{{ $activeReward->judul_reward }}</h5>
                         <div class="progress">
                             
             <div class="progress-bar" role="progressbar" style="width: {{ $progressWidthPerReward[$activeReward->id] }}" aria-valuenow="{{ $progressWidthPerReward[$activeReward->id] }}" aria-valuemin="0" aria-valuemax="100">{{ $progressWidthPerReward[$activeReward->id] }}</div>
@@ -227,6 +247,8 @@
 </div>
 </div>
 
+            </div>
+
 
 </section>
 
@@ -234,9 +256,50 @@
 
 
 <style> 
+
+.btn-reward {
+    
+    margin-top : 20px;
+}
+.card-reward {
+background-color : white;
+border-radius : 8px;
+}
+
+.card-reward h4{
+    margin-left : 50px;
+    margin-top : 20px;
+}
+
+
+.text-sm {
+    text-align:center;
+}
+
+.txt {
+    text-align: center;
+}
+
+.card-title-reward {
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Nunito;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Atur lebar maksimum yang Anda inginkan */
+  cursor: pointer;
+  font-size: 18px;
+    font-weight: bold;
+}
+
+/* Menampilkan judul lengkap saat hover */
+.card-title-reward:hover {
+  white-space: normal;
+  max-width: none;
+}
 .icon .img-icon {
-    width:35px;
-    height:35px;
+    width:60px;
+    height:60px;
+    
 }
 
 .card-img-dashboard {
@@ -300,13 +363,21 @@ font-weight: 700;
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff; /* Warna latar belakang card */
+    background-color: #F6F8FD; /* Warna latar belakang card */
     transition: transform 0.3s;
+
 }
 .card-style h5.card-title {
     font-size: 18px;
     font-weight: bold;
+    
 }
+
+.card-title {
+    text-align: center;
+
+}
+
 
 .card-img-top {
   border-radius: 10px;
