@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 
 class LeaderBoard extends Model
@@ -12,25 +14,27 @@ class LeaderBoard extends Model
 
     use HasFactory;
 
-    
     public static function getLeaderboardForRole($role)
-    {
-        $today = Carbon::now();
+{
+    $today = Carbon::now();
     
-        // Ambil tanggal awal bulan ini
-        $startDate = $today->startOfMonth()->toDateString();
+    // Ambil tanggal awal bulan ini
+    $startDate = $today->startOfMonth()->toDateString();
     
-        // Ambil tanggal akhir bulan ini
-        $endDate = $today->endOfMonth()->toDateString();
+    // Ambil tanggal akhir bulan ini
+    $endDate = $today->endOfMonth()->toDateString();
     
-        return self::whereBetween('tanggal', [$startDate, $endDate])
-            ->where('role_id', $role)
-            ->orderBy('income', 'desc')
-            ->orderBy('total', 'desc') // Gantilah 'kriteria_lain' dengan nama kolom yang sesuai
-            ->take(3) // Ambil 3 pemimpin teratas.
-            ->get();
-    }
-    
+    return self::select('user_id', 
+                DB::raw('SUM(income) as total_income'),
+                DB::raw('SUM(total) as total_point'))
+        ->whereBetween('tanggal', [$startDate, $endDate])
+        ->where('role_id', $role)
+        ->groupBy('user_id')
+        ->orderBy('total_income', 'desc')
+        ->orderBy('total_point', 'desc')
+        ->take(3) // Ambil 3 pemimpin teratas.
+        ->get();
+}
 
     public function getAllLeaderboardToday()
 {
@@ -51,21 +55,48 @@ class LeaderBoard extends Model
 
     return $leaderboardData;
 }
+
+public static function getLeaderboardForRole2($role)
+{
+    $today = Carbon::now();
+
+    // Ambil tanggal awal bulan ini
+    $startDate = $today->startOfMonth()->toDateString();
+
+    // Ambil tanggal akhir bulan ini
+    $endDate = $today->endOfMonth()->toDateString();
+
+    return self::select('user_id', 
+                DB::raw('SUM(income) as total_income'),
+                DB::raw('SUM(total) as total_point'))
+        ->whereBetween('tanggal', [$startDate, $endDate])
+        ->where('role_id', $role)
+        ->groupBy('user_id')
+        ->orderBy('total_income', 'desc')
+        ->orderBy('total_point', 'desc')
+        ->get();
+}
+
     
  public static function getLeaderboardUser($role)
     {
-
         $today = Carbon::now();
-
-     
-            // Jika hari biasa, ambil data dari hari sebelumnya.
-            $dateToQuery = $today->subDay()->toDateString();
+        // Ambil tanggal awal bulan ini
+        $startDate = $today->startOfMonth()->toDateString();
         
-
-        return self::whereDate('tanggal', $dateToQuery)
+        
+        // Ambil tanggal akhir bulan ini
+        $endDate = $today->endOfMonth()->toDateString();
+        
+        return self::select('user_id', 
+                    DB::raw('SUM(income) as total_income'),
+                    DB::raw('SUM(total) as total_point'))
+            ->whereBetween('tanggal', [$startDate, $endDate])
             ->where('role_id', $role)
-            ->orderBy('total', 'desc')
-            ->take(10) // Ambil 10 leaderboard
+            ->groupBy('user_id')
+            ->orderBy('total_income', 'desc')
+            ->orderBy('total_point', 'desc')
+            ->take(10) // Ambil 3 pemimpin teratas.
             ->get();
     }
 
@@ -101,55 +132,57 @@ class LeaderBoard extends Model
     }
 
     public static function getTotalUsersWithSameRole($role)
-{
-    $today = Carbon::now();
-
-   
-        // Jika hari biasa, ambil data dari hari sebelumnya.
-        $dateToQuery = $today->subDay()->toDateString();
+    {
+        $today = Carbon::now();
     
-    return self::whereDate('tanggal', $dateToQuery)
-        ->where('role_id', $role)
-        ->count();
-}
-
-
+        // Jika hari ini adalah tanggal awal bulan, kita perlu mengambil data dari bulan sebelumnya.
+        $startDate = $today->startOfMonth();
+        if ($today->isToday()) {
+            $startDate->subMonth();
+        }
+    
+        // Ambil tanggal awal bulan dan akhir bulan dari startDate
+        $startDate = $startDate->toDateString();
+        $endDate = $today->endOfMonth()->toDateString();
+    
+        return self::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('role_id', $role)
+            ->distinct('user_id') // Menghindari penghitungan ganda user dengan ID yang sama.
+            ->count();
+    }
+    
+    
 public static function getRankForUser($userId, $role)
 {
     $today = Carbon::now();
-
- 
-        // Jika hari biasa, ambil data dari hari sebelumnya.
-        $dateToQuery = $today->subDay()->toDateString();
     
-    // Check if there is any data for the given role in the database.
-    $roleDataExists = self::whereDate('tanggal', $dateToQuery)
+    // Ambil tanggal awal bulan ini
+    $startDate = $today->startOfMonth()->toDateString();
+    
+    // Ambil tanggal akhir bulan ini
+    $endDate = $today->endOfMonth()->toDateString();
+    
+    // Query untuk menghitung peringkat pengguna berdasarkan total income dan total point.
+    $userRankQuery = self::select('user_id', 
+        DB::raw('SUM(income) as total_income'),
+        DB::raw('SUM(total) as total_point'))
+        ->whereBetween('tanggal', [$startDate, $endDate])
         ->where('role_id', $role)
-        ->exists();
+        ->groupBy('user_id')
+        ->orderBy('total_income', 'desc')
+        ->orderBy('total_point', 'desc');
 
-    if (!$roleDataExists) {
-        // Handle the case where no data exists for the given role.
+    // Query untuk mengambil peringkat pengguna tertentu.
+    $userRank = $userRankQuery->pluck('user_id')->search($userId);
+
+    if ($userRank === false) {
+        // Handle the case where no data exists for the given user.
         return null; // You can return null or an appropriate value indicating no data.
     }
 
-    $userTotal = self::whereDate('tanggal', $dateToQuery)
-        ->where('role_id', $role)
-        ->where('user_id', $userId)
-        ->value('total');
-
-    if ($userTotal === null) {
-        return '-';
-    }
-
-    $rank = self::whereDate('tanggal', $dateToQuery)
-        ->where('role_id', $role)
-        ->where('total', '>', $userTotal)
-        ->count();
-
-    // Karena peringkat dimulai dari 1, tambahkan 1 ke hasil perhitungan.
-    return $rank + 1;
+    // Karena peringkat dimulai dari 0, tambahkan 1 ke hasil perhitungan.
+    return $userRank + 1;
 }
-
 
 
     protected $fillable = [

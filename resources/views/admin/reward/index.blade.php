@@ -24,9 +24,9 @@
                                         <tr>
                                           <th>Role</th>
                                           <th>Judul Reward</th>
-                                          <th>Poin Reward</th>
-                                          <th>Deskripsi Reward</th>
                                           <th>Gambar Reward</th>
+                                          <th>Deskripsi Reward</th>
+                                          <th>Poin Reward</th>
                                           <th>Tanggal Mulai</th>
                                           <th>Tanggal Berakhir</th>
                                           <th>Status</th>

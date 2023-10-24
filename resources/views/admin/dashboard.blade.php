@@ -185,6 +185,7 @@
                     </div>
                    
                     
+                    
                 `;
                 rewardList.appendChild(rewardItem);
                 const viewDetailButton = rewardItem.querySelector('.view-detail');
@@ -253,9 +254,11 @@
         roleSelect.addEventListener('change', function () {
             const selectedRoleId = roleSelect.value;
             const filteredLeaderboard = leaderboardData.filter(leader => leader.role_id == selectedRoleId);
+
+            
             const sortedLeaderboard = filteredLeaderboard.slice(0, 10); // Ambil 10 besar
 
-            console.log(sortedLeaderboard);
+            console.log(filteredLeaderboard);
 
             // Hapus isi tabel sebelum menambahkan data baru
             tableBody.innerHTML = '';
@@ -274,7 +277,7 @@
                     <td>${index + 1}</td>
                     <td>${leader.nama}</td>
                     <td>${leader.kode_sales}</td>
-                    <td>${leader.total}</td>
+                    <td>${leader.total_poin}</td>
                     
                 `;
                 tableBody.appendChild(row);

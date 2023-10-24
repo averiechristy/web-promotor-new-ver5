@@ -23,14 +23,19 @@ class DashboardController extends Controller
        
 
         $today = Carbon::now();
-
-            // Jika hari biasa, ambil data dari hari sebelumnya.
-            $dateToQuery = $today->subDay()->toDateString();
+        $endOfMonth = $today->endOfMonth()->toDateString();
+        $startOfMonth = $today->startOfMonth()->toDateString();
+        
+        // Ambil data dari periode bulan berjalan (tanggal mulai sampai tanggal selesai)
+        $leaderboardData = LeaderBoard::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
+        ->select('user_id', 'role_id', 'nama', 'kode_sales', \DB::raw('SUM(total) as total_poin'), \DB::raw('SUM(income) as total_income'))
+        ->groupBy('user_id', 'role_id', 'nama', 'kode_sales')
+        ->orderBy('total_poin', 'desc')
+        ->orderBy('total_income', 'desc')
+        ->get();
+        
         
     
-        $leaderboardData = LeaderBoard::whereDate('tanggal', $dateToQuery)
-            ->orderBy('total', 'desc')
-            ->get();
     
         $activeRewards = Reward::where(function($query) {
             $today = now();

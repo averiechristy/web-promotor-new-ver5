@@ -12,42 +12,41 @@ class HistoryRewardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $user = auth()->user();
-        $userId = auth()->user()->id;
-        $role_id = $user->role_id;
-    
-        // Tanggal saat ini
-        $currentDate = now();
-        $oneMonthAgo = now()->subMonth(); // Tanggal satu bulan yang lalu
-    
-        // Mengambil semua reward sesuai dengan role_id
-        $rewards = Reward::where('role_id', $role_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-    
-        // Inisialisasi array untuk menyimpan reward yang telah dicapai
-        $achievedRewards = [];
-    
-        // Menghitung total poin yang diperoleh pengguna selama periode reward
-        foreach ($rewards as $reward) {
-            $totalUserPoints = LeaderBoard::where('user_id', $userId)
-                ->whereYear('tanggal', '>=', now()->year)
-                ->whereMonth('tanggal', '>=', now()->month)
-                ->where('tanggal', '<=', $reward->tanggal_selesai)
-                ->sum('total');
-    
-            if ($totalUserPoints >= $reward->poin_reward && $reward->tanggal_selesai >= $oneMonthAgo) {
-                // Menambahkan reward yang telah dicapai dan berakhir dalam satu bulan
-                $achievedRewards[] = $reward;
-            }
+   public function index()
+{
+    $user = auth()->user();
+    $userId = auth()->user()->id;
+    $role_id = $user->role_id;
+
+    // Mengambil semua reward yang sudah berakhir sesuai dengan role_id
+    $rewards = Reward::where('role_id', $role_id)
+        ->where('tanggal_selesai', '<', now())
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Inisialisasi array untuk menyimpan reward yang telah dicapai
+    $achievedRewards = [];
+
+    foreach ($rewards as $reward) {
+        // Menghitung total poin pengguna selama periode reward berjalan
+        $totalUserPoints = LeaderBoard::where('user_id', $userId)
+            ->where('tanggal', '>=', $reward->tanggal_mulai) // Tanggal mulai reward
+            ->where('tanggal', '<=', $reward->tanggal_selesai) // Tanggal selesai reward
+            ->sum('total');
+
+        if ($totalUserPoints >= $reward->poin_reward) {
+            // Menambahkan reward yang telah dicapai
+            $achievedRewards[] = $reward;
         }
-    
-        return view("user.historyreward", [
-            "rewards" => $achievedRewards
-        ]);
     }
+
+
+    return view("user.historyreward", [
+        "rewards" => $achievedRewards
+    ]);
+}
+
+    
     
     
 

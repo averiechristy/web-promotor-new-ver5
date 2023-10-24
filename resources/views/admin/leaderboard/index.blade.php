@@ -326,17 +326,19 @@ function updatePagination() {
     var totalPages = Math.ceil(filteredData.length / itemsPerPage);
     var pageNumbers = document.getElementById('pageNumbers');
     pageNumbers.innerHTML = '';
-    
 
-    var startIndex = (currentPage - 1) * itemsPerPage;
-    var endIndex = startIndex + itemsPerPage;
     var totalEntries = filteredData.length;
 
     document.getElementById('showingStart').textContent = startIndex + 1;
     document.getElementById('showingEnd').textContent = Math.min(endIndex, totalEntries);
     document.getElementById('totalEntries').textContent = totalEntries;
 
-    for (var i = 1; i <= totalPages; i++) {
+    // Calculate the range of page numbers to display
+    var pageRange = 3; // Number of page numbers to display
+    var startPage = Math.max(1, currentPage - Math.floor(pageRange / 2));
+    var endPage = Math.min(totalPages, startPage + pageRange - 1);
+    
+    for (var i = startPage; i <= endPage; i++) {
         var pageButton = document.createElement('button');
         pageButton.className = 'btn btn-primary btn-sm mr-2';
         pageButton.textContent = i;
@@ -350,6 +352,7 @@ function updatePagination() {
         pageNumbers.appendChild(pageButton);
     }
 }
+
 
     function onRoleChange() {
     var roleSelect = document.getElementById('role');

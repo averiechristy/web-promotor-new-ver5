@@ -20,7 +20,8 @@ class HomeController extends Controller
         $artikel= Artikel::orderBy('created_at', 'desc')->paginate(6); // Ubah 10 dengan jumlah data per halaman yang Anda inginkan
         $userRole = Auth::user()->role_id; // Mengambil peran pengguna yang login
         $leaderboardData = Leaderboard::getLeaderboardForRole($userRole);
-        
+
+       
 
         return view('user.home',[
             'artikel' => $artikel,

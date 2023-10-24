@@ -60,11 +60,11 @@
         </div>
 
         <div class="leaderboard-info">
-          <h4>{{ $leader->nama }}</h4>
-          <p>Total Poin: {{ $leader->total }}</p>
+          <h4>{{ $leader->user->nama }}</h4>
+          <p>Total Poin: {{ $leader->total_point}}</p>
 
           <?php
-    $formattedHasil = 'Rp. ' . number_format($leader->income, 0, ',', '.') . ',-';
+    $formattedHasil = 'Rp. ' . number_format($leader->total_income, 0, ',', '.') . ',-';
     ?>
           <p>Pendapatan : {{ $formattedHasil }}</p>
         </div>

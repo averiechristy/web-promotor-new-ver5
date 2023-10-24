@@ -50,8 +50,6 @@
 
 <section id="userdashboard" class="userdashboard">
     <div class="container">
-
-
     
 <div class="row portfolio-container" data-aos-delay="200">
 
@@ -64,7 +62,7 @@
                         <div class="icon success mt-3">
             <img class="img-icon" src="{{asset('img/indonesian-rupiah.png')}}" alt="">
         </div>    
-                        <h4 class="txt text-bold mb-10 mt-3">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }},-</h4>
+                        <h4 class="txt text-bold mb-10 mt-3">Rp. {{ number_format($totalIncomeThisMonth, 0, ',', '.') }},-</h4>
 <!--                         
                         @php
                 $incomeChangePercent = 0;
@@ -114,7 +112,7 @@
                         <div class="icon primary mt-3">
             <img class="img-icon" src="{{asset('img/bonus.png')}}" alt="">
         </div>    
-                        <h4 class="txt text-bold mb-10 mt-3">{{ $totalPointsToday }} poin</h4>
+                        <h4 class="txt text-bold mb-10 mt-3">{{ $totalPointsThisMonth }} poin</h4>
         <!-- @php
                 $pointsChangePercent = 0;
                 if ($totalPointsYesterday !== 0) {
@@ -158,7 +156,7 @@
         <div class="icon-card">
            
             <div class="card-body ">
-                <h5 class="card-title">Peringkat Leaderboard</h5>
+                <h5 class="card-title">Peringkat</h5>
                 <div class="icon orange mt-3">
             <img class="img-icon" src="{{asset('img/top-three.png')}}" alt="">
             </div>
@@ -171,7 +169,7 @@
                         </small>
             </p>  
                     @else 
-                    <h4 class="text-bold mb-10 mt-3">
+                    <h4 class="text-bold mb-10 mt-3 leaderboard-text">
                         <span class="txt user-rank">{{$userRank}}</span>   <span class="total-user">/ {{$totalUsersWithSameRole}} </span> 
                         </h4>
 
@@ -182,7 +180,7 @@
 
             </p>   -->
                         @endif
-                        <div class="container">
+<div class="container">
   <div class="row">
     <div class="col text-center">
       <a href="{{ route('user.leaderboard') }}">
@@ -202,8 +200,6 @@
 <div class="card-reward">
   
 <div class="row portfolio-container" data-aos-delay="200">
-   
-
      <div class="row">
     <div class="col">
     <h4 >Reward</h4>
@@ -246,7 +242,6 @@
     @endforeach
 </div>
 </div>
-
             </div>
 
 
@@ -254,13 +249,15 @@
 
 </main>
 
-
 <style> 
-
+.leaderboard-text{
+    text-align:center;
+}
 .btn-reward {
     
     margin-top : 20px;
 }
+
 .card-reward {
 background-color : white;
 border-radius : 8px;
@@ -270,7 +267,6 @@ border-radius : 8px;
     margin-left : 50px;
     margin-top : 20px;
 }
-
 
 .text-sm {
     text-align:center;
@@ -358,7 +354,8 @@ font-weight: 700;
 
 
 .card-style {
-    margin: 10px;
+    margin:20px;
+
     padding: 20px;
     border: none;
     border-radius: 10px;
@@ -378,10 +375,9 @@ font-weight: 700;
 
 }
 
-
 .card-img-top {
-  border-radius: 10px;
-width:100%;
+    border-radius: 10px;
+    width:100%;
 }
 
 .card-style p.card-text {
@@ -473,8 +469,6 @@ border-radius :5px;
         </div>
     </div>
 <!-- Modal -->
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const avatarInput = document.getElementById('avatar-input');

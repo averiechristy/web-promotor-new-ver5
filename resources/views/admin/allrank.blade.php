@@ -45,9 +45,9 @@
                                     @foreach ($rankings as $index => $ranking)
     <tr>
         <td>{{ $index + 1 }}</td>
-        <td>{{ $ranking->nama }}</td>
-        <td>{{ $ranking->kode_sales }}</td>
-        <td>{{ $ranking->total }}</td>
+        <td>{{ $ranking->user->nama }}</td>
+        <td>{{ $ranking->user->username }}</td>
+        <td>{{ $ranking->total_point }}</td>
     </tr>
     @endforeach
                      </tbody>

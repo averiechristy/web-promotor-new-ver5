@@ -14,17 +14,11 @@ class AllRankController extends Controller
      */
     public function index($role_id)
     {
-
-        $today = Carbon::now();
-        $dateToQuery = $today->subDay()->toDateString();
-        
-       
-        // Ambil data peringkat berdasarkan $role_id
-        $rankings =LeaderBoard::where('role_id', $role_id)->orderBy('total', 'desc')->whereDate('tanggal', $dateToQuery)->get();
-
-        // Tampilkan tampilan "allrank" dengan data peringkat
-        return view('admin.allrank', ['rankings'=>$rankings]);
+        $rankings = LeaderBoard::getLeaderboardForRole2($role_id);
+    
+        return view('admin.allrank', ['rankings' => $rankings]);
     }
+    
     /**
      * Show the form for creating a new resource.
      */

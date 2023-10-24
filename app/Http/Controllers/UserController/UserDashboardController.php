@@ -44,11 +44,14 @@ class UserDashboardController extends Controller
             ->whereMonth('tanggal', now()->month)
             ->sum('income');
     
+           
         // Menghitung total poin bulan ini
         $totalPointsThisMonth = LeaderBoard::where('user_id', $userId)
             ->whereYear('tanggal', now()->year)
             ->whereMonth('tanggal', now()->month)
             ->sum('total');
+
+            
 
         // Menghitung total pendapatan bulan lalu
         $lastMonth = now()->subMonth();
@@ -152,8 +155,8 @@ foreach ($activeRewards as $activeReward) {
         
 
         return view('user.userdashboard', [
-            'totalIncomeThisMonth' => $totalIncomeToday,
-            'totalPointsThisMonth' => $totalPointsToday,
+            'totalIncomeThisMonth' => $totalIncomeThisMonth,
+            'totalPointsThisMonth' => $totalPointsThisMonth,
             'activeRewards' => $activeRewards,
             'requiredPoints' => $requiredPoints,
             'incomeChange' => $incomeChange,
