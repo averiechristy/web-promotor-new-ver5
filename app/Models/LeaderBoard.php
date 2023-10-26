@@ -120,14 +120,21 @@ public static function getLeaderboardForRole2($role)
     public static function getLeaderboardUserDasboard($role)
     {
         $today = Carbon::now();
-
-     
-            // Jika hari biasa, ambil data dari hari sebelumnya.
-            $dateToQuery = $today->subDay()->toDateString();
-      
-        return self::whereDate('tanggal', $dateToQuery)
+        // Ambil tanggal awal bulan ini
+        $startDate = $today->startOfMonth()->toDateString();
+        
+        
+        // Ambil tanggal akhir bulan ini
+        $endDate = $today->endOfMonth()->toDateString();
+        
+        return self::select('user_id', 
+                    DB::raw('SUM(income) as total_income'),
+                    DB::raw('SUM(total) as total_point'))
+            ->whereBetween('tanggal', [$startDate, $endDate])
             ->where('role_id', $role)
-            ->orderBy('total', 'desc')
+            ->groupBy('user_id')
+            ->orderBy('total_income', 'desc')
+            ->orderBy('total_point', 'desc')
             ->get();
     }
 

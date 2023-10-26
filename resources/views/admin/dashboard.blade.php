@@ -66,16 +66,15 @@
     <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Reward</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Reward Sedang Berjalan</h6>
         </div>
         <!-- Card Body -->
         <div class="card-body">
 
-            <div  id="rewardData" class="mt-4 text-center small">
-                <ul  id="rewardList">
-                   
-                </ul>
-            </div>
+        <div id="rewardList" class=" text-center small">
+    <ul id="rewardItems"></ul>
+    <div id="paginationButtons"></div>
+</div>
 
         </div>
     </div>
@@ -85,6 +84,25 @@
 </div>
 
 <style>
+
+.pagination-button {box-sizing:border-box;
+    display:inline-block;
+    min-width:1.5em;
+    padding:.5em 1em;
+    margin-left:2px;
+    text-align:center;
+    text-decoration:none !important;
+    cursor:pointer;color:inherit !important;
+    border:1px solid transparent;
+    border-radius:2px;
+    background:transparent;
+
+    display: inline-block;
+    margin: 5px;
+    text-align: center;
+    border: 1px solid #000;
+    padding: 5px 10px;}
+
     .reward-item {
         border: 1px solid #e0e0e0;
         padding: 10px;
@@ -151,82 +169,173 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const roleSelect = document.getElementById('role');
-        const rewardList = document.getElementById('rewardList');
-        const rewardsData = @json($activeRewards);
-        const usersReached50PercentData = @json($usersReached50Percent);
-        
+    let filteredRewards = []; 
+ document.addEventListener('DOMContentLoaded', function () {
+    const roleSelect = document.getElementById('role');
+    const rewardList = document.getElementById('rewardItems');
+    const rewardsData = @json($activeRewards);
+    const usersReached50PercentData = @json($usersReached50Percent);
+    const itemsPerPage = 3;
+    let currentPage = 1;
 
-        roleSelect.addEventListener('change', function () {
-            const selectedRoleId = roleSelect.value;
-            const filteredRewards = filterRewardsByRole(rewardsData, selectedRoleId);
+    roleSelect.addEventListener('change', function () {
+        const selectedRoleId = roleSelect.value;
+    filteredRewards = filterRewardsByRole(rewardsData, selectedRoleId); // Perbarui filteredRewards
+    currentPage = 1; // Kembali ke halaman pertama saat peran berubah
+    rewardList.innerHTML = ''; // Hapus isi daftar reward
+    renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+    });
 
+    function renderRewardsWithPagination(rewards, page, itemsPerPage) {
+        const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedRewards = rewards.slice(startIndex, endIndex);
+
+    // Hapus isi daftar reward sebelum menambahkan data baru
+    rewardList.innerHTML = '';
+
+        paginatedRewards.forEach(reward => {
+            const rewardItem = document.createElement('li');
+            rewardItem.innerHTML = `
+                <div class="reward-item">
+                    <span class="reward-title">${reward.judul_reward}</span>
+                    <br>
+                    
+                    <ul class="user-list">
+                        ${getUserListHTML(usersReached50PercentData[reward.id])}
+                    </ul>
+                    <a href="#" class="view-detail" data-reward-id="${reward.id}">
+                        <button class="btn btn-link center-text" style="font-size:10pt;">Lihat Detail</button>
+                    </a>
+                </div>
+            `;
+            rewardList.appendChild(rewardItem);
             
-
-            // Hapus isi daftar reward sebelum menambahkan data baru
-            rewardList.innerHTML = '';
-
-            // Tambahkan data reward baru ke daftar reward
-            filteredRewards.forEach(reward => {
-                const rewardItem = document.createElement('li');
-                rewardItem.innerHTML = `
-                    <div class="reward-item">
-                        <span class="reward-title">${reward.judul_reward}</span>
-                        <br>
-                        
-                        <ul class="user-list">
-                            ${getUserListHTML(usersReached50PercentData[reward.id])}
-                        </ul>
-
-                        <a href="#" class="view-detail" data-reward-id="${reward.id}">
-                    <button class="btn btn-link center-text" style="font-size:10pt;">Lihat Detail</button>
-                </a>
-                    </div>
-                   
-                    
-                    
-                `;
-                rewardList.appendChild(rewardItem);
-                const viewDetailButton = rewardItem.querySelector('.view-detail');
+            const viewDetailButton = rewardItem.querySelector('.view-detail');
             viewDetailButton.addEventListener('click', function (event) {
                 event.preventDefault();
                 const rewardId = viewDetailButton.getAttribute('data-reward-id');
                 // Panggil fungsi untuk menampilkan detail reward
                 showRewardDetail(rewardId);
             });
-            });
-            
         });
 
-        function showRewardDetail(rewardId) {
+        // Buat tombol-tombol paginasi
+        const totalPages = Math.ceil(rewards.length / itemsPerPage);
+    renderPaginationButtons(totalPages);
+    }
+
+    function renderPaginationButtons(totalPages) {
+        
+    const paginationButtons = document.getElementById('paginationButtons');
+    paginationButtons.innerHTML = '';
+
+
+    const totalPagesToShow = 3; // Jumlah halaman yang ingin ditampilkan (1-3)
+    const startPage = Math.max(1, currentPage - 1); // Mulai dari halaman saat ini atau minimal 1
+    const endPage = Math.min(startPage + totalPagesToShow - 1, totalPages); // Akhiran halaman yang ditampilkan
+
+    // Tombol Double Previous
+const doublePrevButton = document.createElement('button');
+doublePrevButton.innerHTML = '<i class="fas fa-angle-double-left"></i>';
+doublePrevButton.classList.add( 'mr-2', 'pagination-button');
+doublePrevButton.addEventListener('click', function () {
+    if (currentPage > 1) {
+        currentPage = 1;
+        renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+    }
+});
+
+// Tombol Previous
+const prevButton = document.createElement('button');
+prevButton.innerHTML = '<i class="fas fa-angle-left"></i>';
+prevButton.classList.add( 'mr-2', 'pagination-button');
+prevButton.addEventListener('click', function () {
+    if (currentPage > 1) {
+        currentPage--;
+        renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+    }
+});
+
+// Tombol Next
+   const nextButton = document.createElement('button');
+    nextButton.innerHTML = '<i class="fas fa-angle-right"></i>';
+    nextButton.classList.add('mr-2', 'pagination-button');
+    nextButton.addEventListener('click', function () {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+        }
+        // Cek apakah tombol "Next" telah mencapai batas halaman 3, jika ya, tampilkan angka 1-3 lagi
+        if (currentPage >= totalPages - 2) {
+            renderPaginationButtons(totalPages);
+        }
+    });
+
+
+// Tombol Double Next
+const doubleNextButton = document.createElement('button');
+doubleNextButton.innerHTML = '<i class="fas fa-angle-double-right"></i>';
+doubleNextButton.classList.add( 'mr-2', 'pagination-button');
+doubleNextButton.addEventListener('click', function () {
+    if (currentPage < totalPages) {
+        currentPage = totalPages;
+        renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+    }
+});
+
+
+    paginationButtons.appendChild(doublePrevButton);
+    paginationButtons.appendChild(prevButton);
+
+    for (let i = startPage; i <= endPage; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.classList.add('btn', 'btn-primary', 'mr-1', 'ml-1', 'btn-sm');
+        button.style.fontSize = '10pt';
+        if (i === currentPage) {
+            button.classList.add('active');
+        }
+
+        button.addEventListener('click', function () {
+            currentPage = i;
+            renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+        });
+
+        paginationButtons.appendChild(button);
+    }
+
+    
+
+    paginationButtons.appendChild(nextButton);
+    paginationButtons.appendChild(doubleNextButton);
+}
+    function showRewardDetail(rewardId) {
         // Ganti 'route_name' dengan nama rute yang sesuai untuk menampilkan detail reward
         window.location.href = `/admin/allreward/${rewardId}`;
     }
-        
 
-        // Fungsi untuk mengambil reward berdasarkan peran yang dipilih
-        function filterRewardsByRole(rewards, roleId) {
-            return rewards.filter(reward => reward.role_id == roleId);
-        }
+    // Fungsi untuk mengambil reward berdasarkan peran yang dipilih
+    function filterRewardsByRole(rewards, roleId) {
+        return rewards.filter(reward => reward.role_id == roleId);
+    }
 
-        // Fungsi untuk menghasilkan HTML daftar pengguna yang mencapai target
-        function getUserListHTML(users) {
-    let userListHTML = '';
-    const totalUsers = Object.keys(users).length;
-    
-    userListHTML += `
+    // Fungsi untuk menghasilkan HTML daftar pengguna yang mencapai target
+    function getUserListHTML(users) {
+        let userListHTML = '';
+        const totalUsers = Object.keys(users).length;
+
+        userListHTML += `
             <div class="user-info">
                 <span class="user-name">Total Pengguna yang Mencapai 50% </span> <br>
                 <span style="color:#01004C; font-size:20pt; font-weight: bold;">${totalUsers} </span>
             </div>
-    `;
-    return userListHTML;
-}
+        `;
+        return userListHTML;
+    }
+});
 
-    });
 </script>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
