@@ -16,13 +16,13 @@ class UserRoleController extends Controller
      * Display a listing of the resource.
      */
     
-    public function index()
-    {
-        $dtUserRole = UserRole::all();
-        return view('admin.userrole.index', [
-            'dtUserRole' => $dtUserRole
-        ]);
-    }
+     public function index()
+     {
+         $dtUserRole = UserRole::orderBy('created_at', 'desc')->get();
+         return view('admin.userrole.index', [
+             'dtUserRole' => $dtUserRole
+         ]);
+     }
 
     /**
      * Show the form for creating a new resource.

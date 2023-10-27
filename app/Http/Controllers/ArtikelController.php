@@ -28,7 +28,7 @@ class ArtikelController extends Controller
      */
     public function index()
     {
-        $dtArtikel = Artikel::all();
+        $dtArtikel = Artikel::orderBy('created_at', 'desc')->get();
         $createdBy = User::all();
 
         return view('admin.artikel.index', [

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminHistoryRewardController;
 use App\Http\Controllers\AksesController;
 use App\Http\Controllers\AllRewardController;
 use App\Http\Controllers\ArtikelController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController\HistoryRewardController;
+use App\Http\Controllers\UserController\HistoryUserLeaderboardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\MyIncomeController;
@@ -240,7 +242,6 @@ Route::delete('/deleteartikel/{id}', [ArtikelController::class, 'destroy'])->nam
 Route::get('/detailartikel/{id}',[ArtikelController::class,'detailartikel'])->name('detailartikel');
 
 
-
 //Dashboard Route
 Route::get('admin/dashboard/index', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
@@ -255,12 +256,10 @@ Route::get('/leaderboard/{role_id}', [LeaderboardController::class,'getLeaderboa
 
 // web.php
 
-
 Route::get('/admin/allrank/{role_id}', [AllRankController::class,'index'])->name('admin.allrank.index');
 Route::get('/admin/allreward/{rewardId}',[AllRewardController::class,'index'])->name('admin.allreward.index');
 
-
-
+Route::get('/admin/adminhistoryreward/{role_id}',[AdminHistoryRewardController::class,'index'])->name('admin.adminhistoryreward.index');
 
 });
 
@@ -279,7 +278,6 @@ Route::get('user/home', [HomeController::class, 'index'])->name('user.home')->mi
 
 
 //login route
-
 
 
 // User Package
@@ -308,9 +306,15 @@ Route::get('user/historyreward',[HistoryRewardController::class,'index'])->name(
 
 
 
+
+// routes/web.php
+
+
+
 Route::get('/filter-pendapatan', 'PendapatanController@filter');
 
 Route::get('user/reward',[UserRewardController::class,'index'])->name('user.reward');
+
 
 
 

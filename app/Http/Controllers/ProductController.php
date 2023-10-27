@@ -32,7 +32,7 @@ class ProductController extends Controller
     public function index()
     {
 
-        $dtProduct = Product::all();
+        $dtProduct = Product::orderBy('created_at', 'desc')->get();
         return view('admin.product.index', [
             'dtProduct' => $dtProduct
         ]);

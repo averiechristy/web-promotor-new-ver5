@@ -340,7 +340,7 @@ function updatePagination() {
     
     for (var i = startPage; i <= endPage; i++) {
         var pageButton = document.createElement('button');
-        pageButton.className = 'btn btn-primary btn-sm mr-2';
+        pageButton.className = 'btn btn-primary btn-sm mr-1 ml-1';
         pageButton.textContent = i;
         if (i === currentPage) {
             pageButton.classList.add('btn-active'); // Menambahkan kelas btn-active untuk halaman aktif
@@ -352,7 +352,6 @@ function updatePagination() {
         pageNumbers.appendChild(pageButton);
     }
 }
-
 
     function onRoleChange() {
     var roleSelect = document.getElementById('role');
@@ -511,7 +510,5 @@ function changeEntries() {
     // Panggil onRoleChange saat elemen select dengan id 'role' berubah
     document.getElementById('role').addEventListener('change', onRoleChange);
 </script>
-
-
 
 @endsection

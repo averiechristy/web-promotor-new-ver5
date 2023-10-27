@@ -21,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         
-        $dtUser = User::all();
+        $dtUser = User::orderBy('created_at', 'desc')->get();
         $akses = User::with('Akses');
         $role = UserRole::with('Role');
         

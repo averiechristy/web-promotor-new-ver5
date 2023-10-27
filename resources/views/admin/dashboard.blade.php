@@ -70,13 +70,24 @@
         </div>
         <!-- Card Body -->
         <div class="card-body">
-
-        <div id="rewardList" class=" text-center small">
-    <ul id="rewardItems"></ul>
-    <div id="paginationButtons"></div>
-</div>
+    <div id="rewardList" class="text-center small">
+        <ul id="rewardItems"></ul>
+        <div id="paginationButtons">
 
         </div>
+    </div>
+    
+    <div class="text-center">
+      
+            <div id="historyButton">
+        <button class="btn btn-sm btn-link" id="historyButton">Lihat History Reward</button>
+        </div>
+        
+    </div>
+
+</div>
+
+      
     </div>
 </div>
 
@@ -84,6 +95,11 @@
 </div>
 
 <style>
+
+.text-center {
+    text-align: center;
+    margin-top: 20px; /* Untuk memberi jarak dari elemen di atasnya */
+}
 
 .pagination-button {box-sizing:border-box;
     display:inline-block;
@@ -166,6 +182,23 @@
         background-color: #007bff;
         color: #fff;
     }
+    
+    .reward-item {
+        
+    font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Nunito;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Atur lebar maksimum yang Anda inginkan */
+  cursor: pointer;   
+    }
+
+    .reward-item:hover {
+        white-space: normal;
+  max-width: none;
+    }
+
 </style>
 
 <script>
@@ -174,6 +207,24 @@
     const roleSelect = document.getElementById('role');
     const rewardList = document.getElementById('rewardItems');
     const rewardsData = @json($activeRewards);
+    const historyButton = document.getElementById('historyButton');
+  historyButton.style.display = 'none';
+
+
+
+  function navigateToHistoryReward(roleId) {
+            // Ganti 'route_name' dengan nama rute yang sesuai
+            window.location.href = `/admin/adminhistoryreward/${roleId}`;
+        }
+
+        historyButton.addEventListener('click', function () {
+            const selectedRoleId = roleSelect.value;
+            if (selectedRoleId !== 'role_id') { // Ganti 'role_id' dengan ID peran yang sesuai
+                navigateToHistoryReward(selectedRoleId);
+            }
+        });
+    
+    
     const usersReached50PercentData = @json($usersReached50Percent);
     const itemsPerPage = 3;
     let currentPage = 1;
@@ -184,6 +235,10 @@
     currentPage = 1; // Kembali ke halaman pertama saat peran berubah
     rewardList.innerHTML = ''; // Hapus isi daftar reward
     renderRewardsWithPagination(filteredRewards, currentPage, itemsPerPage);
+
+
+    historyButton.style.display = 'block';
+
     });
 
     function renderRewardsWithPagination(rewards, page, itemsPerPage) {
@@ -305,11 +360,12 @@ doubleNextButton.addEventListener('click', function () {
         paginationButtons.appendChild(button);
     }
 
-    
 
     paginationButtons.appendChild(nextButton);
     paginationButtons.appendChild(doubleNextButton);
+
 }
+
     function showRewardDetail(rewardId) {
         // Ganti 'route_name' dengan nama rute yang sesuai untuk menampilkan detail reward
         window.location.href = `/admin/allreward/${rewardId}`;
@@ -332,6 +388,7 @@ doubleNextButton.addEventListener('click', function () {
             </div>
         `;
         return userListHTML;
+        
     }
 });
 

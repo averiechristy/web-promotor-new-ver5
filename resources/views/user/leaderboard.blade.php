@@ -9,6 +9,8 @@
     <h2>10 Besar Peringkat per bulan {{ now()->format('F') }}</h2>
       <p>Leaderboard</p>
     </div>
+
+    
     <div class="card mb-3">
   <div class="card-body">
   @if($leaderboardData->isEmpty())

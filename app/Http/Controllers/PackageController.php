@@ -16,7 +16,7 @@ class PackageController extends Controller
      */
     public function index()
     {
-        $dtPackage = PackageIncome::all();
+        $dtPackage = PackageIncome::orderBy('created_at', 'desc')->get();
         $role = UserRole::with('Role');
         $produk = Product::with('Role');
         $detail = PackageDetail::with('Detail');

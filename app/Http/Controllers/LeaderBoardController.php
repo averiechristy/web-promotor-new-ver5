@@ -27,7 +27,7 @@ class LeaderBoardController extends Controller
     
         // Mengambil data leaderboard berdasarkan role_id yang dipilih (jika ada)
     
-        $leaderboardData = LeaderBoard::all();
+        $leaderboardData = LeaderBoard::orderBy('created_at', 'desc')->get();
     
         return view('admin.leaderboard.index', [
             'produk' => $produk,
@@ -65,20 +65,19 @@ class LeaderBoardController extends Controller
         // Mendapatkan kolom yang perlu dikunci (header)
         $headerColumnCount = count($header);
         $headerRange = 'A1:' . $sheet->getCellByColumnAndRow($headerColumnCount, 1)->getColumn() . '1';
-    
       
         // Mengunci sel-sel header
-
 
         $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
         $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
         $sheet->getStyle($headerRange)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
 
-    
         
         // Buat response untuk file Excel
         $writer = new Xlsx($spreadsheet);
         $filename = 'data_leaderboard_template.xlsx';
+
+
     
         // Set Content-Security-Policy header untuk melarang modifikasi header oleh JavaScript
         header('Content-Security-Policy: default-src \'none\'; script-src \'self\'');
@@ -89,22 +88,46 @@ class LeaderBoardController extends Controller
         // Menambahkan validasi format "dd/mm/yyyy" untuk kolom "Tanggal"
     
         $writer->save('php://output');
+        
     }
     
     public function importDataFromExcel(Request $request)
     {
         $file = $request->file('file');
+
+        if ($file->getClientOriginalExtension() != 'xlsx') {
+            $request->session()->flash('error', 'Tipe file tidak sesuai. Harap unggah file Excel (xlsx).');
+            return redirect(route('admin.leaderboard.index'));
+        }
+        
         
         try {
             $spreadsheet = IOFactory::load($file);
             $worksheet = $spreadsheet->getActiveSheet();
             $data = $worksheet->toArray();
-    
+
+            $selectedRoleId = $request->input('role_id');
             
             // Mengambil baris header (baris pertama) untuk mendapatkan nama kolom
             $headerRow = $data[0];
 
-            
+            $headerRow = $data[0];
+
+        // Membuat header yang diharapkan
+        $expectedHeader = ['No', 'Tanggal', 'Nama', 'Kode Sales'];
+
+        // Membuat header produk dari $produk (jika perlu)
+        $produk = Product::where('role_id', $selectedRoleId)->get();
+        foreach ($produk as $item) {
+            $expectedHeader[] = $item->nama_produk;
+        }
+
+        // Verifikasi apakah header sesuai dengan yang diharapkan
+        if ($headerRow != $expectedHeader) {
+            $request->session()->flash('error', 'Format file Excel tidak sesuai');
+            return redirect(route('admin.leaderboard.index'));
+        }
+
     
             // Ambil nomor terbesar yang sudah ada di database
             $maxNo = LeaderBoard::max('no');
@@ -320,7 +343,7 @@ class LeaderBoardController extends Controller
     
         return redirect(route('admin.leaderboard.index'))->withInput();
         } catch (\Exception $e) {
-            $request->session()->flash('error', 'Terjadi kesalahan.');
+            $request->session()->flash('error', 'Format file tidak sesuai atau terjadi kesalahan lain');
     
             // Notifikasi kesalahan dalam format JSON
             return redirect(route('admin.leaderboard.index'))->withInput();

@@ -236,16 +236,24 @@ entries
 <script>
     var itemsPerPage = 10; // Ubah nilai ini sesuai dengan jumlah item per halaman
     var currentPage = 1;
+    var filteredData = [];
     
+    function initializeData() {
+    var tableRows = document.querySelectorAll("table tbody tr");
+    filteredData = Array.from(tableRows); // Konversi NodeList ke array
+    updatePagination();
+}
 
-    function doublePreviousPage() {
+// Panggil fungsi initializeData() untuk menginisialisasi data saat halaman dimuat
+initializeData();
+    
+function doublePreviousPage() {
         if (currentPage > 1) {
             currentPage = 1;
             updatePagination();
         }
     }
-
-
+    
 function nextPage() {
     var totalPages = Math.ceil(document.querySelectorAll("table tbody tr").length / itemsPerPage);
     if (currentPage < totalPages) {
@@ -262,7 +270,6 @@ function doubleNextPage() {
     }
 }
 
-
     function previousPage() {
         if (currentPage > 1) {
             currentPage--;
@@ -271,50 +278,49 @@ function doubleNextPage() {
     }
  
     function updatePagination() {
-        var startIndex = (currentPage - 1) * itemsPerPage;
-        var endIndex = startIndex + itemsPerPage;
+    var startIndex = (currentPage - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
 
-        // Sembunyikan semua baris
-        var tableRows = document.querySelectorAll("table tbody tr");
-        tableRows.forEach(function (row) {
-            row.style.display = 'none';
-        });
+    // Sembunyikan semua baris
+    var tableRows = document.querySelectorAll("table tbody tr");
+    tableRows.forEach(function (row) {
+        row.style.display = 'none';
+    });
 
-        // Tampilkan baris untuk halaman saat ini
-        for (var i = startIndex; i < endIndex && i < tableRows.length; i++) {
-            tableRows[i].style.display = 'table-row';
-        }
-
-        // Update nomor halaman
-        var totalPages = Math.ceil(tableRows.length / itemsPerPage);
-        var pageNumbers = document.getElementById('pageNumbers');
-        pageNumbers.innerHTML = '';
-
-        var totalEntries = tableRows.length;
-
-        document.getElementById('showingStart').textContent = startIndex + 1;
-        document.getElementById('showingEnd').textContent = Math.min(endIndex, totalEntries);
-        document.getElementById('totalEntries').textContent = totalEntries;
-
-        var pageRange = 3; // Jumlah nomor halaman yang ditampilkan
-        var startPage = Math.max(1, currentPage - Math.floor(pageRange / 2));
-        var endPage = Math.min(totalPages, startPage + pageRange - 1);
-
-        for (var i = startPage; i <= endPage; i++) {
-            var pageButton = document.createElement('button');
-            pageButton.className = 'btn btn-primary btn-sm mr-1 ml-1';
-            pageButton.textContent = i;
-            if (i === currentPage) {
-                pageButton.classList.add('btn-active');
-            }
-            pageButton.onclick = function () {
-                currentPage = parseInt(this.textContent);
-                updatePagination();
-            };
-            pageNumbers.appendChild(pageButton);
-        }
+    // Tampilkan baris untuk halaman saat ini
+    for (var i = startIndex; i < endIndex && i < filteredData.length; i++) {
+        filteredData[i].style.display = 'table-row';
     }
 
+    // Update nomor halaman
+    var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    var pageNumbers = document.getElementById('pageNumbers');
+    pageNumbers.innerHTML = '';
+
+    var totalEntries = filteredData.length;
+
+    document.getElementById('showingStart').textContent = startIndex + 1;
+    document.getElementById('showingEnd').textContent = Math.min(endIndex, totalEntries);
+    document.getElementById('totalEntries').textContent = totalEntries;
+
+    var pageRange = 3; // Jumlah nomor halaman yang ditampilkan
+    var startPage = Math.max(1, currentPage - Math.floor(pageRange / 2));
+    var endPage = Math.min(totalPages, startPage + pageRange - 1);
+
+    for (var i = startPage; i <= endPage; i++) {
+        var pageButton = document.createElement('button');
+        pageButton.className = 'btn btn-primary btn-sm mr-1 ml-1';
+        pageButton.textContent = i;
+        if (i === currentPage) {
+            pageButton.classList.add('btn-active');
+        }
+        pageButton.onclick = function () {
+            currentPage = parseInt(this.textContent);
+            updatePagination();
+        };
+        pageNumbers.appendChild(pageButton);
+    }
+}
     function changeEntries() {
         var entriesSelect = document.getElementById('entries');
         var selectedEntries = parseInt(entriesSelect.value);
@@ -329,32 +335,31 @@ function doubleNextPage() {
         updatePagination();
     }
 
-
     function applySearchFilter() {
-        var searchInput = document.getElementById('search');
-        var filter = searchInput.value.toLowerCase();
-        var tableRows = document.querySelectorAll("table tbody tr");
+    var searchInput = document.getElementById('search');
+    var filter = searchInput.value.toLowerCase();
+    
+    // Mencari data yang sesuai dengan filter
+    filteredData = Array.from(document.querySelectorAll("table tbody tr")).filter(function (row) {
+        var rowText = row.textContent.toLowerCase();
+        return rowText.includes(filter);
+    });
 
-        tableRows.forEach(function (row) {
-            var rowText = row.textContent.toLowerCase();
-            if (rowText.includes(filter)) {
-                row.style.display = 'table-row';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+    // Set currentPage kembali ke 1
+    currentPage = 1;
 
-        // Setelah menerapkan filter pencarian, panggil updatePagination
-      
-    }
+    updatePagination();
+}
+
+updatePagination();
+
+
 
     // Menangani perubahan pada input pencarian
     document.getElementById('search').addEventListener('input', applySearchFilter);
-
     // Panggil updatePagination untuk inisialisasi
-    updatePagination();
-
-    
+  
+             
 </script>
 
 @endsection

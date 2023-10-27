@@ -16,7 +16,7 @@
           <ul id="portfolio-flters">
             <li data-filter=".filter-card" class="filter-active">Sedang Berjalan</li>
             <li data-filter=".filter-web">Akan Datang</li>
-            <li data-filter=".filter-app">Berakhir</li>
+            <!-- <li data-filter=".filter-app">Berakhir</li> -->
 
           </ul>
         </div>
@@ -194,7 +194,7 @@ $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 
 
     
-    @if ($today->gte($endDate->endOfDay()) && $today->diffInDays($endDate) <= 7)
+    <!-- @if ($today->gte($endDate->endOfDay()) && $today->diffInDays($endDate) <= 7)
               <div class="col-lg-4 portfolio-item filter-app">
       <div class="card-style" data-toggle="modal" data-target="#rewardModal{{ $rewardItem->id }}">
 
@@ -220,11 +220,9 @@ if ($selesai->isPast()) {
       <h5 class="card-title">{{ $rewardItem->judul_reward }}</h5>
       <p class="card-text">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
 <?php
-// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
 $tanggal_mulai = $rewardItem->tanggal_mulai;
 $tanggal_selesai = $rewardItem->tanggal_selesai;
 
-// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
 $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
@@ -247,29 +245,24 @@ $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 
 <div class="modal-body">
 <img src="{{ asset('img/'.$rewardItem->gambar_reward) }}" alt="Gambar Reward" id="gambarmodal">
-  <!-- Isi modal dengan informasi dari $rewardItem -->
 
   <p class="card-text mt-2">Kumpulkan poin : {{ $rewardItem->poin_reward }}</p>
   <p class="card-desc mt-2">{!! nl2br(e($rewardItem->deskripsi_reward)) !!}</p>
   <?php
-// Mendapatkan tanggal mulai dan tanggal selesai dari $rewardItem
 $tanggal_mulai = $rewardItem->tanggal_mulai;
 $tanggal_selesai = $rewardItem->tanggal_selesai;
 
-// Mengubah format tanggal dari yyyy-mm-dd menjadi dd-mm-yyyy
 $tanggal_mulai = date("d-m-Y", strtotime($tanggal_mulai));
 $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
 ?>
 
 <p class="card-text"><small class="text-muted">Periode: <?php echo $tanggal_mulai; ?> s.d. <?php echo $tanggal_selesai; ?></small></p>
-  <!-- Tambahkan informasi lainnya sesuai kebutuhan -->
 </div>
 <div class="modal-footer">
-  <!-- Tambahkan tombol atau aksi lainnya sesuai kebutuhan -->
 </div>
 </div>
 </div>      </div>
-    @endif
+    @endif -->
 
   @endforeach
         

@@ -14,7 +14,7 @@ class RewardController extends Controller
      */
     public function index()
     {
-        $reward = Reward::all();
+        $reward = Reward::orderBy('created_at', 'desc')->get();
         
         return view ('admin.reward.index',[
             'reward' => $reward,
@@ -95,10 +95,25 @@ class RewardController extends Controller
         $data = Reward::find($id);
 
         $role = UserRole::all();
+
+        $selesai = Carbon::parse($data->tanggal_selesai)->endOfDay();
+    $mulai = Carbon::parse($data->tanggal_mulai);
+    $sekarang = Carbon::now();
+
+    if ($selesai->isPast()) {
+        $status = 'Berakhir';
+    } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+        $status = 'Sedang Berjalan';
+    } elseif ($sekarang < $mulai) {
+        $status = 'Akan Datang';
+    } else {
+        $status = 'Tidak Aktif';
+    }
        
         return view('admin.reward.edit', [
             'data' => $data,
             'role' => $role,
+            'status' => $status,
         ]);
 
 
