@@ -19,10 +19,12 @@
       Income
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class=" {{ Request::is('user/kalkulator') ? 'active' : '' }} " href="{{route ('user.kalkulator')}}">Kalkulator</a></li>
+      <li><a class=" {{ Request::is('user/kalkulator') ? 'active' : '' }} " href="{{route ('user.kalkulator')}}">Kalkulator Pendapatan</a></li>
       
       <li><a class=" {{ Request::is('user/package') ? 'active' : '' }} " href="{{route ('user.package')}}">Paket Pendapatan</a></li>
      
+      <li><a class=" {{ Request::is('user/paketkalkulator') ? 'active' : '' }} " href="{{route ('paketkalkulator')}}">Kalkulator Produk</a></li>
+
     </ul>
   </li>      
   

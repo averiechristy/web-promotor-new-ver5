@@ -78,7 +78,8 @@ public static function getLeaderboardForRole2($role)
 }
 
     
- public static function getLeaderboardUser($role)
+ 
+public static function getLeaderboardUser($role)
     {
         $today = Carbon::now();
         // Ambil tanggal awal bulan ini
@@ -99,7 +100,6 @@ public static function getLeaderboardForRole2($role)
             ->take(10) // Ambil 3 pemimpin teratas.
             ->get();
     }
-
 
     public static function getLeaderboardUserAdminDashboard($role)
     {
@@ -190,6 +190,50 @@ public static function getRankForUser($userId, $role)
     // Karena peringkat dimulai dari 0, tambahkan 1 ke hasil perhitungan.
     return $userRank + 1;
 }
+
+// LeaderBoard.php
+public static function getLeaderboardUserForMonth($role, $startDate, $endDate)
+{
+    return self::select('user_id', 
+                    DB::raw('SUM(income) as total_income'),
+                    DB::raw('SUM(total) as total_point'))
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->where('role_id', $role)
+            ->groupBy('user_id')
+            ->orderBy('total_income', 'desc')
+            ->orderBy('total_point', 'desc')
+            ->take(10)
+            ->get();
+}
+
+public static function getTotalUsersWithSameRoleForMonth($role, $startDate, $endDate)
+{
+    return self::whereBetween('tanggal', [$startDate, $endDate])
+        ->where('role_id', $role)
+        ->distinct('user_id')
+        ->count();
+}
+
+public static function getRankForUserForMonth($userId, $role, $startDate, $endDate)
+{
+    $userRankQuery = self::select('user_id', 
+        DB::raw('SUM(income) as total_income'),
+        DB::raw('SUM(total) as total_point'))
+        ->whereBetween('tanggal', [$startDate, $endDate])
+        ->where('role_id', $role)
+        ->groupBy('user_id')
+        ->orderBy('total_income', 'desc')
+        ->orderBy('total_point', 'desc');
+
+    $userRank = $userRankQuery->pluck('user_id')->search($userId);
+
+    if ($userRank === false) {
+        return null;
+    }
+
+    return $userRank + 1;
+}
+
 
 
     protected $fillable = [

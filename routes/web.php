@@ -12,15 +12,18 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\UserController\CObaKalkulatorController;
 use App\Http\Controllers\UserController\HistoryRewardController;
 use App\Http\Controllers\UserController\HistoryUserLeaderboardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
+use App\Http\Controllers\UserController\KalkulatorPaketController;
 use App\Http\Controllers\UserController\MyIncomeController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
 use App\Http\Controllers\UserController\UserDashboardController;
 use App\Http\Controllers\UserController\UserIncomeController;
+use App\Http\Controllers\UserController\UserKalkulatorPaketController;
 use App\Http\Controllers\UserController\UserLeaderboardController;
 use App\Http\Controllers\UserController\UserPaketController;
 use App\Http\Controllers\PackageController;
@@ -303,6 +306,9 @@ Route::get('user/userdashboard', [UserDashboardController::class,'index'])->name
 Route::get('user/historyreward',[HistoryRewardController::class,'index'])->name('user.historyreward');
 
 // routes/web.php
+// routes/web.php
+Route::post('/leaderboard/view', [UserLeaderboardController::class,'view'])->name('leaderboard.view');
+
 
 
 
@@ -355,6 +361,22 @@ Route::middleware('auth')->middleware('ensureUserRole:ADMIN')->group(function ()
 Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {
     Route::get('user/changepassword', [UserController::class,'UserChangePasswordForm'])->name('password-change-user');
     Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
+
+    Route::get('user/kalkulatorpaket',[KalkulatorPaketController::class,'index'])->name('kalkulatorpaket');
+
+    Route::post('/hitung-cicilan', [KalkulatorPaketController::class,'hitungCicilan'])->name('hitung.cicilan');
+
+    Route::get('user/cobakalkulator',[CobaKalkulatorController::class,'index'])->name('cobakalkulator');
+
+    Route::post('/hitung', [CobaKalkulatorController::class,'hitung'])->name('hitung');
+
+    Route::get('user/paketkalkulator',[UserKalkulatorPaketController::class,'index'])->name('paketkalkulator');
+
+    Route::post('/hitung',[UserKalkulatorPaketController::class,'hitung'])->name('hitung');
+
+
+
+
 });
 
 Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () {

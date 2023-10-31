@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UserController;
 use App\Http\Controllers\Controller;
 use App\Models\LeaderBoard;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserLeaderboardController extends Controller
@@ -32,6 +33,39 @@ class UserLeaderboardController extends Controller
     }
 
     
+
+    
+
+    
+
+    // LeaderboardController.php
+public function view(Request $request)
+{
+    $userRole = Auth::user()->role_id;
+    $selectedMonth = $request->input('selected_month');
+    
+    // Pastikan $selectedMonth adalah dalam format tahun-bulan (YYYY-MM).
+    
+    // Ambil tahun dan bulan dari input.
+    list($year, $month) = explode('-', $selectedMonth);
+    
+    // Buat tanggal awal dan akhir berdasarkan tahun dan bulan yang dipilih.
+    $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth()->toDateString();
+    $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth()->toDateString();
+
+    $leaderboardData = LeaderBoard::getLeaderboardUserForMonth($userRole, $startDate, $endDate);
+    $userRank = LeaderBoard::getRankForUserForMonth(Auth::user()->id, $userRole, $startDate, $endDate);
+    $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRoleForMonth($userRole, $startDate, $endDate);
+
+    return view('user.leaderboard', [
+        'leaderboardData' => $leaderboardData,
+        'userRank' => $userRank,
+        'totalUsersWithSameRole' => $totalUsersWithSameRole,
+    ]);
+
+    
+    
+}
 
     /**
      * Show the form for creating a new resource.

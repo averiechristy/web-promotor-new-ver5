@@ -56,6 +56,19 @@
               </a>
             </div>
           </div>
+          <div class="row">
+  <div class="col-md-120">
+    <div class="card" data-aos-delay="300">
+      <a href="{{ route('paketkalkulator') }}">
+      <i class='bx bxs-calculator'></i>
+        <h4>Kalkulator Produk</h4>
+        <p>Fitur Kalkulator untuk hitung penjualan produk dari cicilan mu</p>
+      </a>
+    </div>
+  </div>
+</div>
+
+          
         </div>
       </div>
     </div>
