@@ -31,8 +31,19 @@
     <div class="row g-3 align-items-center">
  
   <div class="col-auto">
-  <input type="number" class ="form-control" style="width:300px"name="product_quantity[{{ $produk->id }}]" min="0"  id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}">
-  </div>
+  <input type="number" class="form-control" style="width: 300px" name="product_quantity[{{ $produk->id }}]" min="0" id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}" oninput="validasiNumber(this)">
+  <script>
+function validasiNumber(input) {
+    // Hapus karakter titik (.) dari nilai input
+    input.value = input.value.replace(/\./g, '');
+
+    // Pastikan hanya karakter angka yang diterima
+    input.value = input.value.replace(/\D/g, '');
+}
+</script>
+  
+
+</div>
   <div class="col-auto">
     <span id="passwordHelpInline" class="form-text">
    x {{ $produk->poin_produk }} poin

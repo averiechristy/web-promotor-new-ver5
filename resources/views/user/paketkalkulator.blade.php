@@ -84,7 +84,17 @@ function formatRupiah(value) {
     </div>
     <div class="row g-3 align-items-center">
         <div class="col-auto">
-        <input type="number" class="form-control" style="width:400px;"  name="product_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('product_persen.' . $barang->id) }}">
+        <input type="number" class="form-control" style="width:400px;" name="product_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('product_persen.' . $barang->id) }}" oninput="validasiNumber(this); updateSisaPersentase();">
+        <script>
+function validasiNumber(input) {
+    // Hapus karakter titik (.) dari nilai input
+    input.value = input.value.replace(/\./g, '');
+
+    // Pastikan hanya karakter angka yang diterima
+    input.value = input.value.replace(/\D/g, '');
+}
+</script>
+
         </div>
         <div class="col-auto">
             <span id="" class="form-text">
@@ -94,6 +104,9 @@ function formatRupiah(value) {
     </div>
 @endforeach
           </div>
+          <div class="mt-2" id="sisa-persentase">Sisa Persentase: 100%</div>
+
+          
         </div>
 
         <button class="btn btn-success btn-sm mt-3 mx-auto" style="width: 50%;" type="submit">Hitung Jumlah Produk</button>
@@ -152,6 +165,40 @@ function formatRupiah(value) {
   
 </main>
       @endsection
+
+      <script>
+function validasiNumber(input) {
+    // Hapus karakter titik (.) dari nilai input
+    input.value = input.value.replace(/\./g, '');
+
+    // Pastikan hanya karakter angka yang diterima
+    input.value = input.value.replace(/\D/g, '');
+}
+
+function updateSisaPersentase() {
+    var totalPersentase = 100;
+    var inputs = document.querySelectorAll('[name^="product_persen["]');
+
+    // Hitung total persentase yang telah diinput
+    var totalInputPersentase = 0;
+    inputs.forEach(function(input) {
+        totalInputPersentase += parseInt(input.value) || 0;
+    });
+
+    // Hitung sisa persentase
+    var sisaPersentase = totalPersentase - totalInputPersentase;
+
+    // Perbarui elemen HTML yang menampilkan sisa persentase
+    var sisaPersentaseElement = document.getElementById('sisa-persentase');
+    sisaPersentaseElement.textContent = "Sisa Persentase: " + sisaPersentase + "%";
+
+    // Periksa apakah total persentase melebihi 100
+    if (totalInputPersentase > totalPersentase) {
+        sisaPersentaseElement.textContent = "Persentase tidak boleh lebih dari 100%";
+    }
+}
+</script>
+
 
       <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -268,7 +315,10 @@ addButton.addEventListener("click", function () {
         color: #01004C;
         font-weight: bold;/* Warna teks biru, bisa disesuaikan */
     }
-
+ #sisa-persentase{
+    color: #FF9029;
+    font-weight : bold;
+ }
     
 </style>
 

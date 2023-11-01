@@ -411,6 +411,7 @@ public function getLeaderboardData(Request $request)
     {
         $leaderboard = LeaderBoard::find($id);
         $leaderboard->delete();
+
  
         $request->session()->flash('error', 'Leaderboard berhasil dihapus.');
         return redirect(route('admin.leaderboard.index'))->withInput();

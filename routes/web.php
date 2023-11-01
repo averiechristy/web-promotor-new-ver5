@@ -261,6 +261,8 @@ Route::get('/leaderboard/{role_id}', [LeaderboardController::class,'getLeaderboa
 
 Route::get('/admin/allrank/{role_id}', [AllRankController::class,'index'])->name('admin.allrank.index');
 Route::get('/admin/allreward/{rewardId}',[AllRewardController::class,'index'])->name('admin.allreward.index');
+Route::post('admin/allrank/viewhistory/{role_id}', [AllRankController::class,'viewhistory'])->name('admin.allrank.viewhistory');
+
 
 Route::get('/admin/adminhistoryreward/{role_id}',[AdminHistoryRewardController::class,'index'])->name('admin.adminhistoryreward.index');
 

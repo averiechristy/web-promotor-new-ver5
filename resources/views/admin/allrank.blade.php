@@ -8,18 +8,21 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Peringkat Leaderboard</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Peringkat Leaderboard {{ \Carbon\Carbon::parse($selectedMonth)->format('F Y') }}</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         
-                     
-
-
-
-
-
+                
                         <div class="card-body">
+                        <form style="margin-bottom:20px" method="POST" action="{{ route('admin.allrank.viewhistory', ['role_id' => $role_id]) }}">
+  @csrf
+  <label for="month">Filter Bulan dan Tahun:</label> <br>
+  <input type="month" name="selected_month" id="month">
+  <button class="btn btn-primary btn-sm" id="showLeaderboard">Tampilkan Leaderboard</button>
+</form>
+
+
 
                         <div class="dataTables_length mb-3" id="myDataTable_length">
 <label for="entries"> Show

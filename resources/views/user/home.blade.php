@@ -41,7 +41,7 @@
             <div class="card" data-aos-delay="100">
               <a href="{{route ('user.kalkulator')}}">
                 <i class="bx bx-calculator"></i>
-                <h4>Kalkulator</h4>
+                <h4>Simulasi Pendapatan</h4>
                 <p>Fitur kalkulator untuk hitung sendiri pendapatan</p>
               </a>
             </div>
@@ -49,24 +49,25 @@
 
           <div class="col-md-6 mb-3">
             <div class="card" data-aos-delay="200">
-              <a href="{{route ('user.package')}}">
-                <i class="bx bx-coin"></i>
-                <h4>Paket Pendapatan</h4>
-                <p>Tersedia banyak pilihan paket pendapatan</p>
+            
+              <a href="{{ route('paketkalkulator') }}">
+              <i class='bx bxs-calculator'></i>
+        <h4>Simulasi Impianmu</h4>
+        <p>Fitur Kalkulator untuk hitung penjualan produk dari cicilan mu</p>
+               
               </a>
             </div>
           </div>
-          <div class="row">
-  <div class="col-md-120">
+        
+  <div>
     <div class="card" data-aos-delay="300">
-      <a href="{{ route('paketkalkulator') }}">
-      <i class='bx bxs-calculator'></i>
-        <h4>Kalkulator Produk</h4>
-        <p>Fitur Kalkulator untuk hitung penjualan produk dari cicilan mu</p>
+    <a href="{{route ('user.package')}}">
+    <i class='bx bx-package'></i>
+                <h4>Paket Pendapatan</h4>
+                <p>Tersedia banyak pilihan paket pendapatan</p>
       </a>
     </div>
   </div>
-</div>
 
           
         </div>
@@ -165,10 +166,10 @@
     <div class="section-title">
       
     <h2>
-  3 Besar Peringkat per bulan {{ now()->format('F') }}
+LeaderBoard
 </h2>
 
-      <p>Leaderboard</p>
+      <p>  3 Besar Peringkat per bulan {{ now()->format('F') }}</p>
     </div>
     @if (count($leaderboardData) > 0)
     <div class="row">
@@ -259,6 +260,20 @@
     .col-lg-offset-4 {
         margin-left: auto; /* Geser peringkat pertama ke tengah */
     }
+
+   
+        /* Styling for small screens */
+        @media (max-width: 767px) {
+            .col-lg-5 {
+                width: 100%;
+            }
+
+            iframe {
+                width: 100%;
+                height: 250px; /* Adjust the height as needed */
+            }
+        }
+  
 </style>
 
 
@@ -305,7 +320,7 @@
     <section id="contact" style ="background-color : #FEF8F5;" class="contact">
       <div class="container" >
         <div class="section-title">
-          <h3>Contact Us</h3>
+          <h2>Contact Us</h2>
           <p>Informasi lebih lanjut hubungi kami</p>
         </div>
 
@@ -329,12 +344,7 @@
                 <i class="bi bi-phone"></i>
                 <h4>Call:</h4>
                 <p>+123456</p>
-              </div>
-
-              <iframe src="https://maps.google.com/maps?q=PT.%20exa%20mitra%20solusi&amp;t=&amp;z=13&amp;ie=UTF8&amp;iwloc=&amp;output=embed" frameborder="0" scrolling="no" style="width: 470px; height: 400px;"></iframe>            
             
-              </div>
-
           </div>
 
         

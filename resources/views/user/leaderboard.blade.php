@@ -6,15 +6,15 @@
 <section id="leaderboard" class="leaderboard">
   <div class="container">
     <div class="section-title">
-    <h2>10 Besar Peringkat per bulan {{ now()->format('F') }}</h2>
+    <h2>10 Besar Peringkat per bulan {{ \Carbon\Carbon::parse($selectedMonth)->format('F Y') }}</h2>
       <p>Leaderboard</p>
     </div>
 
-    <form method="POST" action="{{ route('leaderboard.view') }}">
+    <form style="margin-bottom:20px" method="POST" action="{{ route('leaderboard.view') }}">
   @csrf
-  <label for="month">Pilih Bulan dan Tahun:</label>
-  <input type="month" name="selected_month" id="month">
-<button id="showLeaderboard">Tampilkan Leaderboard</button>
+  <label for="month">Filter Bulan dan Tahun:</label> <br>
+  <input type="month" name="selected_month" id="month" value="{{ \Carbon\Carbon::parse($selectedMonth)->format('F Y') }}">
+<button class="btn btn-primary btn-sm" id="showLeaderboard">Tampilkan Leaderboard</button>
 </form>
 
 
@@ -96,6 +96,15 @@
 
 <style>
 
+
+input[type="month"] {
+            width: 20%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
 hr.solid {
   border-top: 2px solid  #FF5733; 
   margin-bottom : 15px;
@@ -117,7 +126,7 @@ hr.solid {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
   }
-
+  
 
     /* Mengatur tampilan daftar leaderboard */
 .leaderboard-list {
@@ -152,6 +161,7 @@ hr.solid {
   object-fit: cover;
   margin-right: 10px;
 }
+
 .leaderboard-first {
         /* Gaya kartu untuk peringkat pertama */
         border: 4px solid #FFD700; /* Warna border lebih tebal untuk peringkat pertama */

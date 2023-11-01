@@ -33,7 +33,8 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Role</label>
-                                                <input name="kode_role" type="text" class="form-control {{$errors->has('kode_role') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ old('kode_role', $data->kode_role) }}" oninvalid="this.setCustomValidity('Kode role tidak boleh kosong')" oninput="setCustomValidity('')" />
+                                                <input name="kode_role" type="text" class="form-control {{$errors->has('kode_role') ? 'is-invalid' : ''}}" style="border-color: #01004C;" value="{{ old('kode_role', $data->kode_role) }}" oninvalid="this.setCustomValidity('Kode role tidak boleh kosong')" oninput="setCustomValidity('')"  disabled/>
+                                                <small>Kode role tidak dapat diubah</small>
                                                 @if($errors->has('kode_role'))
         <p class="text-danger">{{ $errors->first('kode_role') }}</p>
     @endif

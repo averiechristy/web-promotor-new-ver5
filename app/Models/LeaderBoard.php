@@ -234,6 +234,20 @@ public static function getRankForUserForMonth($userId, $role, $startDate, $endDa
     return $userRank + 1;
 }
 
+public static function getLeaderboardForRoleMonth($role, $startDate, $endDate)
+{
+   
+    return self::select('user_id', 
+                DB::raw('SUM(income) as total_income'),
+                DB::raw('SUM(total) as total_point'))
+        ->whereBetween('tanggal', [$startDate, $endDate])
+        ->where('role_id', $role)
+        ->groupBy('user_id')
+        ->orderBy('total_income', 'desc')
+        ->orderBy('total_point', 'desc')
+        ->get();
+}
+
 
 
     protected $fillable = [

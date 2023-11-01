@@ -420,6 +420,8 @@ selectedRoleRows.forEach(function (row) {
 updatePagination();
 search();
 filterDataByMonth();
+
+sessionStorage.setItem('selectedRole', selectedRole);
 }
 
 
@@ -505,7 +507,19 @@ function changeEntries() {
 
 });
     // Panggil onRoleChange saat halaman dimuat ulang
-    window.onload = onRoleChange;
+    window.onload = function() {
+    var selectedRole = sessionStorage.getItem('selectedRole');
+    var roleSelect = document.getElementById('role');
+
+    if (selectedRole) {
+        // Pilih kembali selectedRole dalam dropdown
+        roleSelect.value = selectedRole;
+    }
+
+    // Panggil onRoleChange
+    onRoleChange();
+};
+
     
     // Panggil onRoleChange saat elemen select dengan id 'role' berubah
     document.getElementById('role').addEventListener('change', onRoleChange);

@@ -222,7 +222,11 @@
                         <h5 class="card-title-reward mb-3 mt-3">{{ $activeReward->judul_reward }}</h5>
                         <div class="progress">
                             
-            <div class="progress-bar" role="progressbar" style="width: {{ $progressWidthPerReward[$activeReward->id] }}" aria-valuenow="{{ $progressWidthPerReward[$activeReward->id] }}" aria-valuemin="0" aria-valuemax="100">{{ $progressWidthPerReward[$activeReward->id] }}</div>
+            <div class="progress-bar" role="progressbar" style="width: {{ $progressWidthPerReward[$activeReward->id] }}" aria-valuenow="{{ $progressWidthPerReward[$activeReward->id] }}" aria-valuemin="0" aria-valuemax="100">
+            <span class="progress-text">   {{ $progressWidthPerReward[$activeReward->id] }} </span>
+        </div>
+
+        
         </div>
 
         <p class="card-text">
@@ -423,6 +427,34 @@ font-weight: 700;
 border-radius :5px;
   
 } 
+
+
+    .progress {
+        height:20px;
+        border-radius:50px;
+
+
+    }
+    .progress-bar {
+        position: relative;
+        background: linear-gradient(270deg, #1681FF 0%, rgba(22, 129, 255, 0.42) 100%);
+
+
+       
+
+
+        /* Menjadikan posisi relatif untuk progress bar */
+    }
+
+    .progress-text {
+        position: absolute;
+    
+        right: 5px;
+        font-weight : bold;
+    }
+
+    
+
 
 /* CSS untuk gambar dalam modal */
 

@@ -13,7 +13,7 @@ class UserLeaderboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $userRole = Auth::user()->role_id;
         $userId = auth()->user()->id;
@@ -21,10 +21,12 @@ class UserLeaderboardController extends Controller
         $userRank = LeaderBoard::getRankForUser($userId, $userRole);
         $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRole($userRole);
 
+        $selectedMonth = $request->input('selected_month');
 
 
         return view('user.leaderboard',[
             'leaderboardData' => $leaderboardData,
+            'selectedMonth' => $selectedMonth,
             'userRank' => $userRank,
             'totalUsersWithSameRole' => $totalUsersWithSameRole,
 
@@ -44,6 +46,7 @@ public function view(Request $request)
     $userRole = Auth::user()->role_id;
     $selectedMonth = $request->input('selected_month');
     
+    
     // Pastikan $selectedMonth adalah dalam format tahun-bulan (YYYY-MM).
     
     // Ambil tahun dan bulan dari input.
@@ -61,7 +64,9 @@ public function view(Request $request)
         'leaderboardData' => $leaderboardData,
         'userRank' => $userRank,
         'totalUsersWithSameRole' => $totalUsersWithSameRole,
+        'selectedMonth' => $selectedMonth,
     ]);
+    
 
     
     

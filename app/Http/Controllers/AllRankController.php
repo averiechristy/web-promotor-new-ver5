@@ -12,13 +12,43 @@ class AllRankController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($role_id)
+    public function index(Request $request, $role_id)
     {
         $rankings = LeaderBoard::getLeaderboardForRole2($role_id);
+        
     
-        return view('admin.allrank', ['rankings' => $rankings]);
+        $selectedMonth = $request->input('selected_month');
+        return view('admin.allrank', ['rankings' => $rankings, 'role_id' => $role_id,  'selectedMonth' => $selectedMonth,]);
     }
     
+
+
+    public function viewhistory(Request $request, $role_id)
+{
+   
+    $selectedMonth = $request->input('selected_month');
+   
+    
+    
+    // Pastikan $selectedMonth adalah dalam format tahun-bulan (YYYY-MM).
+    
+    // Ambil tahun dan bulan dari input.
+    list($year, $month) = explode('-', $selectedMonth);
+    
+    // Buat tanggal awal dan akhir berdasarkan tahun dan bulan yang dipilih.
+    $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth()->toDateString();
+    $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth()->toDateString();
+
+
+
+    $rankings = LeaderBoard::getLeaderboardForRoleMonth($role_id, $startDate, $endDate);
+   
+
+    return view('admin.allrank', ['rankings' => $rankings, 'role_id' => $role_id,  'selectedMonth' => $selectedMonth,]);
+
+    
+    
+}
     /**
      * Show the form for creating a new resource.
      */
