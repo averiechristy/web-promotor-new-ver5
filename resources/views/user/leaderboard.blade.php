@@ -10,12 +10,12 @@
       <p>Leaderboard</p>
     </div>
 
-    <!-- <form method="POST" action="{{ route('leaderboard.view') }}">
+    <form method="POST" action="{{ route('leaderboard.view') }}">
   @csrf
   <label for="month">Pilih Bulan dan Tahun:</label>
   <input type="month" name="selected_month" id="month">
 <button id="showLeaderboard">Tampilkan Leaderboard</button>
-</form> -->
+</form>
 
 
     

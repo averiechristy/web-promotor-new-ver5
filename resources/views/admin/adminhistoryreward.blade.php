@@ -39,16 +39,16 @@
                     <div class="modal-body">
                         <!-- Tampilkan daftar nama pemenang di sini -->
                         @if (count($usersReached100Percent[$reward->id]) > 0)
-                            <ul>
+                        <ol type="1">
                                 @foreach ($usersReached100Percent[$reward->id] as $userId)
                                     @php
                                         $user = \App\Models\User::find($userId); // Ganti \App\User dengan model User Anda
                                     @endphp
                                     @if ($user)
-                                        <li class="mt-2">Nama : {{ $user->nama }} <br> Kode Sales : {{$user->username}}</li>
+                                        <li class="mt-2">{{ $user->nama }} ( {{$user->username}} )</li>
                                     @endif
                                 @endforeach
-                            </ul>
+</ol>
                         @else
                             <p>Tidak ada pemenang yang mencapai reward ini.</p>
                         @endif
@@ -60,4 +60,23 @@
     </div>
 </div>
 
+
+<style>
+
+    .card-title {
+
+    font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  
+  text-overflow: ellipsis;
+  max-width: 100%; /* Atur lebar maksimum yang Anda inginkan */
+  cursor: pointer;   
+    }
+
+    .card-title:hover {
+        white-space: normal;
+  max-width: none;
+    }
+</style>
 @endsection

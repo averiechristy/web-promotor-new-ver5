@@ -12,22 +12,23 @@
         {{ session('error') }}
     </div>
 @endif
-          <div class="row justify-content-between">
+
+          <div class="row justify-content-between tes">
           <div class="col-lg-5 pt-6 pt-lg-0  form-edit">
 
           <form action="{{ route('hitung') }}" method="post" role="form" class="php-email-form1 " id="calculator-form">
 @csrf
 
-         <h4 class="mt-4 text-center">Masukan kebutuhan cicilanmu</h4>
+         <h4 class="mt-4 ">Masukan keinginanmu</h4>
           <div id="input-fields">
 <div class="input-field justify-content-center">                               
 
                
             <div class="mb-3 mt-4">
-            <label for="email">Jenis Barang</label>
+            <label for="email">Jenis Keinginan</label>
             
-            <select style="width: 470px;" class="form-select" name="nama_barang[]" required  oninvalid="this.setCustomValidity('Pilih salah satu barang')" oninput="setCustomValidity('')">
-    <option value="" selected disabled>-- Pilih Barang --</option>
+            <select  class="form-select" name="nama_barang[]" required  oninvalid="this.setCustomValidity('Pilih salah satu barang')" oninput="setCustomValidity('')">
+    <option value="" selected disabled>-- Pilih Kenginanmu--</option>
     <option value="motor" {{ old('nama_barang.0') == 'motor' ? 'selected' : '' }}>Motor</option>
     <option value="mobil" {{ old('nama_barang.0') == 'mobil' ? 'selected' : '' }}>Mobil</option>
     <option value="rumah" {{ old('nama_barang.0') == 'rumah' ? 'selected' : '' }}>Rumah</option>
@@ -39,14 +40,14 @@
 
         <div class="mb-3">
           
-        <input type="text" name="nama_barang_other[]" style="width: 470px;" placeholder="Masukan nama barang lain" class="form-control" id="nama_barang_other_0" value="{{ old('nama_barang_other.0', $formInput['nama_barang_other.0'] ?? '') }}">
+        <input type="text" name="nama_barang_other[]" placeholder="Masukan nama barang lain" class="form-control" id="nama_barang_other_0" value="{{ old('nama_barang_other.0', $formInput['nama_barang_other.0'] ?? '') }}">
             
         </div>
 
         <div class="mb-3">
 
-            <label for="cicilan">Cicilan</label>
-            <input type="text" name="cicilan[]" style="width: 470px;" class="form-control" required value="{{ old('cicilan.0') }}" oninvalid="this.setCustomValidity('Masukan Cicilan')" oninput="setCustomValidity('')" id="cicilan">
+            <label for="cicilan">Harga atau Jumlah Cicilan</label>
+            <input type="text" name="cicilan[]" class="form-control" required value="{{ old('cicilan.0') }}" oninvalid="this.setCustomValidity('Masukan Cicilan')" oninput="setCustomValidity('')" id="cicilan">
 <script>
 document.getElementById('cicilan').addEventListener('input', function (e) {
     let inputValue = e.target.value.replace(/\D/g, ''); // Hapus karakter non-digit
@@ -58,17 +59,12 @@ function formatRupiah(value) {
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-
 </script>
-
-            
         </div>
         </div>
         </div>
 
-        
-
-<button type="button" class="btn btn-primary btn-sm " id="add-field">Tambah Barang</button>
+<button type="button" class="btn btn-primary btn-sm " id="add-field">Tambah Cicilan</button>
 
         <br><br>
                 
@@ -79,7 +75,7 @@ function formatRupiah(value) {
            
 
             <div id="form-sales-skills" >
-                <h4 class="mt-4 text-center">Kamu lebih jago penjualan apa</h4>
+                <h4 class="mt-4 ">Masukan nilai persentase produk yang ingin kamu jual</h4>
                 <form id="sales-skills-form">
                    
                 @foreach ($barang as $barang)
@@ -88,7 +84,7 @@ function formatRupiah(value) {
     </div>
     <div class="row g-3 align-items-center">
         <div class="col-auto">
-        <input type="number" class="form-control" style="width: 430px" name="product_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('product_persen.' . $barang->id) }}">
+        <input type="number" class="form-control" style="width:400px;"  name="product_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('product_persen.' . $barang->id) }}">
         </div>
         <div class="col-auto">
             <span id="" class="form-text">
@@ -102,7 +98,7 @@ function formatRupiah(value) {
 
         <button class="btn btn-success btn-sm mt-3 mx-auto" style="width: 50%;" type="submit">Hitung Jumlah Produk</button>
       
-        @if (session('totalCicilan') && session('totalPoin') && session('jumlahProduk'))
+        <!-- @if (session('totalCicilan') && session('totalPoin') && session('jumlahProduk'))
     @php
         $totalCicilan = session('totalCicilan');
         $totalPoin = session('totalPoin');
@@ -150,7 +146,7 @@ function formatRupiah(value) {
         session()->forget('totalPoin');
         session()->forget('jumlahProduk');
     @endphp
-@endif
+@endif -->
         </form>  
       </section><!-- End Edit Profil Section -->
   
@@ -162,7 +158,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const selectInputs = document.querySelectorAll("select[name='nama_barang[]']");
     const otherInputFields = document.querySelectorAll("input[name^='nama_barang_other']");
-    
+    const cicilanInputs = document.querySelectorAll("input[name='cicilan[]']");
+    const addedForms = [];
 
     function toggleOtherInput(index) {
         const selectInputs = document.querySelectorAll("select[name='nama_barang[]']");
@@ -186,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleOtherInput(index);
     });
 
+
     
     function updateSelectChangeListeners() {
         const selectInputs = document.querySelectorAll("select[name='nama_barang[]']");
@@ -198,17 +196,26 @@ document.addEventListener("DOMContentLoaded", function () {
             toggleOtherInput(index);
         });
     }
-
-
     const addButton = document.getElementById("add-field");
     const inputFieldsContainer = document.getElementById("input-fields");
     const inputFieldTemplate = document.querySelector(".input-field").cloneNode(true);
 
-    
+    let formInputs = [];
 
-    addButton.addEventListener("click", function () {
+function saveFormInputs(index) {
+    const formInput = {
+        nama_barang: selectInputs[index].value,
+        nama_barang_other: otherInputFields[index].value,
+        cicilan: cicilanInputs[index].value
+    };
+    formInputs[index] = formInput;
+}
+
+
+addButton.addEventListener("click", function () {
         const newInputField = inputFieldTemplate.cloneNode(true);
         inputFieldsContainer.appendChild(newInputField);
+        addedForms.push(newInputField);
 
         // Tambahkan tombol "Hapus" di setiap input-field
         const deleteButton = document.createElement("button");
@@ -216,21 +223,30 @@ document.addEventListener("DOMContentLoaded", function () {
         deleteButton.className = "btn btn-danger btn-sm mb-2";
         deleteButton.addEventListener("click", function () {
             inputFieldsContainer.removeChild(newInputField);
-            updateSelectChangeListeners(); // Update select change listeners after removing an input field
+            addedForms.splice(addedForms.indexOf(newInputField), 1);
         });
         newInputField.appendChild(deleteButton);
 
-        updateSelectChangeListeners(); // Update select change listeners for the newly added input field
+        // Periksa apakah ada data form yang telah diisi sebelumnya
+        if (formInputs.length > 0) {
+            const lastFormIndex = formInputs.length - 1;
+            // Isi form yang baru dengan data yang telah diisi sebelumnya
+            selectInputs[selectInputs.length - 1].value = formInputs[lastFormIndex].nama_barang;
+            otherInputFields[otherInputFields.length - 1].value = formInputs[lastFormIndex].nama_barang_other;
+            cicilanInputs[cicilanInputs.length - 1].value = formInputs[lastFormIndex].cicilan;
+        }
 
+        updateSelectChangeListeners();// Update select change listeners for the newly added input field
+
+        // Tetapkan visibilitas form yang ditambahkan ke "block"
+        newInputField.style.display = "block";
         const newCicilanInput = newInputField.querySelector("input[name^='cicilan']");
-    newCicilanInput.addEventListener('input', function (e) {
-        let inputValue = e.target.value.replace(/\D/g, ''); // Hapus karakter non-digit
-        e.target.value = formatRupiah(inputValue);
+        newCicilanInput.addEventListener('input', function (e) {
+            let inputValue = e.target.value.replace(/\D/g, '');
+            e.target.value = formatRupiah(inputValue);
+        });
     });
-    });
-
-   
-    
+ 
 
     // Initialize select change listeners for existing input fields
     updateSelectChangeListeners();
@@ -252,53 +268,8 @@ document.addEventListener("DOMContentLoaded", function () {
         color: #01004C;
         font-weight: bold;/* Warna teks biru, bisa disesuaikan */
     }
+
+    
 </style>
 
-<style>
-    /* Warna latar belakang dan warna teks untuk judul */
-   
-
-    .form-edit {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        
-       
-    }
-
-    h4 {
-        color: #333; /* Warna teks judul */
-    }
-
-    /* Gaya untuk tombol "Tambah Barang" */
-    #add-field {
-        background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s; /* Tambahkan efek hover */
-    }
-
-    #add-field:hover {
-        background-color: #0056b3; /* Warna tombol biru saat dihover */
-    }
-    input[type="text"] {
-    border: 1px solid #ccc; /* Tambahkan border sesuai preferensi Anda */
-    padding: 5px;
-    border-radius: 5px;
-}
-
-    /* Gaya untuk alert dan hasil */
-    .alert {
-        background-color: #17a2b8; /* Warna latar belakang alert */
-        color: #fff;
-    }
-
-    .font-weight-bold {
-        font-weight: bold;
-    }
-</style>
 

@@ -14,7 +14,6 @@ class UserKalkulatorPaketController extends Controller
      */
     public function index()
     {
-
         $user = Auth::user();
         $userKodeRole = auth()->user()->Role->kode_role;
         $barang= Product::where('role_id', $user->role_id)->get();
@@ -36,15 +35,11 @@ class UserKalkulatorPaketController extends Controller
                  'barang' => $barang
             ]);
         }  
-
-
-     
     }
 
 
      public function hitung(Request $request)
     {
-
           $user = Auth::user();
 
         $barang= Product::where('role_id', $user->role_id)->get();
@@ -69,13 +64,19 @@ class UserKalkulatorPaketController extends Controller
         }
 
         
-
         $totalCicilan = 0;
-
+        $cicilanInputs = $request->input('cicilan');
+        $filteredCicilanInputs = [];
         
 
-        // Hitung total cicilan
         foreach ($cicilanInputs as $cicilan) {
+            // Hapus karakter non-digit dan tambahkan ke dalam array baru
+            $cicilanValue = filter_var($cicilan, FILTER_SANITIZE_NUMBER_INT);
+            $filteredCicilanInputs[] = $cicilanValue;
+        }
+
+
+        foreach ($filteredCicilanInputs as $cicilan) {
             if (is_numeric($cicilan)) {
                 $totalCicilan += (int)$cicilan;
             }
@@ -102,10 +103,8 @@ foreach ($productPersen as $productId => $persen) {
     }
 }
 
-
-
 if ($totalPersen != 100) {
-    return redirect()->back()->with('error', 'Total persen produk harus sama dengan 100%');
+    return redirect()->back()->with('error', 'Total persen produk harus sama dengan 100%')->withInput();
 }
 
         $jumlahProduk = [];
@@ -123,11 +122,18 @@ if ($totalPersen != 100) {
         // Misalnya: session(['total_poin' => $totalPoin]);
         $request->session()->put('inputData', $request->all());
         $request->session()->push('addedItems', $request->input());
-        
-        
 
+        
+        
         // Tampilkan hasil perhitungan ke tampilan
-        return redirect()->back()->withInput();   
+        // return redirect()->back()->withInput();   
+
+        return view('user.hasilhitungproduk', [
+            'totalCicilan' => $totalCicilan,
+            'totalPoin' => $totalPoin,
+            'jumlahProduk' => $jumlahProduk,
+
+       ]);
     
     }
 

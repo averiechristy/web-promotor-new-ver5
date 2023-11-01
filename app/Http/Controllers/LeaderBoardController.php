@@ -141,7 +141,9 @@ class LeaderBoardController extends Controller
                 $rowData = $data[$i];
                 $rowNumber = $i + 1;
 
-                
+                if (empty(array_filter($rowData))) {
+                    continue; // Melewati baris data kosong
+                }
             
                 $kodeSales = trim($rowData[3]); // Kolom 'Kode Sales'
                 $importedName = trim($rowData[2]); 

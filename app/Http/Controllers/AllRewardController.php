@@ -45,15 +45,17 @@ class AllRewardController extends Controller
     $target100Percent = $reward->poin_reward;
 
     foreach ($users as $user) {
-        $totalPointsRewardPeriod = LeaderBoard::where('user_id', $user->id)
-            ->whereYear('tanggal', '>=', now()->year)
-            ->whereMonth('tanggal', '>=', now()->month)
-            ->where('tanggal', '<=', $reward->tanggal_selesai)
-            ->sum('total');
+        $totalPointsRewardPeriod =  LeaderBoard::where('user_id', $user->id)
+        ->where('tanggal', '>=', $reward->tanggal_mulai) // Menggunakan tanggal mulai reward
+        ->where('tanggal', '<=', $reward->tanggal_selesai) // Menggunakan tanggal selesai reward
+        ->sum('total');
 
         $progress = ($totalPointsRewardPeriod >= $target100Percent)
             ? '100%'
             : number_format(($totalPointsRewardPeriod / $target100Percent * 100), 1) . '%';
+
+
+            $progress = ($totalPointsRewardPeriod >= $target100Percent) ? '100%' : number_format(($totalPointsRewardPeriod / $target100Percent * 100), 1) . '%';
 
         $progressPercentage[$user->id] = $progress;
     }

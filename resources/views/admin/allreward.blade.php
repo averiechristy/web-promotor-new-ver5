@@ -9,7 +9,7 @@
     <ul class="list-group">
         @foreach($users as $user)
         <li class="list-group-item mt-3">
-            <strong>Nama:</strong> {{ $user->nama }}
+            <strong> {{ $user->nama }}</strong>
 
             <div class="progress mt-2">
                 <div class="progress-bar" role="progressbar" style="width: {{ $progressPercentage[$user->id] }};" aria-valuenow="{{ $progressPercentage[$user->id] }}" aria-valuemin="0" aria-valuemax="100">{{ $progressPercentage[$user->id] }}</div>

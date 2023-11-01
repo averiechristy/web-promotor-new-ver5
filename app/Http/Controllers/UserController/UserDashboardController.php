@@ -105,15 +105,16 @@ class UserDashboardController extends Controller
             $requiredPoints[$reward->id] = $reward->poin_reward - $totalPointsThisMonth;
 
             $totalPointsRewardPeriod = LeaderBoard::where('user_id', $userId)
-        ->whereYear('tanggal', '>=', now()->year)
-        ->whereMonth('tanggal', '>=', now()->month)
-        ->where('tanggal', '<=', $reward->tanggal_selesai)
-        ->sum('total');
+    ->where('tanggal', '>=', $reward->tanggal_mulai) // Menggunakan tanggal mulai reward
+    ->where('tanggal', '<=', $reward->tanggal_selesai) // Menggunakan tanggal selesai reward
+    ->sum('total');
+
     
     // Menghitung persentase poin yang sudah dicapai
     $progressWidth = ($totalPointsRewardPeriod >= $reward->poin_reward) ? '100%' : ($totalPointsRewardPeriod / $reward->poin_reward * 100) . '%';
         }
     
+   
         $remainingTime = [];
 
         foreach ($activeRewards as $reward) {
@@ -127,11 +128,11 @@ class UserDashboardController extends Controller
 
 foreach ($activeRewards as $activeReward) {
     // Menghitung total poin pengguna selama periode reward berjalan
-    $totalPointsReward = LeaderBoard::where('user_id', $userId)
-        ->whereYear('tanggal', '>=', now()->year)
-        ->whereMonth('tanggal', '>=', now()->month)
-        ->where('tanggal', '<=', $activeReward->tanggal_selesai)
-        ->sum('total');
+    $totalPointsReward =  LeaderBoard::where('user_id', $userId)
+    ->where('tanggal', '>=', $reward->tanggal_mulai) // Menggunakan tanggal mulai reward
+    ->where('tanggal', '<=', $reward->tanggal_selesai) // Menggunakan tanggal selesai reward
+    ->sum('total');
+
    
     // Simpan total poin untuk reward ini dalam array
     $totalPointsRewardPeriod[$activeReward->id] = $totalPointsReward;
