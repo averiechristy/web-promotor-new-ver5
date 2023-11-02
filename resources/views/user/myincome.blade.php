@@ -20,8 +20,9 @@
  
         <div class="filter-section ">
         <h4 id="income-title">Pendapatan bulan {{ date('F') }} {{ date('Y') }}</h4>
-    <form id="income-filter-form">
-        <div class="form-group mt-5">
+        <form id="income-filter-form" action="{{ route('filter.income') }}" method="POST">
+@csrf        <div class="form-group mt-5">
+            
             <label for="bulan">Bulan:</label>
             <input type="month" id="bdaymonth" name="bdaymonth" class="form-control">
         </div>

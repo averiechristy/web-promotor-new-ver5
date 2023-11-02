@@ -38,27 +38,41 @@ class UserDashboardController extends Controller
         ->get();
     
              
-        // Menghitung total pendapatan bulan ini
-        $totalIncomeThisMonth = LeaderBoard::where('user_id', $userId)
-            ->whereYear('tanggal', now()->year)
-            ->whereMonth('tanggal', now()->month)
-            ->sum('income');
+        // // Menghitung total pendapatan bulan ini
+        // $totalIncomeThisMonth = LeaderBoard::where('user_id', $userId)
+        //     ->whereYear('tanggal', now()->year)
+        //     ->whereMonth('tanggal', now()->month)
+        //     ->sum('income');
     
            
         // Menghitung total poin bulan ini
         $totalPointsThisMonth = LeaderBoard::where('user_id', $userId)
-            ->whereYear('tanggal', now()->year)
-            ->whereMonth('tanggal', now()->month)
-            ->sum('total');
-
-            
+        ->whereYear('tanggal', now()->year)
+        ->whereMonth('tanggal', now()->month)
+        ->sum('total');
+    
+    if ($totalPointsThisMonth <= 0) {
+        $hasil = 0;
+    } else if ($totalPointsThisMonth < 72) {
+        $hasil = 3600000;
+    } else if ($totalPointsThisMonth > 72 && $totalPointsThisMonth < 120) {
+        $insentif = ($totalPointsThisMonth - 72) * 40000;
+        $hasil = $insentif + 3600000;
+    } else if ($totalPointsThisMonth == 72) {
+        $hasil = 3600000;
+    } elseif ($totalPointsThisMonth == 120) {
+        $hasil = 6000000;
+    } elseif ($totalPointsThisMonth > 120) {
+        $insentif = ($totalPointsThisMonth - 120) * 40000;
+        $hasil = $insentif + 6000000;
+    }
+    
+    $totalIncomeThisMonth = $hasil;
+    
 
         // Menghitung total pendapatan bulan lalu
         $lastMonth = now()->subMonth();
-        $totalIncomeLastMonth = LeaderBoard::where('user_id', $userId)
-            ->whereYear('tanggal', $lastMonth->year)
-            ->whereMonth('tanggal', $lastMonth->month)
-            ->sum('income');
+       
     
         // Menghitung total poin bulan lalu
         $totalPointsLastMonth = LeaderBoard::where('user_id', $userId)
@@ -67,9 +81,7 @@ class UserDashboardController extends Controller
             ->sum('total');
 
 
-            $totalIncomeToday = LeaderBoard::where('user_id', $userId)
-            ->whereDate('tanggal', $dateToQuery) // Mengambil data hanya untuk hari ini
-            ->sum('income');
+         
     
             
         // Menghitung total poin hari ini
@@ -79,10 +91,7 @@ class UserDashboardController extends Controller
 
             $yesterday = Carbon::parse($dateToQuery)->subDay();
 
-            $totalIncomeYesterday = LeaderBoard::where('user_id', $userId)
-                ->whereDate('tanggal', $yesterday) // Mengambil data hanya untuk hari kemarin
-                ->sum('income');
-
+           
                 
         
             // Menghitung total poin hari kemarin
@@ -93,7 +102,7 @@ class UserDashboardController extends Controller
 
 
         // Menentukan apakah total pendapatan naik atau turun dibandingkan dengan bulan lalu
-         $incomeChange = ($totalIncomeToday > $totalIncomeYesterday) ? 'Naik' : 'Turun';
+        
 
     // Menentukan apakah total poin naik atau turun dibandingkan dengan hari kemarin
     $pointsChange = ($totalPointsToday > $totalPointsYesterday) ? 'Naik' : 'Turun';
@@ -105,15 +114,15 @@ class UserDashboardController extends Controller
             $requiredPoints[$reward->id] = $reward->poin_reward - $totalPointsThisMonth;
 
             $totalPointsRewardPeriod = LeaderBoard::where('user_id', $userId)
-    ->where('tanggal', '>=', $reward->tanggal_mulai) // Menggunakan tanggal mulai reward
-    ->where('tanggal', '<=', $reward->tanggal_selesai) // Menggunakan tanggal selesai reward
-    ->sum('total');
-
+            ->where('tanggal', '>=', $reward->tanggal_mulai) // Menggunakan tanggal mulai reward
+            ->where('tanggal', '<=', $reward->tanggal_selesai) // Menggunakan tanggal selesai reward
+            ->sum('total');
     
     // Menghitung persentase poin yang sudah dicapai
     $progressWidth = ($totalPointsRewardPeriod >= $reward->poin_reward) ? '100%' : ($totalPointsRewardPeriod / $reward->poin_reward * 100) . '%';
         }
     
+
    
         $remainingTime = [];
 
@@ -124,16 +133,16 @@ class UserDashboardController extends Controller
 
     //    
     
-        $totalPointsRewardPeriod = [];
+      $totalPointsRewardPeriod = [];
+$progressWidthPerReward = [];
 
 foreach ($activeRewards as $activeReward) {
     // Menghitung total poin pengguna selama periode reward berjalan
-    $totalPointsReward =  LeaderBoard::where('user_id', $userId)
-    ->where('tanggal', '>=', $reward->tanggal_mulai) // Menggunakan tanggal mulai reward
-    ->where('tanggal', '<=', $reward->tanggal_selesai) // Menggunakan tanggal selesai reward
-    ->sum('total');
+    $totalPointsReward = LeaderBoard::where('user_id', $userId)
+        ->where('tanggal', '>=', $activeReward->tanggal_mulai)
+        ->where('tanggal', '<=', $activeReward->tanggal_selesai)
+        ->sum('total');
 
-   
     // Simpan total poin untuk reward ini dalam array
     $totalPointsRewardPeriod[$activeReward->id] = $totalPointsReward;
 
@@ -145,6 +154,8 @@ foreach ($activeRewards as $activeReward) {
 
     // Anda dapat menggunakan $progressWidth sesuai kebutuhan di sini atau menyimpannya untuk digunakan nanti.
 }
+
+
 
 // Sekarang, Anda memiliki $progressWidthPerReward yang berisi persentase progressWidth per ID reward.
 
@@ -160,12 +171,9 @@ foreach ($activeRewards as $activeReward) {
             'totalPointsThisMonth' => $totalPointsThisMonth,
             'activeRewards' => $activeRewards,
             'requiredPoints' => $requiredPoints,
-            'incomeChange' => $incomeChange,
+            
             'pointsChange' => $pointsChange,
-            'totalIncomeLastMonth' => $totalIncomeLastMonth,
             'totalPointsLastMonth' => $totalPointsLastMonth,
-            'totalIncomeToday' => $totalIncomeToday,
-         'totalIncomeYesterday' =>   $totalIncomeYesterday,
          'totalPointsToday' => $totalPointsToday,
          'totalPointsYesterday' =>   $totalPointsYesterday,
             'remainingTime' => $remainingTime,

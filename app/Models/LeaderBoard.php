@@ -25,12 +25,11 @@ class LeaderBoard extends Model
     $endDate = $today->endOfMonth()->toDateString();
     
     return self::select('user_id', 
-                DB::raw('SUM(income) as total_income'),
+            
                 DB::raw('SUM(total) as total_point'))
         ->whereBetween('tanggal', [$startDate, $endDate])
         ->where('role_id', $role)
         ->groupBy('user_id')
-        ->orderBy('total_income', 'desc')
         ->orderBy('total_point', 'desc')
         ->take(3) // Ambil 3 pemimpin teratas.
         ->get();
@@ -67,12 +66,10 @@ public static function getLeaderboardForRole2($role)
     $endDate = $today->endOfMonth()->toDateString();
 
     return self::select('user_id', 
-                DB::raw('SUM(income) as total_income'),
                 DB::raw('SUM(total) as total_point'))
         ->whereBetween('tanggal', [$startDate, $endDate])
         ->where('role_id', $role)
         ->groupBy('user_id')
-        ->orderBy('total_income', 'desc')
         ->orderBy('total_point', 'desc')
         ->get();
 }
@@ -90,12 +87,10 @@ public static function getLeaderboardUser($role)
         $endDate = $today->endOfMonth()->toDateString();
         
         return self::select('user_id', 
-                    DB::raw('SUM(income) as total_income'),
                     DB::raw('SUM(total) as total_point'))
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->where('role_id', $role)
             ->groupBy('user_id')
-            ->orderBy('total_income', 'desc')
             ->orderBy('total_point', 'desc')
             ->take(10) // Ambil 3 pemimpin teratas.
             ->get();
@@ -128,12 +123,10 @@ public static function getLeaderboardUser($role)
         $endDate = $today->endOfMonth()->toDateString();
         
         return self::select('user_id', 
-                    DB::raw('SUM(income) as total_income'),
                     DB::raw('SUM(total) as total_point'))
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->where('role_id', $role)
             ->groupBy('user_id')
-            ->orderBy('total_income', 'desc')
             ->orderBy('total_point', 'desc')
             ->get();
     }
@@ -171,12 +164,10 @@ public static function getRankForUser($userId, $role)
     
     // Query untuk menghitung peringkat pengguna berdasarkan total income dan total point.
     $userRankQuery = self::select('user_id', 
-        DB::raw('SUM(income) as total_income'),
         DB::raw('SUM(total) as total_point'))
         ->whereBetween('tanggal', [$startDate, $endDate])
         ->where('role_id', $role)
         ->groupBy('user_id')
-        ->orderBy('total_income', 'desc')
         ->orderBy('total_point', 'desc');
 
     // Query untuk mengambil peringkat pengguna tertentu.
@@ -195,12 +186,10 @@ public static function getRankForUser($userId, $role)
 public static function getLeaderboardUserForMonth($role, $startDate, $endDate)
 {
     return self::select('user_id', 
-                    DB::raw('SUM(income) as total_income'),
                     DB::raw('SUM(total) as total_point'))
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->where('role_id', $role)
             ->groupBy('user_id')
-            ->orderBy('total_income', 'desc')
             ->orderBy('total_point', 'desc')
             ->take(10)
             ->get();
@@ -217,12 +206,10 @@ public static function getTotalUsersWithSameRoleForMonth($role, $startDate, $end
 public static function getRankForUserForMonth($userId, $role, $startDate, $endDate)
 {
     $userRankQuery = self::select('user_id', 
-        DB::raw('SUM(income) as total_income'),
         DB::raw('SUM(total) as total_point'))
         ->whereBetween('tanggal', [$startDate, $endDate])
         ->where('role_id', $role)
         ->groupBy('user_id')
-        ->orderBy('total_income', 'desc')
         ->orderBy('total_point', 'desc');
 
     $userRank = $userRankQuery->pluck('user_id')->search($userId);
@@ -238,12 +225,10 @@ public static function getLeaderboardForRoleMonth($role, $startDate, $endDate)
 {
    
     return self::select('user_id', 
-                DB::raw('SUM(income) as total_income'),
                 DB::raw('SUM(total) as total_point'))
         ->whereBetween('tanggal', [$startDate, $endDate])
         ->where('role_id', $role)
         ->groupBy('user_id')
-        ->orderBy('total_income', 'desc')
         ->orderBy('total_point', 'desc')
         ->get();
 }
@@ -257,7 +242,7 @@ public static function getLeaderboardForRoleMonth($role, $startDate, $endDate)
         'nama',
         'pencapaian',
         'tanggal',
-        'income',
+      
         'kode_sales',
         'total',// Kolom JSON yang baru ditambahkan
     ];

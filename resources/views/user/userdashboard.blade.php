@@ -58,41 +58,16 @@
             <div class="icon-card">
                 
         <div class="card-body">
-                        <h5 class="card-title">Pendapatan</h5>
+                        <h5 class="card-title">Potensi Pendapatan</h5>
                         <div class="icon success mt-3">
             <img class="img-icon" src="{{asset('img/indonesian-rupiah.png')}}" alt="">
         </div>    
                         <h4 class="txt text-bold mb-10 mt-3">Rp. {{ number_format($totalIncomeThisMonth, 0, ',', '.') }},-</h4>
-<!--                         
-                        @php
-                $incomeChangePercent = 0;
-                if ($totalIncomeYesterday !== 0) {
-                    $incomeChangePercent = (($totalIncomeToday - $totalIncomeYesterday) / $totalIncomeYesterday) * 100/100;
-                }
-            @endphp
 
-            <p class="text-sm @if ($incomeChangePercent > 0) text-success @elseif ($incomeChangePercent < 0) text-danger @endif">
-                
-                @if ($incomeChangePercent > 0)
-                <small >
-                    <i class="lni lni-arrow-up"></i> {{ number_format($incomeChangePercent, 2) }}%
-                    <span class="text-gray">Meningkat dari kemarin </span>
-            </small>
-                @elseif ($incomeChangePercent < 0)
-                <small >
-                    <i class="lni lni-arrow-down"></i> {{ number_format(abs($incomeChangePercent), 2) }}%
-                    <span class="text-gray">Menurun dari kemarin</span>
-            </small>
-                @else
-                <small class="text-muted">
-                    <span class="text-gray">Tidak ada penurunan atau penaikan</span>
-            </small>
-                @endif
-                
-            </p> -->
             <div class="container">
   <div class="row">
     <div class="col text-center">
+        <small>Asumsi dengan absensi 22 hari kerja</small>
       <a href="{{ route('user.myincome') }}">
         <button class="btn btn-sm btn-link">Lihat riwayat pendapatan</button>
       </a>
@@ -108,39 +83,17 @@
             <div class="card-deck">
             <div class="icon-card">
                             <div class="card-body ">
-                        <h5 class="card-title">Poin</h5>
+                        <h5 class="card-title">Potensi Poin</h5>
                         <div class="icon primary mt-3">
             <img class="img-icon" src="{{asset('img/bonus.png')}}" alt="">
         </div>    
                         <h4 class="txt text-bold mb-10 mt-3">{{ $totalPointsThisMonth }} poin</h4>
-        <!-- @php
-                $pointsChangePercent = 0;
-                if ($totalPointsYesterday !== 0) {
-                    $pointsChangePercent = (($totalPointsToday - $totalPointsYesterday) / $totalPointsYesterday) * 100/100;
-                }
-            @endphp
-
-            <p class="text-sm @if ($pointsChangePercent > 0) text-success @elseif ($pointsChangePercent < 0) text-danger @endif">
-                @if ($pointsChangePercent > 0)
-                <small>
-                    <i class="lni lni-arrow-up"></i> {{ number_format($pointsChangePercent, 2) }}%
-                    <span class="text-gray">Meningkat dari kemarin</span>
-            </small >
-                @elseif ($pointsChangePercent < 0)
-                <small >
-                    <i class="lni lni-arrow-down"></i> {{ number_format(abs($pointsChangePercent), 2) }}%
-                    <span class="text-gray">Menurun dari kemarin</span>
-            </small>
-                @else
-                <small class="text-muted">
-                    <span class="text-gray">Tidak ada penurunan atau penaikan</span>
-            </small>
-                @endif
-            </p>   -->
+      
 
             <div class="container">
   <div class="row">
     <div class="col text-center">
+    <small> </small>
       <a href="{{ route('user.myincome') }}">
         <button class="btn btn-sm btn-link">Lihat riwayat poin</button>
       </a>
@@ -156,7 +109,7 @@
         <div class="icon-card">
            
             <div class="card-body ">
-                <h5 class="card-title">Peringkat</h5>
+                <h5 class="card-title">Potensi Peringkat</h5>
                 <div class="icon orange mt-3">
             <img class="img-icon" src="{{asset('img/top-three.png')}}" alt="">
             </div>
@@ -354,6 +307,7 @@ font-weight: 700;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #fff; /* Warna latar belakang card */
     transition: transform 0.3s;
+    height:300px;
 }
 
 

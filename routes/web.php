@@ -364,9 +364,9 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
     Route::get('user/changepassword', [UserController::class,'UserChangePasswordForm'])->name('password-change-user');
     Route::post('user/changepassword', [UserController::class,'changePassword'])->name('change-password');
 
-    Route::get('user/kalkulatorpaket',[KalkulatorPaketController::class,'index'])->name('kalkulatorpaket');
+    // Route::get('user/kalkulatorpaket',[KalkulatorPaketController::class,'index'])->name('kalkulatorpaket');
 
-    Route::post('/hitung-cicilan', [KalkulatorPaketController::class,'hitungCicilan'])->name('hitung.cicilan');
+    // Route::post('/hitung-cicilan', [KalkulatorPaketController::class,'hitungCicilan'])->name('hitung.cicilan');
 
     Route::get('user/cobakalkulator',[CobaKalkulatorController::class,'index'])->name('cobakalkulator');
 
@@ -388,7 +388,7 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
     Route::get('/profile/delete-photo', [ProfileController::class,'deletePhoto'])->name('profile.delete-photo');
 
 
-    Route::post('/filter-income', [MyIncomeController::class,'filterIncome']);
+    Route::post('/filter-income', [MyIncomeController::class,'filterIncome'])->name('filter.income');;
 
 
 });

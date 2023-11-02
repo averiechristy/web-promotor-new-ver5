@@ -87,6 +87,7 @@ class LeaderBoardController extends Controller
     
         // Menambahkan validasi format "dd/mm/yyyy" untuk kolom "Tanggal"
     
+        
         $writer->save('php://output');
         
     }
@@ -234,7 +235,7 @@ class LeaderBoardController extends Controller
                         continue;
                     }
 
-                    if (intval($jumlah) != $jumlah || $jumlah <= 0) {
+                    if (intval($jumlah) != $jumlah || $jumlah < 0) {
                         $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk tidak boleh desimal.";
                         continue;
                     }
@@ -301,26 +302,7 @@ class LeaderBoardController extends Controller
                     $total += $product->poin_produk * $jumlah;
                 }
 
-                if ($kodeRole == 'mr') {
-                    if ($total < 72) {
-                        $hasil = 3600000;
-                    } else if ($total > 72 && $total < 120) {
-                        $insentif = ($total - 72) * 40000;
-                        $hasil = $insentif + 3600000;
-                    } else if ($total == 72) {
-                        $hasil = 3600000;
-                    } elseif ($total == 120) {
-                        $hasil = 6000000;
-                    } elseif ($total > 120) {
-                        $insentif = ($total - 120) * 40000;
-                        $hasil = $insentif + 6000000;
-                    }
-
-                } elseif ($kodeRole == 'tm') {
-                    $hasil = 0;
-                } elseif ($kodeRole == 'ms') {
-                    $hasil = 0;
-                }
+               
     
                 // Tambahkan nilai total ke dalam array $rowData
                 $rowData[] = $total;
@@ -333,7 +315,7 @@ class LeaderBoardController extends Controller
                     'nama' => $rowData[2], // Kolom 'Nama'
                     'kode_sales' => $rowData[3],
                     'tanggal' => $rowData[1], // Kolom 'Tanggal'
-                    'income' => $hasil,
+                   
                     'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
                     'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
                 ]);

@@ -24,14 +24,32 @@ class MyIncomeController extends Controller
        
             // Menghitung total pendapatan dan total poin pada bulan berjalan
             $currentMonth = now()->format('Y-m');
-            $totalIncomeThisMonth = Leaderboard::where('user_id', $userId)
-                ->whereYear('tanggal', now()->year)
-                ->whereMonth('tanggal', now()->month)
-                ->sum('income');
+            // $totalIncomeThisMonth = Leaderboard::where('user_id', $userId)
+            //     ->whereYear('tanggal', now()->year)
+            //     ->whereMonth('tanggal', now()->month)
+            //     ->sum('income');
             $totalPointsThisMonth = Leaderboard::where('user_id', $userId)
                 ->whereYear('tanggal', now()->year)
                 ->whereMonth('tanggal', now()->month)
                 ->sum('total');
+
+                if ($totalPointsThisMonth <= 0) {
+                    $hasil = 0;
+                } else if ($totalPointsThisMonth < 72) {
+                    $hasil = 3600000;
+                } else if ($totalPointsThisMonth > 72 && $totalPointsThisMonth < 120) {
+                    $insentif = ($totalPointsThisMonth - 72) * 40000;
+                    $hasil = $insentif + 3600000;
+                } else if ($totalPointsThisMonth == 72) {
+                    $hasil = 3600000;
+                } elseif ($totalPointsThisMonth == 120) {
+                    $hasil = 6000000;
+                } elseif ($totalPointsThisMonth > 120) {
+                    $insentif = ($totalPointsThisMonth - 120) * 40000;
+                    $hasil = $insentif + 6000000;
+                }
+                
+                $totalIncomeThisMonth = $hasil;
     
             // Menghitung poin yang dibutuhkan lagi untuk mencapai reward
     
@@ -53,15 +71,31 @@ class MyIncomeController extends Controller
     $selectedDate = Carbon::createFromFormat('Y-m', $selectedMonth);
 
     // Mengambil data pendapatan dan poin sesuai dengan bulan dan tahun yang dipilih
-    $totalIncome = Leaderboard::where('user_id', auth()->user()->id)
-        ->whereYear('tanggal', $selectedDate->year)
-        ->whereMonth('tanggal', $selectedDate->month)
-        ->sum('income');
+  
     
     $totalPoints = Leaderboard::where('user_id', auth()->user()->id)
         ->whereYear('tanggal', $selectedDate->year)
         ->whereMonth('tanggal', $selectedDate->month)
         ->sum('total');
+
+
+        if ( $totalPoints  <= 0) {
+            $hasil = 0;
+        } else if ( $totalPoints  < 72) {
+            $hasil = 3600000;
+        } else if ( $totalPoints  > 72 &&  $totalPoints  < 120) {
+            $insentif = ( $totalPoints  - 72) * 40000;
+            $hasil = $insentif + 3600000;
+        } else if ( $totalPoints  == 72) {
+            $hasil = 3600000;
+        } elseif ( $totalPoints  == 120) {
+            $hasil = 6000000;
+        } elseif ( $totalPoints  > 120) {
+            $insentif = ( $totalPoints  - 120) * 40000;
+            $hasil = $insentif + 6000000;
+        }
+        
+        $totalIncome = $hasil;
 
     return response()->json([
         'totalIncome' => $totalIncome,
