@@ -15,8 +15,6 @@ class ReportHistoryRewardController extends Controller
      */
     public function index()
     {
-
-        
         $role = UserRole::all();
         $currentDate = Carbon::now();
 
@@ -30,12 +28,14 @@ class ReportHistoryRewardController extends Controller
         $target100Percent = $reward->poin_reward;
 
         // Get the users who have reached 100% for this reward
-        $userIds = LeaderBoard::select('leader_boards.user_id')
+     $userIds = LeaderBoard::select('leader_boards.user_id')
      ->join('users', 'leader_boards.user_id', '=', 'users.id')
      ->where('leader_boards.tanggal', '>=', $reward->tanggal_mulai)
      ->where('leader_boards.tanggal', '<=', $reward->tanggal_selesai)
      ->where('users.role_id', '=', $reward->role_id)
      ->groupBy('leader_boards.user_id')
+     ->havingRaw('SUM(total) >= ?', [$target100Percent])
+     ->orderByRaw('SUM(total) DESC') 
      ->pluck('leader_boards.user_id')
      ->toArray();
 
@@ -43,6 +43,7 @@ class ReportHistoryRewardController extends Controller
         $usersReached100Percent[$reward->id] = $userIds;
     }
 
+    
     // Calculate the total number of users who reached 100% for all rewards
     $totalUsersReached100Percent = count(array_merge(...array_values($usersReached100Percent)));
 

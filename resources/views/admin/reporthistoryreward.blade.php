@@ -26,9 +26,11 @@
                         <h5 class="card-title">{{ $reward->judul_reward }}</h5>
                         <hr>
                         <!-- Display the total number of users who reached 100% for this reward -->
-                        <p class="card-text">
+                        <!-- <p class="card-text">
                             <strong>Total Pemenang</strong> {{ count($usersReached100Percent[$reward->id]) }}
-                        </p>
+                        </p> -->
+
+                        <p>Kuota reward : {{ $reward->kuota }}</p>
 
                         <button data-toggle="modal" data-target="#detailModal{{ $reward->id }}" class="btn btn-primary btn-sm">Lihat detail pemenang</button>
                     </div>
@@ -40,31 +42,51 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detailModalLabel">{{ $reward->judul_reward }}</h5>
+                    
+
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- Tampilkan daftar nama pemenang di sini -->
-                        @if (count($usersReached100Percent[$reward->id]) > 0)
-                        <ol type="1">
-                                @foreach ($usersReached100Percent[$reward->id] as $userId)
-                                    @php
-                                        $user = \App\Models\User::find($userId); // Ganti \App\User dengan model User Anda
-                                    @endphp
-                                    @if ($user)
-                                        <li class="mt-2">{{ $user->nama }} ( {{$user->username}} )</li>
-                                    @endif
-                                @endforeach
-</ol>
+                    <p>Kuota reward : {{ $reward->kuota }}</p>
+    <!-- Tampilkan daftar nama pemenang di sini -->
+    @if (count($usersReached100Percent[$reward->id]) > 0)
+    <ol type="1">
+        @php
+            $rewardQuota = $reward->kuota;
+            $userRank = 1; // Inisialisasi peringkat pengguna
+        @endphp
+        @foreach ($usersReached100Percent[$reward->id] as $userId)
+            @php
+                $user = \App\Models\User::find($userId); // Ganti \App\User dengan model User Anda
+            @endphp
 
-                        @else
-                            <p>Tidak ada pemenang yang mencapai reward ini.</p>
-                        @endif
-                    </div>
+            @if ($user)
+                @if ($userRank <= $rewardQuota)
+                    <li class="tercapai mt-2">
+                        {{ $user->nama }} ({{ $user->username }}) <span class="badge badge-primary">Tercapai dan masuk kuota pemenang</span>
+                    </li>
+                @else
+                    <li class="tidak-tercapai mt-2">
+                        {{ $user->nama }} ({{ $user->username }}) <span class="badge badge-danger">Tercapai dan tidak masuk kuota pemenang</span>
+                    </li>
+                @endif
+
+                @php
+                    $userRank++;
+                @endphp
+            @endif
+        @endforeach
+    </ol>
+    @else
+    <p>Tidak ada pemenang yang mencapai reward ini.</p>
+    @endif
+</div>
+
+
+
                     <div class="modal-footer">
-                   
-
 <button id="exportDataButton" class="btn btn-sm btn-success" >Download Data Pemenang</button>
 
 </div>
