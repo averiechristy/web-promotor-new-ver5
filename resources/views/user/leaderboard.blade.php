@@ -92,7 +92,7 @@ if ($leader->total_point < 72) {
 
 $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
 ?>
-          <p>Pendapatan : {{ $formattedHasil }}</p>
+          <!-- <p>Pendapatan : {{ $formattedHasil }}</p> -->
         </div>
       </li>
       @endforeach
@@ -201,7 +201,7 @@ if ($leader->total_point < 72) {
 
 $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
 ?>
-          <p>Pendapatan : {{ $formattedHasil }}</p>
+          <!-- <p>Pendapatan : {{ $formattedHasil }}</p> -->
         </div>
       </li>
       @endforeach
@@ -292,9 +292,10 @@ hr.solid {
   font-weight: bold; /* Membuat angka rank lebih tebal */
 }
 
+
 .leaderboard-avatar img {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border-radius: 100%;
   object-fit: cover;
   margin-right: 10px;
@@ -322,8 +323,10 @@ hr.solid {
     }
 
 
-.leaderboard-info {
+
+    .leaderboard-info {
   flex: 1;
+  margin-top:12px;
 }
 
 /* Gaya tombol "Lihat daftar ranking" */

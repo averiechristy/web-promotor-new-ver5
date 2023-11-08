@@ -97,7 +97,7 @@
     </a>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item {{ Request::is('admin/reportleaderboardtahun') ? 'active' : '' }}" href="{{route('admin.reportleaderboardtahun')}}">Leaderboard Tahunan</a>
+            <a class="collapse-item {{ Request::is('admin/reportleaderboardtahun') ? 'active' : '' }}" href="{{route('admin.reportleaderboardtahun')}}">Leaderboard Tahun Lalu</a>
             <a class="collapse-item {{ Request::is('admin/reportleaderboardakumulasi') ? 'active' : '' }}" href="{{route('admin.reportleaderboardakumulasi')}}">Leaderboard Akumulasi</a>
             <a class="collapse-item {{ Request::is('admin/reporthistoryreward') ? 'active' : '' }}" href="{{route('admin.reporthistoryreward')}}">History Reward</a>
         </div>
