@@ -10,6 +10,9 @@ class Reward extends Model
 {
     use HasFactory;
 
+
+    
+
     protected $fillable = [ 
         'role_id',
         'judul_reward',
@@ -20,6 +23,7 @@ class Reward extends Model
         'tanggal_selesai',
         'created_by',
         'updated_by',
+        'kuota',
 
 
     ];

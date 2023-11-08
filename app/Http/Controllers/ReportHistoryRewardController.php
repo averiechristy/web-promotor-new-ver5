@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\LeaderBoard;
 use App\Models\Reward;
+use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AdminHistoryRewardController extends Controller
+class ReportHistoryRewardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-   public function index($role_id)
-{
-    $currentDate = Carbon::now();
+    public function index()
+    {
 
-    $rewards = Reward::where('role_id', $role_id)
-        ->whereDate('tanggal_selesai', '<', $currentDate)
+        
+        $role = UserRole::all();
+        $currentDate = Carbon::now();
+
+    $rewards = Reward::whereDate('tanggal_selesai', '<', $currentDate)
         ->get();
 
     $usersReached100Percent = [];
@@ -28,13 +31,13 @@ class AdminHistoryRewardController extends Controller
 
         // Get the users who have reached 100% for this reward
         $userIds = LeaderBoard::select('leader_boards.user_id')
-        ->join('users', 'leader_boards.user_id', '=', 'users.id')
-        ->where('leader_boards.tanggal', '>=', $reward->tanggal_mulai)
-        ->where('leader_boards.tanggal', '<=', $reward->tanggal_selesai)
-        ->where('users.role_id', '=', $reward->role_id)
-        ->groupBy('leader_boards.user_id')
-        ->pluck('leader_boards.user_id')
-        ->toArray();
+     ->join('users', 'leader_boards.user_id', '=', 'users.id')
+     ->where('leader_boards.tanggal', '>=', $reward->tanggal_mulai)
+     ->where('leader_boards.tanggal', '<=', $reward->tanggal_selesai)
+     ->where('users.role_id', '=', $reward->role_id)
+     ->groupBy('leader_boards.user_id')
+     ->pluck('leader_boards.user_id')
+     ->toArray();
 
         // Store the users who reached 100% for this reward
         $usersReached100Percent[$reward->id] = $userIds;
@@ -43,13 +46,13 @@ class AdminHistoryRewardController extends Controller
     // Calculate the total number of users who reached 100% for all rewards
     $totalUsersReached100Percent = count(array_merge(...array_values($usersReached100Percent)));
 
-    return view('admin.adminhistoryreward', [
+    return view('admin.reporthistoryreward', [
         'rewards' => $rewards,
         'usersReached100Percent' => $usersReached100Percent,
         'totalUsersReached100Percent' => $totalUsersReached100Percent,
+        'role' => $role,
     ]);
-}
-
+    }
 
     /**
      * Show the form for creating a new resource.

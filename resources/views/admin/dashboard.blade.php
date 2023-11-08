@@ -79,9 +79,9 @@
     
     <div class="text-center">
       
-            <div id="historyButton">
+            <!-- <div id="historyButton">
         <button class="btn btn-sm btn-link" id="historyButton">Lihat History Reward</button>
-        </div>
+        </div> -->
         
     </div>
 
@@ -207,22 +207,22 @@
     const roleSelect = document.getElementById('role');
     const rewardList = document.getElementById('rewardItems');
     const rewardsData = @json($activeRewards);
-    const historyButton = document.getElementById('historyButton');
-  historyButton.style.display = 'none';
+//     const historyButton = document.getElementById('historyButton');
+//   historyButton.style.display = 'none';
 
 
 
-  function navigateToHistoryReward(roleId) {
-            // Ganti 'route_name' dengan nama rute yang sesuai
-            window.location.href = `/admin/adminhistoryreward/${roleId}`;
-        }
+//   function navigateToHistoryReward(roleId) {
+//             // Ganti 'route_name' dengan nama rute yang sesuai
+//             window.location.href = `/admin/adminhistoryreward/${roleId}`;
+//         }
 
-        historyButton.addEventListener('click', function () {
-            const selectedRoleId = roleSelect.value;
-            if (selectedRoleId !== 'role_id') { // Ganti 'role_id' dengan ID peran yang sesuai
-                navigateToHistoryReward(selectedRoleId);
-            }
-        });
+//         historyButton.addEventListener('click', function () {
+//             const selectedRoleId = roleSelect.value;
+//             if (selectedRoleId !== 'role_id') { // Ganti 'role_id' dengan ID peran yang sesuai
+//                 navigateToHistoryReward(selectedRoleId);
+//             }
+//         });
     
     
     const usersReached50PercentData = @json($usersReached50Percent);

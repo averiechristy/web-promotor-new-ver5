@@ -75,6 +75,7 @@
   </div>
 </div>
     </div>
+
                 </div>
             </div>
         </div>
@@ -184,7 +185,15 @@
 
         <p class="card-text">
        <span class="text-poin"> {{ $totalPointsRewardPeriod[$activeReward->id] }} </span>   <span class="text-poinreward">  / {{$activeReward->poin_reward}} </span>
-        </p>              
+        </p>        
+        
+        <p class="kuota-posisi">
+         Posisi <span class="posisi"> {{ $userRankRewardPeriod[$activeReward->id] }} </span> dari
+          {{ $totalUsersRewardPeriod[$activeReward->id] }} ||
+         Kuota Pemenang : <span class="kuota-pemenang">{{ $activeReward->kuota }}</span>        
+         </p>
+
+
                         <p class="card-text">
                         <small class="text-muted">
                 Berakhir dalam {{ $remainingTime[$activeReward->id] }}
@@ -207,6 +216,21 @@
 </main>
 
 <style> 
+    .kuota-posisi {
+        align-items: center; /* Untuk mengalign vertikal */
+    }
+
+    .kuota-pemenang {
+        font-weight: bold;
+        color: #FF5733; /* Ganti warna sesuai keinginan Anda */
+        margin-right: 5px; 
+    }
+
+    .posisi {
+        font-weight: bold;
+        color: #007BFF; /* Ganti warna sesuai keinginan Anda */
+        font-size : 16pt;
+    }
 .leaderboard-text{
     text-align:center;
 }

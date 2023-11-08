@@ -131,20 +131,44 @@ class UserDashboardController extends Controller
             $remainingTime[$reward->id] =  now()->diffInDays($endDate) . ' hari';
         }
 
-    //    
+    // 
     
-      $totalPointsRewardPeriod = [];
+$totalPointsRewardPeriod = [];
 $progressWidthPerReward = [];
 
+
 foreach ($activeRewards as $activeReward) {
+
+    $userRoleId = Auth::user()->role_id;
+
     // Menghitung total poin pengguna selama periode reward berjalan
     $totalPointsReward = LeaderBoard::where('user_id', $userId)
         ->where('tanggal', '>=', $activeReward->tanggal_mulai)
         ->where('tanggal', '<=', $activeReward->tanggal_selesai)
         ->sum('total');
 
+        $totalUsers = LeaderBoard::where('tanggal', '>=', $activeReward->tanggal_mulai)
+        ->where('tanggal', '<=', $activeReward->tanggal_selesai)
+        ->where('role_id', '=', $userRoleId) // Ganti $userRoleId dengan nilai yang sesuai
+        ->distinct('user_id')
+        ->count();
+
+
+        $userRank = LeaderBoard::where('tanggal', '>=', $activeReward->tanggal_mulai)
+        ->where('tanggal', '<=', $activeReward->tanggal_selesai)
+        ->selectRaw('user_id, SUM(total) as total_points')
+        ->groupBy('user_id')
+        ->orderByDesc('total_points')
+        ->pluck('user_id')
+        ->search($userId) + 1;
+    
+    
+
     // Simpan total poin untuk reward ini dalam array
     $totalPointsRewardPeriod[$activeReward->id] = $totalPointsReward;
+    $userRankRewardPeriod[$activeReward->id] = $userRank;
+    $totalUsersRewardPeriod[$activeReward->id] = $totalUsers;
+
 
     // Menghitung persentase poin yang sudah dicapai untuk reward ini
     $progressWidth = ($totalPointsReward >= $activeReward->poin_reward) ? '100%' : number_format(($totalPointsReward / $activeReward->poin_reward * 100), 1) . '%';
@@ -153,6 +177,8 @@ foreach ($activeRewards as $activeReward) {
     $progressWidthPerReward[$activeReward->id] = $progressWidth;
 
     // Anda dapat menggunakan $progressWidth sesuai kebutuhan di sini atau menyimpannya untuk digunakan nanti.
+    
+
 }
 
 
@@ -182,6 +208,8 @@ foreach ($activeRewards as $activeReward) {
             'totalUsersWithSameRole' => $totalUsersWithSameRole,
             'totalPointsRewardPeriod' => $totalPointsRewardPeriod,
             'progressWidthPerReward' => $progressWidthPerReward,
+            'userRankRewardPeriod' => $userRankRewardPeriod,
+           'totalUsersRewardPeriod' => $totalUsersRewardPeriod
         ]);
     }
     

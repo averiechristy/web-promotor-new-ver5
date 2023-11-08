@@ -48,6 +48,8 @@ class RewardController extends Controller
             'deskripsi_reward' => 'required',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'kuota' => 'required|integer',
+
         ], [
           
             'gambar_reward.required' => 'Upload Gambar Produk dahulu.',
@@ -69,6 +71,7 @@ class RewardController extends Controller
             'poin_reward' => $request->input('poin_reward'),
             'tanggal_mulai' => $request->input('tanggal_mulai'),
             'gambar_reward' => $namaFile,
+            'kuota' => $request->input('kuota'),
             'deskripsi_reward' => $request->input('deskripsi_reward'),
             'tanggal_selesai' => $request->input('tanggal_selesai'),
             'role_id' => $request->input('role_id'),
@@ -159,6 +162,7 @@ class RewardController extends Controller
         'gambar_reward' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
         'deskripsi_reward' => 'required',
         'tanggal_mulai' => 'required|date',
+        'kuota' => 'required|integer',
         'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
     ], [
       
@@ -195,6 +199,7 @@ class RewardController extends Controller
         'tanggal_selesai' => $request->input('tanggal_selesai'),
         'role_id' => $request->input('role_id'),
         'updated_by' => $loggedInUsername,
+        'kuota'=>$request->input('kuota'),
         'gambar_reward' => $filename,
     ]);
 

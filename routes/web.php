@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdminHistoryRewardController;
 use App\Http\Controllers\AksesController;
+use App\Http\Controllers\AkumulasiLeaderboardAdminController;
+use App\Http\Controllers\AkumulasiLeaderboardAdminTahunController;
 use App\Http\Controllers\AllRewardController;
 use App\Http\Controllers\ArtikelController;
 
@@ -11,6 +13,9 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LeaderBoardController;
+use App\Http\Controllers\ReportHistoryRewardController;
+use App\Http\Controllers\ReportLeaderboardAkumulasiController;
+use App\Http\Controllers\ReportLeaderboardTahunController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController\CObaKalkulatorController;
 use App\Http\Controllers\UserController\HistoryRewardController;
@@ -18,6 +23,7 @@ use App\Http\Controllers\UserController\HistoryUserLeaderboardController;
 use App\Http\Controllers\UserController\HomeController;
 use App\Http\Controllers\UserController\KalkulatorController;
 use App\Http\Controllers\UserController\KalkulatorPaketController;
+use App\Http\Controllers\UserController\LeaderboardTahunanController;
 use App\Http\Controllers\UserController\MyIncomeController;
 use App\Http\Controllers\UserController\UserArtikelController;
 use App\Http\Controllers\UserController\UserArtikelReadController;
@@ -263,8 +269,15 @@ Route::get('/admin/allrank/{role_id}', [AllRankController::class,'index'])->name
 Route::get('/admin/allreward/{rewardId}',[AllRewardController::class,'index'])->name('admin.allreward.index');
 Route::post('admin/allrank/viewhistory/{role_id}', [AllRankController::class,'viewhistory'])->name('admin.allrank.viewhistory');
 
+Route::get('/admin/akumulasiallrank/{role_id}',[AkumulasiLeaderboardAdminController::class,'index'])->name('admin.akumulasiallrank');
+Route::get('/admin/akumulasiallranktahun/{role_id}',[AkumulasiLeaderboardAdminTahunController::class,'index'])->name('admin.akumulasiallranktahun');
 
 Route::get('/admin/adminhistoryreward/{role_id}',[AdminHistoryRewardController::class,'index'])->name('admin.adminhistoryreward.index');
+
+
+Route::get('/admin/reportleaderboardtahun',[ReportLeaderboardTahunController::class,'index'])->name('admin.reportleaderboardtahun');
+Route::get('/admin/reportleaderboardakumulasi',[ReportLeaderboardAkumulasiController::class,'index'])->name('admin.reportleaderboardakumulasi');
+Route::get('/admin/reporthistoryreward',[ReportHistoryRewardController::class,'index'])->name('admin.reporthistoryreward');
 
 });
 
@@ -312,7 +325,7 @@ Route::get('user/historyreward',[HistoryRewardController::class,'index'])->name(
 Route::post('/leaderboard/view', [UserLeaderboardController::class,'view'])->name('leaderboard.view');
 
 
-
+Route::get('user/userleaderboardtahun', [LeaderboardTahunanController::class,'index'])->name('user.userleaderboardtahun');
 
 
 // routes/web.php

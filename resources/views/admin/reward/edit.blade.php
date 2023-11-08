@@ -53,6 +53,14 @@
                                                 @endif
                                             </div>
 
+                                            <div class="form-group mb-4">
+                                                <label for="" class="form-label">Kuota Pemenang</label>
+                                                <input name ="kuota" type="number" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('kuota') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-describedby="passwordHelpInline" value="{{old('kuota', $data->kuota)}}"oninvalid="this.setCustomValidity('Kuota tidak boleh kosong')" oninput="setCustomValidity('')">
+                                                @if ($errors->has('kuota'))
+                                                    <p class="text-danger">{{$errors->first('kuota')}}</p>
+                                                @endif
+                                            </div>
+
                                             <div class="form-group">
                                             <label for="file">Upload Gambar (PNG atau JPG, maksimum 5 MB):</label>
     <input id="gambar_reward_input" name="gambar_reward" type="file" class="form-control-file {{ $errors->has('gambar_reward') ? 'is-invalid' : '' }}" value="{{ old('data_gambar', $data->data_gambar) }}" accept=".png, .jpg, .jpeg" 
@@ -128,6 +136,8 @@ function validateForm() {
 
   let tanggal_mulai = document.forms["saveform"]["tanggal_mulai"].value;
   let tanggal_selesai = document.forms["saveform"]["tanggal_selesai"].value;
+  let kuota = document.forms["saveform"]["kuota"].value;
+
 
   if (koderole == "") {
     alert("Kode role tidak boleh kosong");
@@ -141,6 +151,10 @@ function validateForm() {
   } else if (deskripsi_reward == "") {
     alert("Deskripsi reward tidak boleh kosong");
     return false;
+  }else if (kuota == "") {
+    alert("Kuota pemenang tidak boleh kosong");
+    return false;
+  
   }else if (tanggal_mulai == "") {
     alert("Tanggal mulai tidak boleh kosong");
     return false;

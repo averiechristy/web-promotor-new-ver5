@@ -8,7 +8,25 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Peringkat penjualan sales {{ \Carbon\Carbon::parse($selectedMonth)->format('F Y') }}</h1>
+                    <h1 id="title" class="h3 mb-2 text-gray-800">Akumulasi peringkat penjualan sales tahun {{ \Carbon\Carbon::parse($selectedMonth)->format('Y') }}</h1>
+         
+                   
+                    <div class="form-group mb-4">
+        <label for="" class="form-label">Kode Role</label>
+        <select id="role" name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example" oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
+            <option value="" disabled selected>-- Pilih Kode Role--</option>
+            @foreach ($role as $item)
+                @if ($item->Akses->jenis_akses === 'User')
+                <option value="{{ $item->id }}"{{ old('role_id') == $item->id ? 'selected' : '' }}> {{ $item->kode_role }} - {{$item->jenis_role}}</option>
+                @endif
+            @endforeach
+        </select> 
+        @if ($errors->has('role_id'))
+            <p class="text-danger">{{ $errors->first('role_id') }}</p>
+        @endif
+    </div>
+    
+    
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -16,25 +34,57 @@
                 
                         <div class="card-body">
 
-                        <!-- <div class="akumulasi mb-2" style="float:right;">
-                        <a href="{{ route('admin.akumulasiallrank', ['role_id' => $role_id]) }}">
-    <button id="rankingTitle" class="btn btn-success btn-sm">
-        Lihat akumulasi peringkat
-    </button>
-</a>
+                        
+                        <div class="card-body">
+
+                        <button id="exportData"  class="btn btn-success btn-sm mb-3" style="float:right;" onclick="exportTableToCSV('Akumulasi Data Leaderboard Tahun {{ \Carbon\Carbon::now()->format('Y') }}.csv')">Download Data </button>
+
+</div>
 
 
-</div> -->
-                        <form style="margin-bottom:20px" method="POST" action="{{ route('admin.allrank.viewhistory', ['role_id' => $role_id]) }}">
-  @csrf
-  <label for="month">Filter Bulan dan Tahun:</label> <br>
-  <input type="month" name="selected_month" id="month" required oninvalid="this.setCustomValidity('Pilih bulan terlebih dahulu')" oninput="setCustomValidity('')">
-  <button class="btn btn-primary btn-sm" id="showLeaderboard">Tampilkan Leaderboard</button>
-</form>
+<script>
+    // Fungsi untuk mengonversi data tabel ke format CSV
+    function exportTableToCSV(filename) {
+        var table = document.querySelector("table");
+        var rows = table.querySelectorAll("tr");
+        var csvData = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = [],
+                cols = rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++) {
+                row.push(cols[j].textContent);
+            }
+
+            csvData.push(row.join(","));
+        }
+
+        var csvContent = "data:text/csv;charset=utf-8," + csvData.join("\n");
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", filename);
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+<script>
+  // Mengambil elemen h2 berdasarkan ID
+  var h2Element = document.getElementById("rankingTitle");
+
+  // Mendapatkan tahun saat ini
+  var currentYear = new Date().getFullYear();
+
+  // Mengganti teks tahun dalam elemen h2
+  h2Element.innerHTML = h2Element.innerHTML.replace("2023", currentYear - 1);
+</script>
 
 
-
-                        <div class="dataTables_length mb-3" id="myDataTable_length">
+                        <!-- <div class="dataTables_length mb-3" id="myDataTable_length">
 <label for="entries"> Show
 <select id="entries" name="myDataTable_length" aria-controls="myDataTable"  onchange="changeEntries()" class>
 <option value="10">10</option>
@@ -50,7 +100,8 @@ entries
     <label for="search">Search
         <input id="search" placeholder>
     </label>
-</div>
+</div> -->
+
                             
                             <div class="table-responsive">
                             @include('components.alert')
@@ -68,19 +119,12 @@ entries
                                         </tr>
                                     </thead>
                                     
-                                    <tbody>
-                                    @foreach ($rankings as $index => $ranking)
-    <tr>
-        <td>{{ $index + 1 }}</td>
-        <td>{{ $ranking->user->nama }}</td>
-        <td>{{ $ranking->user->username }}</td>
-        <td>{{ $ranking->total_point }}</td>
-    </tr>
-    @endforeach
+                                    <tbody id="tableBody">
+                                  
                      </tbody>
                       </table>
 
-                      <div class="dataTables_info" id="dataTableInfo" role="status" aria-live="polite">
+                      <!-- <div class="dataTables_info" id="dataTableInfo" role="status" aria-live="polite">
     Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalEntries">0</span> entries
 </div>
         
@@ -93,7 +137,7 @@ entries
     </span>
     <a href="#" class="paginate_button" id="nextButton" onclick="nextPage()"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
     <a href="#" class="paginate_button" id="doubleNextButton" onclick="doubleNextPage()"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-</div>
+</div> -->
                       <nav aria-label="Page navigation example">
                     </nav>
                                
@@ -118,6 +162,7 @@ entries
     </div>
     <!-- End of Page Wrapper -->
 
+   
     <style>
 
 .dataTables_paginate{float:right;text-align:right;padding-top:.25em}
@@ -209,6 +254,8 @@ entries
     }
 
 </style>
+
+
 
 <script>
     var itemsPerPage = 10; // Ubah nilai ini sesuai dengan jumlah item per halaman
@@ -330,6 +377,63 @@ function doubleNextPage() {
              
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('role');
+        const tableBody = document.getElementById('tableBody');
+        const leaderboardData = @json($leaderboardData);
+    
+
+        // const rolepesan = document.getElementById('selectRoleMessage');
+
+       
+
+        roleSelect.addEventListener('change', function () {
+            const selectedRoleId = roleSelect.value;
+            const filteredLeaderboard = leaderboardData.filter(leader => leader.role_id == selectedRoleId);
+
+            
+
+            console.log(filteredLeaderboard);
+
+            // Hapus isi tabel sebelum menambahkan data baru
+            tableBody.innerHTML = '';
+
+            // Tambahkan data baru ke tabel
+            filteredLeaderboard.forEach((leader, index) => {
+                const row = document.createElement('tr');
+                if (index === 0) {
+                    row.classList.add('leaderboard-first');
+                } else if (index === 1) {
+                    row.classList.add('leaderboard-second');
+                } else if (index === 2) {
+                    row.classList.add('leaderboard-third');
+                }
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${leader.nama}</td>
+                    <td>${leader.kode_sales}</td>
+                    <td>${leader.total_poin}</td>
+                    
+                `;
+                tableBody.appendChild(row);
+            });
+
+            if (selectedRoleId === 'role_id') { // Ganti 'some_role_id' dengan ID role yang sesuai
+            lihatSeluruhRankingButton.style.display = 'block';
+            rolepesan.style.display ='none';
+        } else {
+            lihatSeluruhRankingButton.style.display = 'block';
+            rolepesan.style.display ='none';
+        }
+        });
+
+        // Format angka dengan pemisah ribuan
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    });
+</script>
 
 
     @endsection

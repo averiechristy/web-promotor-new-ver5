@@ -64,7 +64,7 @@ function formatRupiah(value) {
         </div>
         </div>
 
-<button type="button" class="btn btn-primary btn-sm " id="add-field">Tambah Cicilan</button>
+<button type="button" class="btn btn-primary btn-sm " id="add-field">Tambah Keinginan</button>
 
         <br><br>
                 

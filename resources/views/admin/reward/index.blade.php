@@ -43,8 +43,9 @@ entries
                                           <th>Role</th>
                                           <th>Judul Reward</th>
                                           <th>Gambar Reward</th>
-                                          <th>Deskripsi Reward</th>
                                           <th>Poin Reward</th>
+                                          <th>Deskripsi Reward</th>
+                                          <th>Kuota Pemenang</th>
                                           <th>Tanggal Mulai</th>
                                           <th>Tanggal Berakhir</th>
                                           <th>Status</th>
@@ -90,10 +91,12 @@ entries
 </div>
 <!-- {{ $item->gambar_produk}} -->
 </td>
+<td>{{$item->poin_reward}} </td>
 <td>   <a href="{{ route('detailreward', $item->id) }}"><button type="button" class="btn btn-link">
     Lihat Deskripsi Reward
 </button></a>     </td>
-<td>{{$item->poin_reward}} </td>
+
+<td>{{$item->kuota}} </td>
 @php
 // Mendapatkan tanggal mulai dan tanggal selesai dari $item
 $tanggal_mulai = $item->tanggal_mulai;

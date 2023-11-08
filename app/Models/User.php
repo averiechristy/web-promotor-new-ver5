@@ -28,7 +28,7 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'avatar',
-        'number',
+       'nomor_urut',
         'kode_user',
         'created_by',
         'updated_by',
@@ -89,16 +89,17 @@ public static function boot()
     static::creating(function($model){
         $roleId = UserRole::find($model->role_id)->kode_role; // Ambil kode role dari relasi Role
         $dateFormatted = now()->format('ym'); // Format tahun dan bulan yymm
-        $model->number = static::where('role_id', $model->role_id)->max('number') + 1;
-        $model->kode_user = $roleId . $dateFormatted . str_pad($model->number, 3, '0', STR_PAD_LEFT);
-    });
+        $lastNumber = self::where('role_id', $model->role_id)
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->max('nomor_urut');
 
-  
-    
-        // Event "updating" dipicu ketika entitas diperbarui
- 
-    
+        $model->kode_user = $roleId . $dateFormatted . str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        $model->nomor_urut = $lastNumber + 1;
+    });
 }
+
+
 
 public function isAdmin()
 {

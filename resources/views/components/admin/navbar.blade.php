@@ -84,12 +84,39 @@
             <a class="nav-link" href="{{ route('admin.leaderboard.index') }}" data-toggle="" data-target="#collapseContact"
                 aria-expanded="true" aria-controls="collapseContact">
                 <i class="fa fa-trophy" style="color: #01004C"></i>
-                <span style="color: #01004C">Leaderboard</span>
+                <span style="color: #01004C">Data Pencapaian</span>
                
             </a>
         </li>
     <!-- Nav Item - Utilities Collapse Menu -->
-  
+
+    <li class="nav-item">
+    <a class="nav-link collapsed" href="#collapseTwo" data-toggle="collapse" aria-expanded="false">
+        <i class="fa fa-file" style="color: #01004C"></i>
+        <span style="color: #01004C">Report</span>
+    </a>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item {{ Request::is('admin/reportleaderboardtahun') ? 'active' : '' }}" href="{{route('admin.reportleaderboardtahun')}}">Leaderboard Tahunan</a>
+            <a class="collapse-item {{ Request::is('admin/reportleaderboardakumulasi') ? 'active' : '' }}" href="{{route('admin.reportleaderboardakumulasi')}}">Leaderboard Akumulasi</a>
+            <a class="collapse-item {{ Request::is('admin/reporthistoryreward') ? 'active' : '' }}" href="{{route('admin.reporthistoryreward')}}">History Reward</a>
+        </div>
+    </div>
+</li>
+
+<script>
+$(document).ready(function () {
+    // Mengambil URL saat ini
+    var currentUrl = window.location.href;
+
+    // Mengecek apakah URL saat ini sesuai dengan URL menu Report
+    if (currentUrl.includes('/admin/report')) {
+        // Jika sesuai, tambahkan class 'show' ke elemen collapse
+        $('#collapseTwo').addClass('show');
+    }
+});
+</script>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">

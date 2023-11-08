@@ -40,11 +40,13 @@
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Poin Reward</label>
-                                                <input name ="poin_reward" type="number" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('poin_reward') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-describedby="passwordHelpInline" value="{{old('poin_reward')}}"oninvalid="this.setCustomValidity('Poin reward tidak boleh kosong')" oninput="setCustomValidity('')">
+                                                <input name ="poin_reward" type="number" min="1" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('poin_reward') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-describedby="passwordHelpInline" value="{{old('poin_reward')}}"oninvalid="this.setCustomValidity('Poin reward tidak boleh kosong atau 0')" oninput="setCustomValidity('')">
                                                 @if ($errors->has('poin_reward'))
                                                     <p class="text-danger">{{$errors->first('poin_reward')}}</p>
                                                 @endif
                                             </div>
+
+                                           
 
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Deskripsi Reward</label>
@@ -52,6 +54,14 @@
 
                                                 @if ($errors->has('deskripsi_reward'))
                                                     <p class="text-danger">{{$errors->first('deskripsi_reward')}}</p>
+                                                @endif
+                                            </div>
+
+                                            <div class="form-group mb-4">
+                                                <label for="" class="form-label">Kuota Pemenang</label>
+                                                <input name ="kuota" type="number" min="1" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('kuota') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-describedby="passwordHelpInline" value="{{old('kuota')}}"oninvalid="this.setCustomValidity('Poin reward tidak boleh kosong atau 0')" oninput="setCustomValidity('')">
+                                                @if ($errors->has('kuota'))
+                                                    <p class="text-danger">{{$errors->first('kuota')}}</p>
                                                 @endif
                                             </div>
 
@@ -132,6 +142,8 @@ function validateForm() {
   let gambar_reward = document.forms["saveform"]["gambar_reward"].value;
   let tanggal_mulai = document.forms["saveform"]["tanggal_mulai"].value;
   let tanggal_selesai = document.forms["saveform"]["tanggal_selesai"].value;
+  let kuota = document.forms["saveform"]["kuota"].value;
+
 
   if (koderole == "") {
     alert("Kode role tidak boleh kosong");
@@ -144,6 +156,10 @@ function validateForm() {
     return false;
   }else if (deskripsi_reward == "") {
     alert("Deskripsi reward tidak boleh kosong");
+    return false;
+
+  }else if (kuota == "") {
+    alert("Kuota pemenang tidak boleh kosong");
     return false;
   }else if (gambar_reward == "") {
     alert("Gambar reward tidak boleh kosong");

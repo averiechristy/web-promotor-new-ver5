@@ -23,13 +23,20 @@ class UserLeaderboardController extends Controller
 
         $selectedMonth = $request->input('selected_month');
 
+        $leaderboardDataYear = LeaderBoard::getLeaderboardUserYearNow($userRole);
+        $userRankYear = LeaderBoard::getRankForUserYearNow ($userId, $userRole);
+        $totalUsersWithSameRoleYear = LeaderBoard::getTotalUsersWithSameRoleYearNow ($userRole);
+
 
         return view('user.leaderboard',[
             'leaderboardData' => $leaderboardData,
             'selectedMonth' => $selectedMonth,
             'userRank' => $userRank,
             'totalUsersWithSameRole' => $totalUsersWithSameRole,
+            'leaderboardDataYear' => $leaderboardDataYear,
+            'totalUsersWithSameRoleYear' => $totalUsersWithSameRoleYear,
 
+            'userRankYear' => $userRankYear,
 
         ]);
     }
@@ -46,7 +53,7 @@ public function view(Request $request)
     $userRole = Auth::user()->role_id;
     $selectedMonth = $request->input('selected_month');
     
-    
+    $userId = auth()->user()->id;
     // Pastikan $selectedMonth adalah dalam format tahun-bulan (YYYY-MM).
     
     // Ambil tahun dan bulan dari input.
@@ -60,11 +67,21 @@ public function view(Request $request)
     $userRank = LeaderBoard::getRankForUserForMonth(Auth::user()->id, $userRole, $startDate, $endDate);
     $totalUsersWithSameRole = LeaderBoard::getTotalUsersWithSameRoleForMonth($userRole, $startDate, $endDate);
 
+    $leaderboardDataYear = LeaderBoard::getLeaderboardUserYearNow($userRole);
+    $userRankYear = LeaderBoard::getRankForUserYearNow ($userId, $userRole);
+    $totalUsersWithSameRoleYear = LeaderBoard::getTotalUsersWithSameRoleYearNow ($userRole);
+
+
     return view('user.leaderboard', [
         'leaderboardData' => $leaderboardData,
         'userRank' => $userRank,
         'totalUsersWithSameRole' => $totalUsersWithSameRole,
         'selectedMonth' => $selectedMonth,
+        'leaderboardDataYear' => $leaderboardDataYear,
+        'totalUsersWithSameRoleYear' => $totalUsersWithSameRoleYear,
+
+        'userRankYear' => $userRankYear,
+
     ]);
     
 

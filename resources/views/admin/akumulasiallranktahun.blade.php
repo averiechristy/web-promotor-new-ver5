@@ -8,7 +8,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Peringkat penjualan sales {{ \Carbon\Carbon::parse($selectedMonth)->format('F Y') }}</h1>
+                    <h1 id="rankingTitle" class="h3 mb-2 text-gray-800">Peringkat penjualan sales tahun 2023</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -16,22 +16,23 @@
                 
                         <div class="card-body">
 
-                        <!-- <div class="akumulasi mb-2" style="float:right;">
-                        <a href="{{ route('admin.akumulasiallrank', ['role_id' => $role_id]) }}">
-    <button id="rankingTitle" class="btn btn-success btn-sm">
-        Lihat akumulasi peringkat
-    </button>
-</a>
+                        
+                        <div class="card-body">
 
 
-</div> -->
-                        <form style="margin-bottom:20px" method="POST" action="{{ route('admin.allrank.viewhistory', ['role_id' => $role_id]) }}">
-  @csrf
-  <label for="month">Filter Bulan dan Tahun:</label> <br>
-  <input type="month" name="selected_month" id="month" required oninvalid="this.setCustomValidity('Pilih bulan terlebih dahulu')" oninput="setCustomValidity('')">
-  <button class="btn btn-primary btn-sm" id="showLeaderboard">Tampilkan Leaderboard</button>
-</form>
 
+</div>
+
+<script>
+  // Mengambil elemen h2 berdasarkan ID
+  var h2Element = document.getElementById("rankingTitle");
+
+  // Mendapatkan tahun saat ini
+  var currentYear = new Date().getFullYear();
+
+  // Mengganti teks tahun dalam elemen h2
+  h2Element.innerHTML = h2Element.innerHTML.replace("2023", currentYear - 1);
+</script>
 
 
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -51,6 +52,7 @@ entries
         <input id="search" placeholder>
     </label>
 </div>
+
                             
                             <div class="table-responsive">
                             @include('components.alert')
@@ -69,7 +71,7 @@ entries
                                     </thead>
                                     
                                     <tbody>
-                                    @foreach ($rankings as $index => $ranking)
+                                    @foreach ($rankingsYear as $index => $ranking)
     <tr>
         <td>{{ $index + 1 }}</td>
         <td>{{ $ranking->user->nama }}</td>

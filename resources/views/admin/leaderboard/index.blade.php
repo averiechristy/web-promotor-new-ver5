@@ -3,7 +3,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Data Leaderboard</h1>
+    <h1 class="h3 mb-2 text-gray-800">Data Pencapaian</h1>
     <form action="{{ route('import.excel') }}" method="POST" enctype="multipart/form-data">
     @csrf 
     <div class="form-group">
