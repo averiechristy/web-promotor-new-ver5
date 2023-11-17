@@ -109,8 +109,8 @@
 
 <script>
     function removeSpecialCharacters(input) {
-        // Hapus karakter khusus dari input
-        input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+        // Hapus karakter khusus dari input kecuali '-'
+        input.value = input.value.replace(/[^a-zA-Z0-9-]/g, '');
     }
 
     function avoidSpace(event) {

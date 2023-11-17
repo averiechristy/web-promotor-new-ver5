@@ -123,6 +123,33 @@
 .portfolio-item .info h5:hover {
   white-space: normal;
   max-width: none;
+}.card {
+    text-align: center;
+}
+
+.card a {
+    display: block;
+}
+
+.card i,
+.card h4,
+.card p {
+    margin: 0; /* Menghapus margin bawaan */
+}
+
+/* Menengahkan elemen h4 dan p di tengah saat responsif */
+@media (max-width: 768px) {
+    .card h4,
+    .card p {
+        text-align: center;
+    }
+}
+
+/* Mengatur elemen i agar tetap berada di kiri */
+@media (max-width: 768px) {
+    .card i {
+        text-align: left;
+    }
 }
 
 .card-news {
@@ -331,7 +358,7 @@ $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
     </section>End Contact Us Section -->
 
     <!-- ======= Contact Us Section ======= -->
-    <section id="contact" style ="background-color : #FEF8F5;" class="contact">
+    <!-- <section id="contact" style ="background-color : #FEF8F5;" class="contact">
       <div class="container" >
         <div class="section-title">
           <h2>Contact Us</h2>
@@ -366,7 +393,7 @@ $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
         </div>
 
       </div>
-    </section><!-- End Contact Us Section -->
+    </section>End Contact Us Section -->
     
 
   </main><!-- End #main -->

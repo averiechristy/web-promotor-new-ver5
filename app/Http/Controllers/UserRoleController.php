@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Akses;
 use App\Models\PackageIncome;
 use App\Models\Product;
+use App\Models\Reward;
 use Illuminate\Http\Request;
 use App\Models\UserRole;
 use App\Models\User;
@@ -137,12 +138,17 @@ class UserRoleController extends Controller
         }
 
         if (Product::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data user accout yang berhubungan.");
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data produk yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
 
         if (PackageIncome::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data user accout yang berhubungan.");
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data paket pendapatan yang berhubungan.");
+            return redirect()->route('admin.userrole.index');
+        }
+        
+        if (Reward::where('role_id', $userrole->id)->exists()) {
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data reward yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
         

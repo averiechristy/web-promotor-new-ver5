@@ -8,6 +8,7 @@
           <div class="row justify-content-between">
         <h5>History Reward</h5>
         <div class="row mt3">
+        @if(count( $rewards) > 0)
             @foreach($rewards as $reward)
                 <div class="col-md-4 mt-3">
                     <div class="card card-tes">
@@ -35,6 +36,10 @@
                     </div>
                 </div>
             @endforeach
+            @else
+
+            <p>Belum ada reward berakhir</p>
+            @endif
         </div>
         </div>
         </div>

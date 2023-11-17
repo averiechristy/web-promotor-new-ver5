@@ -91,11 +91,11 @@
                                             <div class="form-group mb-4">
     <label for="" class="form-label">Kode Sales atau NIK</label>
     <input name="username" type="text" class="form-control {{$errors->has('username') ? 'is-invalid' : ''}}"
-       style="border-color: #01004C;" value="{{old('username')}}"
-       pattern="[a-zA-Z0-9]{8,10}" 
-       oninvalid="this.setCustomValidity('Kode Sales / NIK harus terdiri dari 8 hingga 10 karakter ')"
-       oninput="removeSpecialCharacters(this); setCustomValidity('')"
-       onkeydown="avoidSpace(event);"/>
+        style="border-color: #01004C;" value="{{old('username')}}"
+        pattern="[a-zA-Z0-9-]{8,10}"
+        oninvalid="this.setCustomValidity('Kode Sales / NIK harus terdiri dari 8 hingga 10 karakter ')"
+        oninput="removeSpecialCharacters(this); setCustomValidity('')"
+        onkeydown="avoidSpace(event);" />
 
     @if ($errors->has('username'))
         <p class="text-danger">{{$errors->first('username')}}</p>
@@ -104,8 +104,8 @@
 
 <script>
     function removeSpecialCharacters(input) {
-        // Hapus karakter khusus dari input
-        input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+        // Hapus karakter khusus dari input kecuali '-'
+        input.value = input.value.replace(/[^a-zA-Z0-9-]/g, '');
     }
 
     function avoidSpace(event) {
@@ -115,6 +115,7 @@
         }
     }
 </script>
+
 
 
 

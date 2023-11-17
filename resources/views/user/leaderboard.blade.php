@@ -12,7 +12,7 @@
         <!-- Leaderboard Kiri -->
         <div class="col-md-6">
           <div class="section-title">
-            <h2>10 Besar Peringkat per bulan {{ \Carbon\Carbon::parse($selectedMonth)->format('F Y') }}</h2>
+          <h2>10 Besar Peringkat bulan {{ \Carbon\Carbon::now()->format('F') }}</h2>
             <p>Leaderboard </p>
           </div>
 
@@ -105,7 +105,7 @@ $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
         <!-- Leaderboard Kanan -->
         <div class="col-md-6">
           <div class="section-title">
-            <h2>10 Besar Peringkat tahun {{ \Carbon\Carbon::parse($selectedMonth)->format('Y') }}</h2>
+            <h2>10 Besar Peringkat tahun {{ \Carbon\Carbon::now()->format('Y') }}</h2>
             <p>Leaderboard</p>
           </div>
 

@@ -165,7 +165,7 @@
       </a>
     </div>
   </div>
-
+  @if(count($activeRewards) > 0)
     @foreach ($activeRewards as $activeReward)
         <div class="col-lg-4 col-md-6 portfolio-item">
             <div class="card-deck">
@@ -182,6 +182,16 @@
 
         
         </div>
+        @if($leaderboardData->isEmpty())
+
+        <p class="text-sm mt-2">
+               
+                    <small class="tes text-muted ">
+                        Belum ada peringkat
+                        </small>
+            </p>  
+
+            @else
 
         <p class="card-text">
        <span class="text-poin"> {{ $totalPointsRewardPeriod[$activeReward->id] }} </span>   <span class="text-poinreward">  / {{$activeReward->poin_reward}} </span>
@@ -192,6 +202,8 @@
           {{ $totalUsersRewardPeriod[$activeReward->id] }} ||
          Kuota Pemenang : <span class="kuota-pemenang">{{ $activeReward->kuota }}</span>        
          </p>
+
+        @endif
 
 
                         <p class="card-text">
@@ -206,6 +218,9 @@
             </div>
         </div>
     @endforeach
+    @else
+            <p class="rewardnone">Belum ada reward berjalan.</p>
+        @endif
 </div>
 </div>
             </div>
@@ -216,6 +231,9 @@
 </main>
 
 <style> 
+.rewardnone {
+    margin-left:50px;
+}
     .kuota-posisi {
         align-items: center; /* Untuk mengalign vertikal */
     }

@@ -135,7 +135,8 @@ class UserDashboardController extends Controller
     
 $totalPointsRewardPeriod = [];
 $progressWidthPerReward = [];
-
+$userRankRewardPeriod = []; 
+$totalUsersRewardPeriod =[];
 
 foreach ($activeRewards as $activeReward) {
 

@@ -32,7 +32,7 @@
   <li><a class="nav-link scrollto  {{ Request::is('user/reward') ? 'active' : '' }} " href="{{route('user.reward')}}">Reward</a></li>
 
   <li><a class="nav-link scrollto  {{ Request::is('user/leaderboard') ? 'active' : '' }} " href="{{route('user.leaderboard')}}">Leaderboard</a></li>
-          <li><a class="nav-link scrollto  {{ Request::is('user/contact-us') ? 'active' : '' }} " href="{{route('user.contact')}}">Contact Us</a></li>
+          <!-- <li><a class="nav-link scrollto  {{ Request::is('user/contact-us') ? 'active' : '' }} " href="{{route('user.contact')}}">Contact Us</a></li> -->
           
           <li><p class="nav-link scrollto" style="margin-top:13px; margin-left:13px;" >Welcome,  {{ Auth::user()->nama }}!</p></li>
 

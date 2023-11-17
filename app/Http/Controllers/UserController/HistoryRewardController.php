@@ -29,7 +29,10 @@ class HistoryRewardController extends Controller
 
     // Inisialisasi array untuk menyimpan reward yang telah dicapai
     $achievedRewards = [];
-
+    $userRankRewardPeriod=[];
+    $totalUsersRewardPeriod=[];
+    $totalpoinuser=[];
+    $userRank=[];
     
     foreach ($rewards as $reward) {
         $userRoleId = Auth::user()->role_id;

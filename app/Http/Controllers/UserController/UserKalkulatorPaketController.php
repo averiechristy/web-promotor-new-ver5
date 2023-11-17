@@ -18,7 +18,7 @@ class UserKalkulatorPaketController extends Controller
         $userKodeRole = auth()->user()->Role->kode_role;
         $barang= Product::where('role_id', $user->role_id)->get();
         
-        if (strtolower($userKodeRole) === 'mr') {
+        if (strtolower($userKodeRole) === 'me') {
             return view('user.paketkalkulator', [
                 'barang' => $barang
             ]);

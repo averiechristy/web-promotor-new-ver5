@@ -113,7 +113,6 @@ Search
             <tr>
                 <th>Role</th>
                 <th id="sortNama">Nama</th>
-                <th>Kode Sales</th>
                 <th>Pencapaian Penjualan Produk</th>
                 <th>Total Poin</th>
                 <th>Tanggal</th>
@@ -142,7 +141,6 @@ Search
     <tr data-row-id="{{ $item->id }}" data-role="{{ $item->role_id }}">        <!-- <td>{{ $roleNumber  }}</td> Nomor urutan -->
         <td>{{ $item->Role->jenis_role }}</td> <!-- Kolom Role -->
         <td>{{ $item->nama }}</td> <!-- Kolom Nama -->
-        <td>{{ $item->User->username }}</td> <!-- Kolom Role -->
         <td><ul>
     @foreach ($item->pencapaian as $key => $value)
         <li>{{ $key }} : {{ $value }}</li>

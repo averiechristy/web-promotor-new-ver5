@@ -18,7 +18,7 @@ class KalkulatorController extends Controller
         $userKodeRole = auth()->user()->Role->kode_role;
         $produk= Product::where('role_id', $user->role_id)->get();
         
-        if (strtolower($userKodeRole) === 'mr') {
+        if (strtolower($userKodeRole) === 'me') {
             return view('user.kalkulator', [
                 'produk' => $produk
             ]);

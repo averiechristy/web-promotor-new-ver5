@@ -19,7 +19,7 @@
           <li><a class="nav-link scrollto" href="{{route('user.reward')}}">Reward</a></li>
 
           <li><a class="nav-link scrollto" href="#leaderboard">Leaderboard</a></li>
-          <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li>
+          <!-- <li><a class="nav-link scrollto" href="#contact">Contact Us</a></li> -->
 
           <li><p class="nav-link scrollto" style="margin-top:13px; margin-left:13px;" >Welcome,  {{ Auth::user()->nama }}!</p></li>
 
