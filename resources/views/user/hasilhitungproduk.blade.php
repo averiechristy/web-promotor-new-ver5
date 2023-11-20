@@ -28,7 +28,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Total Cicilan</h5>
+                <h5 class="card-title">Total Kebutuhan bulanan dan cicilan</h5>
                 <input class="form-control font-weight-bold" style="font-weight: bold;" type="text" value="{{ $formattedHasil }}" aria-label="Rp. 0,-" disabled>
             </div>
         </div>

@@ -72,14 +72,16 @@ function validasiNumber(input) {
 <div class="form-group mt-3">
                     <div class="row g-3">
                     @isset($hasil)
-  <div class="col">
+  <div id="hasil" class="col">
   <label for="name">Hasil yang kamu dapat</label>
   <?php
     $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
     ?>
 
                             <input class="form-control font-weight-bold" style="  font-weight: bold;" type="text" value=" {{ $formattedHasil }}" aria-label="Rp. 0,-" disabled readonly>  </div>
-  <div class="col">
+ <p> <small style="color:red;">{{ $message}}</small></p>
+ 
+                            <div class="col">
 </div>
 @endisset
 </div>

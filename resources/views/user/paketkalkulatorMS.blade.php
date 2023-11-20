@@ -16,7 +16,7 @@
           <div class="row justify-content-between tes">
           <div class="col-lg-5 pt-6 pt-lg-0  form-edit">
 
-          <form action="{{ route('hitungTM') }}" method="post" role="form" class="php-email-form1 " id="calculator-form">
+          <form action="{{route('hitungMS')}}" method="post" role="form" class="php-email-form1 " id="calculator-form">
 @csrf
 
          <h4 class="mt-4 ">Masukan keinginanmu</h4>
@@ -95,6 +95,11 @@ function formatRupiah(value) {
   <div class="form-group">
     <label for="exampleFormControlInput1">Sosmed (%)</label>
     <input type="number" class="form-control" style="width:400px;" name="sosmed_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('sosmed_persen.' . $barang->id) }}" oninput="validasiNumber(this); updateSisaPersentase();">
+  </div>
+
+  <div class="form-group">
+    <label for="exampleFormControlInput1">Personal Loan & Pendoc (%)</label>
+    <input type="number" class="form-control" style="width:400px;" name="personal_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('sosmed_persen.' . $barang->id) }}" oninput="validasiNumber(this); updateSisaPersentase();">
   </div>
         </div>
 

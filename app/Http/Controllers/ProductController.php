@@ -208,12 +208,20 @@ if ($request->session()->has('errors')) {
      
          $loggedInUser = auth()->user();
          $loggedInUsername = $loggedInUser->nama; 
+
+         $poinValue = $request->input('poin_produk');
+         $isPoinEnabled = $request->has('flexSwitchCheckChecked');
+
+         if (!$isPoinEnabled) {
+             // Jika checkbox tidak dicentang, set nilai poin ke null atau nilai yang sesuai
+             $poinValue = null;
+         }
  
          // Update informasi lainnya
          $dtProduk = [
              'role_id' => $request->role_id,
              'nama_produk' => $request->nama_produk,
-             'poin_produk' => $request->poin_produk,
+             'poin_produk' => $poinValue,
              'deskripsi_produk' => $request->deskripsi_produk,
              'updated_by' => $loggedInUsername,
          ];

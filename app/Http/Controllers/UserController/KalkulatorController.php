@@ -162,17 +162,43 @@ class KalkulatorController extends Controller
 
     public function calculateMS (Request $request){
         $user = Auth::user();
+    $produk = Product::where('role_id', $user->role_id)->get();
 
-        $produk= Product::where('role_id', $user->role_id)->get();
+    $ntbReg = $request->input('ntb_reg');
+    $sosmed = $request->input('ntb_sosmed');
+    $personal = $request->input('personal');
 
-        $ntbReg = $request->input('ntb_reg');
-        $sosmed = $request->input('ntb_sosmed');
-        $personal = $request->input('personal');
-       
+    $totalNtb = 0;
 
-    //     return view('user.kalkulatorMS', ['hasil' => $hasil,
-    //     'produk' => $produk, 
-    // 'message' => $message]);
+    foreach ($produk as $p) {
+        $insentifNtbReg = $ntbReg[$p->id] * 50000;
+        $insentifNtbSosmed = $sosmed[$p->id] * 20000;
+        $insentifNtbPersonal = $personal[$p->id] * 10000;
+
+        $totalNtb += $insentifNtbReg + $insentifNtbSosmed + $insentifNtbPersonal;
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Ambil data dari form dan simpan dalam sesi
+        foreach ($_POST["ntb_reg"] as $produkId => $ntbReg) {
+            $_SESSION["ntb_reg"][$produkId] = $ntbReg;
+        }
+
+        foreach ($_POST["ntb_sosmed"] as $produkId => $sosmed) {
+            $_SESSION["ntb_sosmed"][$produkId] = $sosmed;
+        }
+
+        foreach ($_POST["personal"] as $produkId => $personal) {
+            $_SESSION["personal"][$produkId] = $personal;
+        }
+    }
+
+    $hasil = (250000 * 4) + $totalNtb;
+    $message = "Asumsi minimal menjual 5 aplikasi per minggu";
+
+        return view('user.kalkulatorMS', ['#hasil','hasil' => $hasil,
+        'produk' => $produk, 
+    'message' => $message]);
     }
 
     

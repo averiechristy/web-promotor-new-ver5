@@ -39,35 +39,44 @@
                                                     <p class="text-danger">{{$errors->first('nama_produk')}}</p>
                                                 @endif
                                             </div> 
-                                            <div class="form-group mb-4">
-                                                <label for="" class="form-label">Poin Produk</label>
-                                                <input
-  name="poin_produk"
-  value="{{ old('poin_produk', $data->poin_produk) }}" 
-  type="number"
-  style="border-color: #01004C;"
-  id=""
-  class="form-control {{ $errors->has('poin_produk') ? 'is-invalid' : '' }}"
-  style="border-color: #01004C;"
-  aria-describedby="passwordHelpInline"
-  
-  oninvalid="this.setCustomValidity('Poin produk harus lebih dari 0 ')"
-  oninput="validatePoin(this)"
-  min="1"
->
 
-<script>
-  function validatePoin(input) {
-    if (input.value < 1) {
-      input.setCustomValidity('Poin produk harus minimal 1');
-    } else {
-      input.setCustomValidity('');
-    }
-  }
-</script>                                                    @if ($errors->has('poin_produk'))
-                                                    <p class="text-danger">{{$errors->first('poin_produk')}}</p>
-                                                @endif
-                                            </div> 
+                                            <div class="form-group mb-4">
+    <div class="form-check form-switch">
+        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
+        <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
+    </div>
+</div>
+
+<div class="form-group mb-4 " id="formpoin" style="display: none;">
+    <label for="" class="form-label">Poin Produk</label>
+    <input
+        name="poin_produk"
+        value="{{ old('poin_produk', $data->poin_produk) }}" 
+        type="number"
+        style="border-color: #01004C;"
+        id=""
+        class="form-control {{ $errors->has('poin_produk') ? 'is-invalid' : '' }}"
+        style="border-color: #01004C;"
+        aria-describedby="passwordHelpInline"
+        oninvalid="this.setCustomValidity('Poin produk harus lebih dari 0 ')"
+        oninput="validatePoin(this)"
+        min="1"
+    >
+
+    <script>
+        function validatePoin(input) {
+            if (input.value < 1) {
+                input.setCustomValidity('Poin produk harus minimal 1');
+            } else {
+                input.setCustomValidity('');
+            }
+        }
+    </script>
+
+    @if ($errors->has('poin_produk'))
+        <p class="text-danger">{{$errors->first('poin_produk')}}</p>
+    @endif
+</div>
 
 
                                               <div class="form-group">
@@ -130,7 +139,6 @@
 function validateForm() {
   let koderole = document.forms["saveform"]["role_id"].value;
   let nama = document.forms["saveform"]["nama_produk"].value;
-  let poin_produk = document.forms["saveform"]["poin_produk"].value;
   let deskripsi_produk = document.forms["saveform"]["deskripsi_produk"].value;
 
 
@@ -140,17 +148,42 @@ function validateForm() {
   } else   if (nama == "") {
     alert("Nama produk tidak boleh kosong");
     return false;
-  }else   if (poin_produk == "") {
-    alert("Poin produk tidak boleh kosong");
-    return false;
-
-
-}else   if (deskripsi_produk == "") {
+  }else   if (deskripsi_produk == "") {
     alert("Deskripsi produk tidak boleh kosong");
     return false;
 }
 }
 
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Periksa apakah ada nilai poin
+        var poinValue = parseInt("{{ old('poin_produk', $data->poin_produk) }}");
+
+        // Ambil elemen checkbox dan form poin
+        var checkbox = document.getElementById('flexSwitchCheckChecked');
+        var formpoin = document.getElementById('formpoin');
+
+        // Jika ada nilai poin, aktifkan checkbox dan tampilkan form poin
+        if (poinValue > 0) {
+            checkbox.checked = true;
+            formpoin.style.display = 'block';
+        }
+    });
+
+    function toggleFormPoin() {
+        var checkbox = document.getElementById('flexSwitchCheckChecked');
+        var formpoin = document.getElementById('formpoin');
+
+        if (checkbox.checked) {
+            formpoin.style.display = 'block';
+        } else {
+            formpoin.style.display = 'none';
+        }
+    }
+</script>
+
+
 
 @endsection

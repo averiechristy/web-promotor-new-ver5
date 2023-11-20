@@ -61,6 +61,17 @@
                         </div>
                     </div>
 
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Jumlah Produk Personal</h6>
+                            <ul>
+                                @foreach($jumlahProdukpersonal as $productId => $jumlah)
+                                <li>{{ $product->find($productId)->nama_produk }}: {{ $jumlah }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
 
             <div class="text-center">
     <button class="btn btn-primary btn-sm mt-5" style="width: 50%;" type="button" onclick="goBack()">Hitung ulang produk</button>

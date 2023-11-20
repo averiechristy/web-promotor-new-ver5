@@ -27,7 +27,7 @@ class UserKalkulatorPaketController extends Controller
                  'barang' => $barang
             ]);
         } elseif (strtolower($userKodeRole) === 'ms') {
-            return view('user.paketkalkulatorlainnya', [
+            return view('user.paketkalkulatorMS', [
                  'barang' => $barang
             ]);
         } else {
@@ -259,6 +259,104 @@ return view('user.hasilhitungprodukTM', [
 
 ]);
    
+}
+
+public function hitungMS (Request $request) {
+    $user = Auth::user();
+
+        $barang= Product::where('role_id', $user->role_id)->get();
+
+        $user = Auth::user();
+        $userKodeRole = auth()->user()->Role->kode_role;
+        $product= Product::where('role_id', $user->role_id)->get();
+
+
+        // Ambil data dari formulir
+        $cicilanInputs = $request->input('cicilan');
+
+        $ntbPersenInputs = $request->input('ntb_persen');
+        $sosmedPersenInputs = $request->input('sosmed_persen');
+        $personalPersenInputs =  $request->input('personal_persen');
+
+        $cicilanInputs = $request->input('cicilan');
+        $productPersen = $request->input('product_persen');
+        $selectedBarang = $request->input('nama_barang');
+    
+        // Validasi bahwa barang yang dipilih tidak boleh sama
+        if (count($selectedBarang) !== count(array_unique($selectedBarang))) {
+            return redirect()->back()->with('error', 'Barang yang dipilih tidak boleh sama');
+        }
+
+        $totalCicilan = 0;
+        $cicilanInputs = $request->input('cicilan');
+        $filteredCicilanInputs = [];
+        
+
+        foreach ($cicilanInputs as $cicilan) {
+            // Hapus karakter non-digit dan tambahkan ke dalam array baru
+            $cicilanValue = filter_var($cicilan, FILTER_SANITIZE_NUMBER_INT);
+            $filteredCicilanInputs[] = $cicilanValue;
+        }
+
+
+        foreach ($filteredCicilanInputs as $cicilan) {
+            if (is_numeric($cicilan)) {
+                $totalCicilan += (int)$cicilan;
+            }
+        }
+
+        // Tambahkan 3 juta ke total cicilan
+        $totalCicilan += 3000000;
+
+        $productPersen = array_merge($ntbPersenInputs, $sosmedPersenInputs,$personalPersenInputs );
+
+        // Validasi bahwa persentase tidak boleh kurang dari 0 atau lebih dari 100
+        foreach ($productPersen as $barangId => $persen) {
+            if ($persen < 0 || $persen > 100) {
+                return redirect()->back()->with('error', 'Persentase harus berada antara 0 dan 100')->withInput();
+            }
+        }
+    
+        $totalPersen = 0;
+        foreach ($productPersen as $productId => $persen) {
+            if (is_numeric($persen)) {
+                $totalPersen += (int)$persen;
+            }
+        }
+    
+        if ($totalPersen != 100) {
+            return redirect()->back()->with('error', 'Total persen produk harus sama dengan 100%')->withInput();
+        }
+
+
+        $jumlahProdukntb = [];
+$jumlahProduksosmed = [];
+$jumlahProdukpersonal = [];
+
+$insentif = $totalCicilan - 1000000;
+
+foreach ($product as $produk) { 
+    $productId = $produk->id;
+
+    // Perhitungan jumlah produk untuk kategori ntb
+    $jumlahProdukntb[$productId] = intval(ceil((($ntbPersenInputs[$productId] * $insentif) / 100) / 50000));
+
+    // Perhitungan jumlah produk untuk kategori sosmed
+    $jumlahProduksosmed[$productId] = intval(ceil((($sosmedPersenInputs[$productId] *  $insentif ) / 100) / 20000));
+
+    $jumlahProdukpersonal[$productId] = intval(ceil((($personalPersenInputs[$productId] *  $insentif ) / 100 )/10000));
+
+}
+return view('user.hasilhitungprodukMS', [
+    'totalCicilan' => $totalCicilan,
+    'jumlahProdukntb'=> $jumlahProdukntb,
+    'jumlahProduksosmed'=> $jumlahProduksosmed,
+    'jumlahProdukpersonal' => $jumlahProdukpersonal,
+    'product' => $product,
+
+]);
+   
+
 }
 
 

@@ -395,6 +395,7 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
 
     Route::post('/hitungTM',[UserKalkulatorPaketController::class,'hitungTM'])->name('hitungTM');
 
+    Route::post('/hitungMS',[UserKalkulatorPaketController::class,'hitungMS'])->name('hitungMS');
 
 
 });
