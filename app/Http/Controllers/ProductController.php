@@ -86,13 +86,11 @@ $request->validate([
             }
         },
     ],
-    'poin_produk' => 'required',
     'gambar_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048', // Validasi file gambar
     'deskripsi_produk' => 'required',
 ], [
     'role_id.required' => 'Pilih role terlebih dahulu.', 
     'nama_produk.required' => 'Input nama produk dahulu',
-    'poin_produk.required' => 'Input poin produk dahulu',
     'gambar_produk.required' => 'Upload Gambar Produk dahulu.',
     'gambar_produk.image' => 'File harus berupa gambar.',
     'gambar_produk.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',

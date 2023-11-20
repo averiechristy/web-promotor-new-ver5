@@ -35,6 +35,14 @@
                                             </div> 
 
                                             <div class="form-group mb-4">
+                                            <div class="form-check form-switch">
+    <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
+    <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
+</div>
+</div>
+
+                                            
+                                            <div id="formpoin" class="form-group mb-4" style="display: none;">
                                                 <label for="" class="form-label">Poin Produk</label>
                                                 <input
   name="poin_produk"
@@ -60,8 +68,6 @@
     }
   }
 </script>
-
-
 
                                                     @if ($errors->has('poin_produk'))
                                                     <p class="text-danger">{{$errors->first('poin_produk')}}</p>
@@ -132,7 +138,6 @@ function previewImage(input) {
 function validateForm() {
   let koderole = document.forms["saveform"]["role_id"].value;
   let nama = document.forms["saveform"]["nama_produk"].value;
-  let poin_produk = document.forms["saveform"]["poin_produk"].value;
   let gambar_produk = document.forms["saveform"]["gambar_produk"].value;
   let deskripsi_produk = document.forms["saveform"]["deskripsi_produk"].value;
 
@@ -143,10 +148,7 @@ function validateForm() {
   } else   if (nama == "") {
     alert("Nama produk tidak boleh kosong");
     return false;
-  }else   if (poin_produk == "") {
-    alert("Poin produk tidak boleh kosong");
-    return false;
-}else   if (gambar_produk == "") {
+  }else   if (gambar_produk == "") {
     alert("Gambar produk tidak boleh kosong");
     return false;
 
@@ -157,5 +159,20 @@ function validateForm() {
 }
 
 </script>
+
+<script>
+    function toggleFormPoin() {
+        var checkbox = document.getElementById('flexSwitchCheckChecked');
+        var formpoin = document.getElementById('formpoin');
+
+        if (checkbox.checked) {
+            formpoin.style.display = 'block';
+        } else {
+            formpoin.style.display = 'none';
+        }
+    }
+</script>
+
+
 
 @endsection

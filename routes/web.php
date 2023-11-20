@@ -311,6 +311,10 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
 Route::get('user/kalkulator', [KalkulatorController::class,'index'])->name('user.kalkulator');
 Route::post('/calculate', [KalkulatorController::class,'calculate'])->name('calculate');
 
+Route::post('/calculateTM', [KalkulatorController::class,'calculateTM'])->name('calculateTM');
+Route::post('/calculateMS', [KalkulatorController::class,'calculateMS'])->name('calculateMS');
+
+
 Route::get('user/leaderboard', [UserLeaderboardController::class,'index'])->name('user.leaderboard');
 Route::get('user/myincome', [MyIncomeController::class,'index'])->name('user.myincome');
 
@@ -389,6 +393,7 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
 
     Route::post('/hitung',[UserKalkulatorPaketController::class,'hitung'])->name('hitung');
 
+    Route::post('/hitungTM',[UserKalkulatorPaketController::class,'hitungTM'])->name('hitungTM');
 
 
 
