@@ -2,21 +2,13 @@
 
 @section('content2')
 
-
-
     <!-- ======= Services Section ======= -->
     <main id="main2">
     <section id="services" class="services d-flex align-items-center">
       <div class="container" >
 
-        
-   
         <div class="row">
        
-      
-        
-
-
           <div class="alert alert-info mt-3">
    Asumsikan ditambahkan senilai Rp. 3.000.000 dari total cicilan untuk kebutuhan harianmu ya.
 </div>

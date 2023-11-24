@@ -199,7 +199,7 @@ class KalkulatorController extends Controller
     }
 
     $hasil = (250000 * 4) + $totalNtb;
-    $message = "Asumsi minimal menjual 5 aplikasi per minggu";
+    $message = "Asumsi minimal menjual 5 aplikasi per minggu dalam 1 bulan";
 
         return view('user.kalkulatorMS', ['#hasil','hasil' => $hasil,
         'produk' => $produk, 
