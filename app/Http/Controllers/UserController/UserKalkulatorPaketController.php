@@ -153,9 +153,8 @@ if ($totalPersen != 100) {
         // Ambil data dari formulir
         $cicilanInputs = $request->input('cicilan');
 
-        $ntbPersenInputs = $request->input('ntb_persen');
-        $sosmedPersenInputs = $request->input('sosmed_persen');
-
+        $productPersen = $request->input('product_persen');
+    
         $cicilanInputs = $request->input('cicilan');
         $productPersen = $request->input('product_persen');
         $selectedBarang = $request->input('nama_barang');
@@ -184,7 +183,7 @@ if ($totalPersen != 100) {
         }
 
         // Tambahkan 3 juta ke total cicilan
-        $totalCicilan += 3000000;
+        $totalCicilan += 4900000;
 
         $totalntb = 0;
 
@@ -200,7 +199,8 @@ if ($totalPersen != 100) {
         }
     }
 
-    $productPersen = array_merge($ntbPersenInputs, $sosmedPersenInputs);
+  
+    
 
     // Validasi bahwa persentase tidak boleh kurang dari 0 atau lebih dari 100
     foreach ($productPersen as $barangId => $persen) {
@@ -223,27 +223,34 @@ if ($totalPersen != 100) {
 
 
    // Inisialisasi array untuk menyimpan jumlah produk untuk masing-masing kategori
-$jumlahProdukntb = [];
-$jumlahProduksosmed = [];
+// $jumlahProdukntb = [];
+// $jumlahProduksosmed = [];
 
+// foreach ($product as $produk) {
+//     $productId = $produk->id;
+
+//     // Perhitungan jumlah produk untuk kategori ntb
+//     $jumlahProdukntb[$productId] = intval(ceil(($ntbPersenInputs[$productId] * $totalntb) / 100));
+
+//     // Perhitungan jumlah produk untuk kategori sosmed
+//     $jumlahProduksosmed[$productId] = intval(ceil(($sosmedPersenInputs[$productId] * $totalntb * 3) / 100));
+// }
+
+
+$jumlahProduk = [];
 foreach ($product as $produk) {
     $productId = $produk->id;
-
-    // Perhitungan jumlah produk untuk kategori ntb
-    $jumlahProdukntb[$productId] = intval(ceil(($ntbPersenInputs[$productId] * $totalntb) / 100));
-
-    // Perhitungan jumlah produk untuk kategori sosmed
-    $jumlahProduksosmed[$productId] = intval(ceil(($sosmedPersenInputs[$productId] * $totalntb * 3) / 100));
+    $jumlahProduk[$productId] = intval(ceil(($productPersen[$productId] * $totalntb / 100)/$produk->poin_produk));
 }
+
+
 
 // Tampilkan hasil perhitungan
 
 $request->session()->put('totalCicilan', $totalCicilan);
 $request->session()->put('totalntb', $totalntb);
 
-$request->session()->put('jumlahProdukntb', $jumlahProdukntb);
-$request->session()->put('jumlahProduksosmed', $jumlahProduksosmed);
-
+$request->session()->put('jumlahProduk', $jumlahProduk);
 $request->session()->put('formInput', $request->all());
 // Simpan data poin ke dalam sesi jika diperlukan
 // Misalnya: session(['total_poin' => $totalPoin]);
@@ -253,8 +260,7 @@ $request->session()->push('addedItems', $request->input());
 
 return view('user.hasilhitungprodukTM', [
     'totalCicilan' => $totalCicilan,
-    'jumlahProdukntb'=> $jumlahProdukntb,
-    'jumlahProduksosmed'=> $jumlahProduksosmed,
+'jumlahProduk' => $jumlahProduk,
     'product' => $product,
 
 ]);
@@ -274,9 +280,7 @@ public function hitungMS (Request $request) {
         // Ambil data dari formulir
         $cicilanInputs = $request->input('cicilan');
 
-        $ntbPersenInputs = $request->input('ntb_persen');
-        $sosmedPersenInputs = $request->input('sosmed_persen');
-        $personalPersenInputs =  $request->input('personal_persen');
+       
 
         $cicilanInputs = $request->input('cicilan');
         $productPersen = $request->input('product_persen');
@@ -308,7 +312,6 @@ public function hitungMS (Request $request) {
         // Tambahkan 3 juta ke total cicilan
         $totalCicilan += 3000000;
 
-        $productPersen = array_merge($ntbPersenInputs, $sosmedPersenInputs,$personalPersenInputs );
 
         // Validasi bahwa persentase tidak boleh kurang dari 0 atau lebih dari 100
         foreach ($productPersen as $barangId => $persen) {
@@ -329,29 +332,33 @@ public function hitungMS (Request $request) {
         }
 
 
-        $jumlahProdukntb = [];
-$jumlahProduksosmed = [];
-$jumlahProdukpersonal = [];
+
 
 $insentif = $totalCicilan - 1000000;
 
-foreach ($product as $produk) { 
+// foreach ($product as $produk) { 
+//     $productId = $produk->id;
+
+//     // Perhitungan jumlah produk untuk kategori ntb
+//     $jumlahProdukntb[$productId] = intval(ceil((($ntbPersenInputs[$productId] * $insentif) / 100) / 50000));
+
+//     // Perhitungan jumlah produk untuk kategori sosmed
+//     $jumlahProduksosmed[$productId] = intval(ceil((($sosmedPersenInputs[$productId] *  $insentif ) / 100) / 20000));
+
+//     $jumlahProdukpersonal[$productId] = intval(ceil((($personalPersenInputs[$productId] *  $insentif ) / 100 )/10000));
+
+// }
+
+$jumlahProduk = [];
+foreach ($product as $produk) {
     $productId = $produk->id;
-
-    // Perhitungan jumlah produk untuk kategori ntb
-    $jumlahProdukntb[$productId] = intval(ceil((($ntbPersenInputs[$productId] * $insentif) / 100) / 50000));
-
-    // Perhitungan jumlah produk untuk kategori sosmed
-    $jumlahProduksosmed[$productId] = intval(ceil((($sosmedPersenInputs[$productId] *  $insentif ) / 100) / 20000));
-
-    $jumlahProdukpersonal[$productId] = intval(ceil((($personalPersenInputs[$productId] *  $insentif ) / 100 )/10000));
-
+    $jumlahProduk[$productId] = intval(ceil(($productPersen[$productId] * $insentif / 100)/$produk->poin_produk));
 }
+
+
 return view('user.hasilhitungprodukMS', [
     'totalCicilan' => $totalCicilan,
-    'jumlahProdukntb'=> $jumlahProdukntb,
-    'jumlahProduksosmed'=> $jumlahProduksosmed,
-    'jumlahProdukpersonal' => $jumlahProdukpersonal,
+  'jumlahProduk' => $jumlahProduk,
     'product' => $product,
 
 ]);

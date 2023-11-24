@@ -107,36 +107,42 @@ class KalkulatorController extends Controller
 
         $produk= Product::where('role_id', $user->role_id)->get();
 
-        $ntbReg = $request->input('ntb_reg');
-        $sosmed = $request->input('sosmed');
+        $productQuantities = $request->input('product_quantity');
 
         // Initialize totalNTB variable
         $totalNTB = 0;
 
         $products = Product::all();       
         // Calculate totalNTB <input type="number" class="form-control" style="width: 300px" name="ntb_reg[{{ $produk->id }}]" value="{{ old('ntb_reg.' . $produk->id, session('product_quantity.' . $produk->id)) }}"> based on the given conditions
-        foreach ($ntbReg as $productId => $ntb) {
-            // Ensure the input is numeric
-            $ntb = is_numeric($ntb) ? $ntb : 0;
+        // foreach ($ntbReg as $productId => $ntb) {
+        //     // Ensure the input is numeric
+        //     $ntb = is_numeric($ntb) ? $ntb : 0;
 
-            if ($sosmed[$productId] % 3 !== 0) {
-                // If not divisible, set result to 0 and return with an error message
-                $request->session()->flash('erroruser', 'Jumlah sosmed tidak habis dibagi 3, silakan input ulang jumlah sosmed.');
-                return redirect(route('user.kalkulator'));           
+        //     if ($sosmed[$productId] % 3 !== 0) {
+        //         // If not divisible, set result to 0 and return with an error message
+        //         $request->session()->flash('erroruser', 'Jumlah sosmed tidak habis dibagi 3, silakan input ulang jumlah sosmed.');
+        //         return redirect(route('user.kalkulator'));           
+        //     }
+
+        //     // Calculate totalNTB by adding NTB and 1/3 of Sosmed
+        //     $totalNTB += $ntb + ($sosmed[$productId] / 3);
+        // }
+
+        foreach ($products as $product) {
+            if (isset($productQuantities[$product->id])) {
+                $quantity = $productQuantities[$product->id];
+                $totalNTB += ceil($quantity * $product->poin_produk);
             }
-
-            // Calculate totalNTB by adding NTB and 1/3 of Sosmed
-            $totalNTB += $ntb + ($sosmed[$productId] / 3);
         }
+        
+      
+        
+
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Ambil data dari form dan simpan dalam sesi
-            foreach ($_POST["ntb_reg"] as $produkId => $ntbReg) {
-                $_SESSION["ntb_reg"][$produkId] = $ntbReg;
-            }
-
-            foreach ($_POST["sosmed"] as $produkId => $sosmed) {
-                $_SESSION["sosmed"][$produkId] = $sosmed;
+            foreach ($_POST["product_quantity"] as $produkId => $quantity) {
+                $_SESSION["product_quantity"][$produkId] = $quantity;
             }
         }
         // Initialize result variable
@@ -164,32 +170,31 @@ class KalkulatorController extends Controller
         $user = Auth::user();
     $produk = Product::where('role_id', $user->role_id)->get();
 
-    $ntbReg = $request->input('ntb_reg');
-    $sosmed = $request->input('ntb_sosmed');
-    $personal = $request->input('personal');
+    $productQuantities = $request->input('product_quantity');
+
 
     $totalNtb = 0;
 
-    foreach ($produk as $p) {
-        $insentifNtbReg = $ntbReg[$p->id] * 50000;
-        $insentifNtbSosmed = $sosmed[$p->id] * 20000;
-        $insentifNtbPersonal = $personal[$p->id] * 10000;
+    // foreach ($produk as $p) {
+    //     $insentifNtbReg = $ntbReg[$p->id] * 50000;
+    //     $insentifNtbSosmed = $sosmed[$p->id] * 20000;
+    //     $insentifNtbPersonal = $personal[$p->id] * 10000;
 
-        $totalNtb += $insentifNtbReg + $insentifNtbSosmed + $insentifNtbPersonal;
+    //     $totalNtb += $insentifNtbReg + $insentifNtbSosmed + $insentifNtbPersonal;
+    // }
+
+    $products = Product::all();     
+    foreach ($products as $product) {
+        if (isset($productQuantities[$product->id])) {
+            $quantity = $productQuantities[$product->id];
+            $totalNtb += $quantity * $product->poin_produk;
+        }
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Ambil data dari form dan simpan dalam sesi
-        foreach ($_POST["ntb_reg"] as $produkId => $ntbReg) {
-            $_SESSION["ntb_reg"][$produkId] = $ntbReg;
-        }
-
-        foreach ($_POST["ntb_sosmed"] as $produkId => $sosmed) {
-            $_SESSION["ntb_sosmed"][$produkId] = $sosmed;
-        }
-
-        foreach ($_POST["personal"] as $produkId => $personal) {
-            $_SESSION["personal"][$produkId] = $personal;
+        foreach ($_POST["product_quantity"] as $produkId => $quantity) {
+            $_SESSION["product_quantity"][$produkId] = $quantity;
         }
     }
 

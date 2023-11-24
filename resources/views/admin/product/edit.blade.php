@@ -42,7 +42,7 @@
 
                                             <div class="form-group mb-4">
     <div class="form-check form-switch">
-        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
+        <input class="form-check-input switch"  name="flexSwitchCheckChecked" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
         <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
     </div>
 </div>
@@ -58,20 +58,11 @@
         class="form-control {{ $errors->has('poin_produk') ? 'is-invalid' : '' }}"
         style="border-color: #01004C;"
         aria-describedby="passwordHelpInline"
-        oninvalid="this.setCustomValidity('Poin produk harus lebih dari 0 ')"
         oninput="validatePoin(this)"
-        min="1"
+        step="any"
     >
 
-    <script>
-        function validatePoin(input) {
-            if (input.value < 1) {
-                input.setCustomValidity('Poin produk harus minimal 1');
-            } else {
-                input.setCustomValidity('');
-            }
-        }
-    </script>
+  
 
     @if ($errors->has('poin_produk'))
         <p class="text-danger">{{$errors->first('poin_produk')}}</p>

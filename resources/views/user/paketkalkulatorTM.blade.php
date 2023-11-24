@@ -84,20 +84,7 @@ function formatRupiah(value) {
     </div>
     <div class="row g-3 align-items-center">
         <div class="col-auto">
-        <div class="form-group">
-    <label for="exampleFormControlInput1">NTB Reguler (%)</label>
-    <input type="number" class="form-control" style="width:400px;" name="ntb_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('ntb_persen.' . $barang->id) }}" oninput="validasiNumber(this); updateSisaPersentase();">
-  </div>
- 
-           
-      
-
-  <div class="form-group">
-    <label for="exampleFormControlInput1">Sosmed (%)</label>
-    <input type="number" class="form-control" style="width:400px;" name="sosmed_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('sosmed_persen.' . $barang->id) }}" oninput="validasiNumber(this); updateSisaPersentase();">
-  </div>
-        </div>
-
+        <input type="number" class="form-control" style="width:400px;" name="product_persen[{{ $barang->id }}]" min="0" id="input-expression_{{ $barang->id }}" value="{{ old('product_persen.' . $barang->id) }}" oninput="validasiNumber(this); updateSisaPersentase();">
         <script>
 function validasiNumber(input) {
     // Hapus karakter titik (.) dari nilai input
@@ -107,7 +94,13 @@ function validasiNumber(input) {
     input.value = input.value.replace(/\D/g, '');
 }
 </script>
-     
+
+        </div>
+        <div class="col-auto">
+            <span id="" class="form-text">
+                %
+            </span>
+        </div>
     </div>
 @endforeach
           </div>
@@ -184,23 +177,13 @@ function validasiNumber(input) {
 
 function updateSisaPersentase() {
     var totalPersentase = 100;
-    var inputsNtb = document.querySelectorAll('[name^="ntb_persen["]');
-    var inputsSosmed = document.querySelectorAll('[name^="sosmed_persen["]');
+    var inputs = document.querySelectorAll('[name^="product_persen["]');
 
-    // Hitung total persentase yang telah diinput untuk ntb
-    var totalInputPersentaseNtb = 0;
-    inputsNtb.forEach(function(input) {
-        totalInputPersentaseNtb += parseInt(input.value) || 0;
+    // Hitung total persentase yang telah diinput
+    var totalInputPersentase = 0;
+    inputs.forEach(function(input) {
+        totalInputPersentase += parseInt(input.value) || 0;
     });
-
-    // Hitung total persentase yang telah diinput untuk sosmed
-    var totalInputPersentaseSosmed = 0;
-    inputsSosmed.forEach(function(input) {
-        totalInputPersentaseSosmed += parseInt(input.value) || 0;
-    });
-
-    // Hitung total persentase dari kedua formulir
-    var totalInputPersentase = totalInputPersentaseNtb + totalInputPersentaseSosmed;
 
     // Hitung sisa persentase
     var sisaPersentase = totalPersentase - totalInputPersentase;
@@ -214,7 +197,6 @@ function updateSisaPersentase() {
         sisaPersentaseElement.textContent = "Persentase tidak boleh lebih dari 100%";
     }
 }
-
 </script>
 
 

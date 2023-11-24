@@ -168,8 +168,7 @@ if ($request->session()->has('errors')) {
      public function updateproduct(Request $request, $id)
      {
         $ubah = Product::find($id);
-      
-
+       
         $this->validate($request, [
             'role_id' => 'required',
             'nama_produk' => 'required',
@@ -212,11 +211,14 @@ if ($request->session()->has('errors')) {
          $poinValue = $request->input('poin_produk');
          $isPoinEnabled = $request->has('flexSwitchCheckChecked');
 
+         
+         
          if (!$isPoinEnabled) {
              // Jika checkbox tidak dicentang, set nilai poin ke null atau nilai yang sesuai
              $poinValue = null;
          }
  
+
          // Update informasi lainnya
          $dtProduk = [
              'role_id' => $request->role_id,

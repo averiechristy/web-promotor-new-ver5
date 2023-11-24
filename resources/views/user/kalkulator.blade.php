@@ -63,14 +63,14 @@ function validasiNumber(input) {
                     <div class="row g-3">
                     @isset($hasil)
   <div class="col">
-  <label for="name">Hasil yang kamu dapat</label>
+  <label for="name">Potensi Hasil yang kamu dapat</label>
   <?php
     $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
     ?>
 
                             <input class="form-control font-weight-bold" style="  font-weight: bold;" type="text" value=" {{ $formattedHasil }}" aria-label="Rp. 0,-" disabled readonly>  </div>
   <div class="col">
-  <label for="name">Jumlah Poin</label>
+  <label for="name">Potensi Jumlah Poin</label>
                             <input class="form-control font-weight-bold"   style="font-weight: bold;" type="text" value="{{$totalPoints}} poin" aria-label="0 poin"  disabled readonly>  </div>
 </div>
 @endisset

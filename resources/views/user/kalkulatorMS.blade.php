@@ -23,14 +23,14 @@
         {{ $error }}
     </div>
 @endif
-   @foreach ($produk as $produk)
+@foreach ($produk as $produk)
     <div class="col-auto">
     <label for="inputPassword6" class="col-form-label">{{ $produk->nama_produk }}</label>
   </div>
     <div class="row g-3 align-items-center">
  
   <div class="col-auto">
-  <!-- <input type="number" class="form-control" style="width: 300px" name="product_quantity[{{ $produk->id }}]" min="0" id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}" oninput="validasiNumber(this)"> -->
+  <input type="number" class="form-control" style="width: 300px" name="product_quantity[{{ $produk->id }}]" min="0" id="input-expression" value="{{ isset($_SESSION['product_quantity'][$produk->id]) ? $_SESSION['product_quantity'][$produk->id] : old('product_quantity.' . $produk->id) }}" oninput="validasiNumber(this)">
   <script>
 function validasiNumber(input) {
     // Hapus karakter titik (.) dari nilai input
@@ -40,28 +40,12 @@ function validasiNumber(input) {
     input.value = input.value.replace(/\D/g, '');
 }
 </script>
+  
+
 </div>
 
-<div class="form-group">
-    <label for="inputAddress">NTB Reguler</label>
-    <input type="number" class="form-control" style="width: 300px" name="ntb_reg[{{ $produk->id }}]" value="{{ isset($_SESSION['ntb_reg'][$produk->id]) ? $_SESSION['ntb_reg'][$produk->id] : old('ntb_reg.' . $produk->id) }}">
-  </div>
-</div>
-
-
-<div class="form-group">
-    <label for="inputAddress">NTB Sosmed</label>
-    <input type="number" class="form-control" style="width: 300px" name="ntb_sosmed[{{ $produk->id }}]" value="{{ isset($_SESSION['ntb_sosmed'][$produk->id]) ? $_SESSION['ntb_sosmed'][$produk->id] : old('ntb_sosmed.' . $produk->id) }}">
-  </div>
-</div>
-
-<div class="form-group">
-    <label for="inputAddress">Personal Loan & Pendoc</label>
-    <input type="number" class="form-control" style="width: 300px" name="personal[{{ $produk->id }}]"  value="{{ isset($_SESSION['personal'][$produk->id]) ? $_SESSION['personal'][$produk->id] : old('personal.' . $produk->id) }}">
-  </div>
 </div>
 @endforeach
-
                    
     <div class="form-group mt-3">
                     
@@ -73,7 +57,7 @@ function validasiNumber(input) {
                     <div class="row g-3">
                     @isset($hasil)
   <div id="hasil" class="col">
-  <label for="name">Hasil yang kamu dapat</label>
+  <label for="name">Potensi Hasil yang kamu dapat</label>
   <?php
     $formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
     ?>

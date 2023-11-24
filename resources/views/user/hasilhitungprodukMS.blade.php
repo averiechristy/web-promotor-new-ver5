@@ -33,48 +33,40 @@
             </div>
         </div>
     </div>
-    
+   
 </div>
 
     
     <div id="form-jumlah-produk" >
         <h5 class="mt-3">Jumlah Produk yang harus dijual:</h5>
-        <div class="card">
-                        <div class="card-body">
-                            <h6 class="card-title">Jumlah Produk NTB Reguler</h6>
-                            <ul>
-                                @foreach($jumlahProdukntb as $productId => $jumlah)
-                                <li>{{ $product->find($productId)->nama_produk }}: {{ $jumlah }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
+        <p> <small style="color:red;">Asumsi jika dalam 1 bulan menjual minimal 5 aplikasi per minggu</small></p>
 
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h6 class="card-title">Jumlah Produk Sosmed</h6>
-                            <ul>
-                                @foreach($jumlahProduksosmed as $productId => $jumlah)
-                                <li>{{ $product->find($productId)->nama_produk }}: {{ $jumlah }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
+        <div class="row">
 
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h6 class="card-title">Jumlah Produk Personal</h6>
-                            <ul>
-                                @foreach($jumlahProdukpersonal as $productId => $jumlah)
-                                <li>{{ $product->find($productId)->nama_produk }}: {{ $jumlah }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
+            @foreach ($jumlahProduk as $productId => $jumlah)
+                @php
+                    $product = \App\Models\Product::find($productId); // Gantilah '\App\Product' dengan namespace aktual model Produk Anda
+                    $productName = $product->nama_produk;
+                    $productImage = $product->gambar_produk;
+                @endphp
+                <!-- <li>
+                    <span class="product-name">{{ $productName }}</span>:
+                    <span class="product-quantity">{{ $jumlah }}</span>
+                </li> -->
 
+                <div class="col-md-6 col-lg-3 d-flex align-items-stretch">
+            <div class="icon-box">
+              <div class="icon">                    
+                <img src="{{ asset('img/' .$productImage) }}" class="card-img-top" style="object-fit: cover; height: 250px;" alt="...">
+              </div>
+              <h4 class="title"><span class="jumlah">{{ $jumlah }}</span> - {{ $productName }}</h4>
+            </div>
+          </div>
 
+          
+            @endforeach
             <div class="text-center">
-    <button class="btn btn-primary btn-sm mt-5" style="width: 50%;" type="button" onclick="goBack()">Hitung ulang produk</button>
+    <button class="btn btn-primary btn-sm" style="width: 50%;" type="button" onclick="goBack()">Hitung ulang produk</button>
 </div>
 
 <script>
@@ -90,11 +82,17 @@ function goBack() {
 }
 
 </style>
+
        <div>
+
+
         </div>
+       
+
         </form>  
       </section><!-- End Edit Profil Section -->
   
 </main>
+    
 
 @endsection
