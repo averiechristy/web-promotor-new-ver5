@@ -1,11 +1,7 @@
 @extends('layouts.admin.app')
 
 @section('content')
-
-  
                 <!-- Begin Page Content -->
-             
-
                 <div class="container">
                         <div class="row">
                             <div class="col-8 offset-2">
