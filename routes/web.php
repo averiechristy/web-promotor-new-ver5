@@ -9,6 +9,7 @@ use App\Http\Controllers\ArtikelController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\BiayaOperasionalController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KontakController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\ReportHistoryRewardController;
 use App\Http\Controllers\ReportLeaderboardAkumulasiController;
 use App\Http\Controllers\ReportLeaderboardTahunController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\SkemaController;
 use App\Http\Controllers\UserController\CObaKalkulatorController;
 use App\Http\Controllers\UserController\HistoryRewardController;
 use App\Http\Controllers\UserController\HistoryUserLeaderboardController;
@@ -279,6 +281,17 @@ Route::get('/admin/reportleaderboardtahun',[ReportLeaderboardTahunController::cl
 Route::get('/admin/reportleaderboardakumulasi',[ReportLeaderboardAkumulasiController::class,'index'])->name('admin.reportleaderboardakumulasi');
 Route::get('/admin/reporthistoryreward',[ReportHistoryRewardController::class,'index'])->name('admin.reporthistoryreward');
 
+Route::get('/admin/skema/index',[SkemaController::class,'index'])->name('admin.skema.index');
+Route::get('/admin/skema/create',[SkemaController::class,'create'])->name('admin.skema.create');
+Route::post('/admin/skema/simpan',[SkemaController::class,'store'])->name('admin.skema.simpan');
+Route::get('/tampildetailinsentif/{id}',[SkemaController::class,'tampildetailinsentif'])->name('tampildetailinsentif');
+
+Route::get('/admin/biayaoperasional/index',[BiayaOperasionalController::class,'index'])->name('admin.biayaoperasional.index');
+Route::get('/admin/biayaoperasional/create',[BiayaOperasionalController::class,'create'])->name('admin.biayaoperasional.create');
+Route::post('/admin/biayaoperasional/simpan',[BiayaOperasionalController::class,'store'])->name('admin.biayaoperasional.simpan');
+
+
+
 });
 
 Route::get('getProduct/{id}', function ($id) {
@@ -406,9 +419,7 @@ Route::middleware('auth')->middleware('ensureUserRole:USER')->group(function () 
     Route::post('/avatar/update',[ProfileController::class,'updateAvatar'])->name('update-avatar');
     Route::get('/profile/delete-photo', [ProfileController::class,'deletePhoto'])->name('profile.delete-photo');
 
-
-    Route::post('/filter-income', [MyIncomeController::class,'filterIncome'])->name('filter.income');;
-
+    Route::post('/filter-income', [MyIncomeController::class,'filterIncome'])->name('filter.income');
 
 });
 

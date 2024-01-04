@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Controller;
+use App\Models\BiayaOperasional;
+use App\Models\DetailInsentif;
 use App\Models\Product;
+use App\Models\Skema;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -101,110 +104,224 @@ class KalkulatorController extends Controller
     }
 
 
-    public function calculateTM(Request $request) {
+    // public function calculateTM(Request $request) {
+    //     $user = Auth::user();
 
+    //     $produk= Product::where('role_id', $user->role_id)->get();
+
+    //     $productQuantities = $request->input('product_quantity');
+
+    //     $totalNTB = 0;
+
+    //     $products = Product::all();       
+       
+    //     foreach ($products as $product) {
+    //         if (isset($productQuantities[$product->id])) {
+    //             $quantity = $productQuantities[$product->id];
+    //             $totalNTB += ceil($quantity * $product->poin_produk);
+    //         }
+    //     }
+        
+    //     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //         // Ambil data dari form dan simpan dalam sesi
+    //         foreach ($_POST["product_quantity"] as $produkId => $quantity) {
+    //             $_SESSION["product_quantity"][$produkId] = $quantity;
+    //         }
+    //     }
+    //     $result = 0;
+
+    //     if ($totalNTB <= 90) {
+    //         $result = 4901800;
+    //     } elseif ($totalNTB >= 91 && $totalNTB <= 155) {
+    //         $insentif = ($totalNTB - 90) * 12000;
+    //         $result = 4901800 + $insentif;
+    //     } elseif ($totalNTB > 155) {
+    //         $insentif = ($totalNTB - 155) * 15500;
+    //         $result = 4901800 + 768000 + $insentif;
+    //     }
+
+    //     // Return the result to the view
+    //     return view('user.kalkulatorTM', [
+    //         'hasil' => $result,
+    //         'produk' => $produk]);
+    // }
+
+    public function calculateTM(Request $request) {
         $user = Auth::user();
 
         $produk= Product::where('role_id', $user->role_id)->get();
 
         $productQuantities = $request->input('product_quantity');
 
-        // Initialize totalNTB variable
         $totalNTB = 0;
 
         $products = Product::all();       
-        // Calculate totalNTB <input type="number" class="form-control" style="width: 300px" name="ntb_reg[{{ $produk->id }}]" value="{{ old('ntb_reg.' . $produk->id, session('product_quantity.' . $produk->id)) }}"> based on the given conditions
-        // foreach ($ntbReg as $productId => $ntb) {
-        //     // Ensure the input is numeric
-        //     $ntb = is_numeric($ntb) ? $ntb : 0;
-
-        //     if ($sosmed[$productId] % 3 !== 0) {
-        //         // If not divisible, set result to 0 and return with an error message
-        //         $request->session()->flash('erroruser', 'Jumlah sosmed tidak habis dibagi 3, silakan input ulang jumlah sosmed.');
-        //         return redirect(route('user.kalkulator'));           
-        //     }
-
-        //     // Calculate totalNTB by adding NTB and 1/3 of Sosmed
-        //     $totalNTB += $ntb + ($sosmed[$productId] / 3);
-        // }
-
+       
         foreach ($products as $product) {
             if (isset($productQuantities[$product->id])) {
-                $quantity = $productQuantities[$product->id];
-                $totalNTB += ceil($quantity * $product->poin_produk);
+                $quantity = $productQuantities[$product->id];           
+                $poinproduk = Skema::where('produk_id', $product->id)->first();
+                $poin = $poinproduk ? $poinproduk->poin_produk : 0;
+
+                $totalNTB += ceil($quantity * $poin);
             }
         }
-        
-      
-        
 
+        $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->value('biaya_operasional');
 
+        // $minqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('min_qty');
+
+        // $maxqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('max_qty');
+
+        // $insentifs = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('insentif');
+
+        // dd($insentifs);
+
+        
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Ambil data dari form dan simpan dalam sesi
             foreach ($_POST["product_quantity"] as $produkId => $quantity) {
                 $_SESSION["product_quantity"][$produkId] = $quantity;
             }
         }
-        // Initialize result variable
+    
         $result = 0;
 
-        // Determine the result based on totalNTB
-        if ($totalNTB <= 90) {
-            $result = 4901800;
-        } elseif ($totalNTB >= 91 && $totalNTB <= 155) {
-            $insentif = ($totalNTB - 90) * 12000;
-            $result = 4901800 + $insentif;
-        } elseif ($totalNTB > 155) {
-            $insentif = ($totalNTB - 155) * 15500;
-            $result = 4901800 + 768000 + $insentif;
-        }
+        // if ($totalNTB <= 90) {
+        //     $result =     $biayaOperasional;
+        // } elseif ($totalNTB >= 91 && $totalNTB <= 155) {
+        //     $insentif = ($totalNTB - 90) * 12000;
+        //     $result =     $biayaOperasional + $insentif;
+        // } elseif ($totalNTB > 155) {
+        //     $insentif = ($totalNTB - 155) * 15500;
+        //     $result =     $biayaOperasional + 768000 + $insentif;
+        // }
+        
+$minqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('min_qty')->toArray();
+$maxqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('max_qty')->toArray();
+$insentifs = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('insentif')->toArray();
 
-        // Return the result to the view
-        return view('user.kalkulatorTM', ['hasil' => $result,
-    'produk' => $produk]);
 
+$detailsInsentif = DetailInsentif::where('role_id', $user->role_id)->distinct()->get(['min_qty', 'max_qty', 'insentif']);
+$maxQtyPrevious = null;
+$minQtyPrevious = null;
+$insentifPrevious = null;
+
+foreach ($detailsInsentif as $detail) {
+    $minqty = $detail->min_qty;
+    $maxqty = $detail->max_qty;
+    $insentif = $detail->insentif;
+
+    
+    // Pengecekan kondisi totalNTB berada di antara minqty dan maxqty
+    if ($totalNTB >= $minqty && $totalNTB <= $maxqty) {
+        // Menghitung insentifresult
+        $insentifresult = ($totalNTB - $maxQtyPrevious) * $detail->insentif;
+
+        $result = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
+        // Gunakan dd untuk menampilkan hasil
+      
     }
 
+    // Simpan nilai maxqty untuk iterasi berikutnya
+    $maxQtyPrevious = $maxqty;
+    $minQtyPrevious = $minqty;
+    $insentifPrevious = $insentif;
+}
 
-    public function calculateMS (Request $request){
-        $user = Auth::user();
-    $produk = Product::where('role_id', $user->role_id)->get();
+// if ($totalNTB >= $minqtys[0] && $totalNTB <= $maxqtys[0]) {
+//     $insentif = ($totalNTB - $minqtys[0]) * $insentifs[0];
+//     $result = $biayaOperasional + $insentif;
+// } elseif ($totalNTB >= $minqtys[1]  ) {
+//     $insentif = ($totalNTB - $maxqtys[0]) * $insentifs[1];
+//     $result = $biayaOperasional + ( ($maxqtys[0]-$minqtys[0]) * $insentifs[0]) + $insentif;
+// }
 
-    $productQuantities = $request->input('product_quantity');
 
 
-    $totalNtb = 0;
 
-    // foreach ($produk as $p) {
-    //     $insentifNtbReg = $ntbReg[$p->id] * 50000;
-    //     $insentifNtbSosmed = $sosmed[$p->id] * 20000;
-    //     $insentifNtbPersonal = $personal[$p->id] * 10000;
 
-    //     $totalNtb += $insentifNtbReg + $insentifNtbSosmed + $insentifNtbPersonal;
+        // Return the result to the view
+        return view('user.kalkulatorTM', [
+            'hasil' => $result,
+            'produk' => $produk]);
+    }
+
+    
+
+
+    // public function calculateMS (Request $request){
+    //     $user = Auth::user();
+    // $produk = Product::where('role_id', $user->role_id)->get();
+
+    // $productQuantities = $request->input('product_quantity');
+
+    // $totalNtb = 0;
+
+    // $products = Product::all();     
+    // foreach ($products as $product) {
+    //     if (isset($productQuantities[$product->id])) {
+    //         $quantity = $productQuantities[$product->id];
+    //         $totalNtb += $quantity * $product->poin_produk;
+    //     }
     // }
 
-    $products = Product::all();     
+    // if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //     // Ambil data dari form dan simpan dalam sesi
+    //     foreach ($_POST["product_quantity"] as $produkId => $quantity) {
+    //         $_SESSION["product_quantity"][$produkId] = $quantity;
+    //     }
+    // }
+
+    // $hasil = (250000 * 4) + $totalNtb;
+    // $message = "Asumsi minimal menjual 5 aplikasi per minggu dalam 1 bulan";
+
+    //     return view('user.kalkulatorMS', ['#hasil','hasil' => $hasil,
+    //     'produk' => $produk, 
+    // 'message' => $message]);
+    // }
+
+    public function calculateMS(Request $request)
+{
+    $user = Auth::user();
+    $produk = Product::where('role_id', $user->role_id)->get();
+    $productQuantities = $request->input('product_quantity');
+    $totalNtb = 0;
+
+    $products = Product::all();
+
     foreach ($products as $product) {
         if (isset($productQuantities[$product->id])) {
             $quantity = $productQuantities[$product->id];
-            $totalNtb += $quantity * $product->poin_produk;
+
+            // Assuming DetailInsentif model has a column named 'incentif'
+            $detailInsentif = DetailInsentif::where('produk_id', $product->id)->first();
+            $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
+
+            $totalNtb += $quantity * $incentif;
         }
     }
+    $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->value('biaya_operasional');
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Ambil data dari form dan simpan dalam sesi
         foreach ($_POST["product_quantity"] as $produkId => $quantity) {
             $_SESSION["product_quantity"][$produkId] = $quantity;
         }
     }
+    
 
-    $hasil = (250000 * 4) + $totalNtb;
+    $hasil = $biayaOperasional + $totalNtb;
     $message = "Asumsi minimal menjual 5 aplikasi per minggu dalam 1 bulan";
 
-        return view('user.kalkulatorMS', ['#hasil','hasil' => $hasil,
-        'produk' => $produk, 
-    'message' => $message]);
-    }
+    
+    return view('user.kalkulatorMS', [
+        'hasil' => $hasil,
+        'produk' => $produk,
+        'message' => $message
+    ]);
+}
+
 
     
     /**

@@ -25,6 +25,7 @@ class AksesController extends Controller
      */
     public function create()
     {
+        
         return view ('admin.akses.create');
     }
 

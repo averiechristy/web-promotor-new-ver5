@@ -25,10 +25,22 @@ class UserRole extends Model
         return $this->hasMany(User::class);
     }
 
+    public function Skema()
+    {
+
+        return $this->hasMany(Skema::class);
+    }
+
     public function LeaderBoard()
     {
 
         return $this->hasMany(LeaderBoard::class);
+    }
+
+    public function Biaya_Operasional()
+    {
+
+        return $this->hasMany(BiayaOperasional::class);
     }
 
     public function Product()

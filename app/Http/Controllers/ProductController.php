@@ -118,7 +118,7 @@ if ($request->session()->has('errors')) {
         $dtProduk = new Product;
         $dtProduk->nama_produk = $request->nama_produk;
         $dtProduk->role_id = $request->role_id;
-        $dtProduk->poin_produk = $request->poin_produk;
+        // $dtProduk->poin_produk = $request->poin_produk;
         $dtProduk->deskripsi_produk = $request->deskripsi_produk;
         $dtProduk->number = $request->number;
         $dtProduk->kode_produk = $request->kode_produk;

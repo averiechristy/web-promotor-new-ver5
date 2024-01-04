@@ -61,5 +61,12 @@ class Product extends Model
     {
         return $this->belongsTo(PackageDetail::class);
     }
+
+    public function Skema()
+    {
+
+        return $this->hasMany(Skema::class);
+    }
+
  
 }

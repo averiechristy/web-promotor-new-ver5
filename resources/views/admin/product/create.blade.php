@@ -34,15 +34,14 @@
                                                 @endif
                                             </div> 
 
-                                            <div class="form-group mb-4">
+                                            <!-- <div class="form-group mb-4">
                                             <div class="form-check form-switch">
     <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
     <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
 </div>
-</div>
-
+</div> -->
                                             
-                                            <div id="formpoin" class="form-group mb-4" style="display: none;">
+                                            <!-- <div id="formpoin" class="form-group mb-4" style="display: none;">
                                                 <label for="" class="form-label">Poin Produk</label>
                                                 <input
   name="poin_produk"
@@ -72,7 +71,8 @@
                                                     @if ($errors->has('poin_produk'))
                                                     <p class="text-danger">{{$errors->first('poin_produk')}}</p>
                                                 @endif
-                                            </div> 
+                                            </div>  -->
+
                                             <div class="form-group">
                                             <label for="file">Upload Gambar (PNG atau JPG, maksimum 5 MB):</label>
         <input type="file" name="gambar_produk" id="file"oninvalid="this.setCustomValidity('Gambar produk tidak boleh kosong')" oninput="setCustomValidity('')"  accept=".png, .jpg, .jpeg" 
@@ -88,8 +88,6 @@
     @endif
 
 </div>
-
-
 
 <script>
 function previewImage(input) {

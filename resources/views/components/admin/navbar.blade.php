@@ -41,7 +41,6 @@
             <i class="fas fa-address-card" style="color: #01004C"></i>
             <span style="color: #01004C">User Account</span>
         </a>
-        
     </li>
 
     <li class="nav-item {{ Request::is('admin/product/index') || Request::is('admin/product/create') ? 'active' : '' }}">
@@ -50,7 +49,14 @@
             <i class="fas fa-box" style="color: #01004C"></i>
             <span style="color: #01004C">Product</span>
         </a>
-        
+    </li>
+
+    <li class="nav-item {{ Request::is('admin/skema/index') || Request::is('admin/skema/create') ? 'active' : '' }}">
+        <a class="nav-link " href="{{route('admin.skema.index')}}" data-toggle="" data-target="#collapseTwo"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-calculator" style="color: #01004C"></i>
+            <span style="color: #01004C">Skema</span>
+        </a>        
     </li>
 
     <li class="nav-item {{ Request::is('admin/package/index') || Request::is('admin/package/create')  ? 'active' : '' }}">
