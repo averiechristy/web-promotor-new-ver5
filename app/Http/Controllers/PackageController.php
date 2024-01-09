@@ -128,11 +128,8 @@ class PackageController extends Controller
      */
     public function show(string $id)
     {
-
-        
         $package = PackageIncome::find($id); // Menggunakan find() untuk menghindari error jika tidak ditemukan
       
-
         $kode = Product::where('role_id', $package->role_id)->get(); // Assuming your model name is Product
         $produk = Product::all();
 

@@ -103,18 +103,18 @@ Search
      
         <div style="display: flex; align-items: center;">
   
-    <div class="form-group" style="margin-right: 10px;">
+    <!-- <div class="form-group" style="margin-right: 10px;">
         <label for="month">Filter Bulan</label>
         <input type="month" id="month" name="month" class="form-control">
     </div>
 
-    <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterDataByMonth()">Terapkan</button>
+    <button type="button" class="btn btn-success btn-sm mt-3" onclick="filterDataByMonth()">Terapkan</button> -->
 </div>
             <tr>
                 <th>Role</th>
                 <th id="sortNama">Nama</th>
                 <th>Pencapaian Penjualan Produk</th>
-                <th>Total Poin</th>
+                <th>Total</th>
                 <th>Tanggal</th>
                 <th>Action</th>
                 <!-- Kolom lainnya -->
@@ -147,7 +147,7 @@ Search
     @endforeach
 </ul>
 </td>      
-        <td>{{ $item->total }} poin</td>
+        <td>{{ $item->total }}</td>
         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
         <td>
             <form method="POST" action="{{ route('deleteleaderboard', $item->id) }}">

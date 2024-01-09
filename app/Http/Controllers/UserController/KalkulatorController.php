@@ -8,6 +8,7 @@ use App\Models\DetailInsentif;
 use App\Models\Product;
 use App\Models\Skema;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -156,19 +157,36 @@ class KalkulatorController extends Controller
         $totalNTB = 0;
 
         $products = Product::all();       
+        $tanggalBerjalan = Carbon::now();
        
         foreach ($products as $product) {
             if (isset($productQuantities[$product->id])) {
                 $quantity = $productQuantities[$product->id];           
-                $poinproduk = Skema::where('produk_id', $product->id)->first();
+                $poinproduk = Skema::where('produk_id', $product->id)
+                    ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+                    ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+                    ->first();
+                
                 $poin = $poinproduk ? $poinproduk->poin_produk : 0;
-
-                $totalNTB += ceil($quantity * $poin);
+        
+                $totalNTB += round($quantity * $poin, 0, PHP_ROUND_HALF_DOWN);
+        
+                // Check if the decimal part ends with 9
+                $decimalPart = fmod($totalNTB, 1);
+                if ($decimalPart == 0.9) {
+                    $totalNTB = ceil($totalNTB);
+                }
             }
         }
+    
+        
 
-        $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->value('biaya_operasional');
+        $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+        ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+        ->value('biaya_operasional');
 
+        
+      
         // $minqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('min_qty');
 
         // $maxqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('max_qty');
@@ -196,16 +214,20 @@ class KalkulatorController extends Controller
         //     $insentif = ($totalNTB - 155) * 15500;
         //     $result =     $biayaOperasional + 768000 + $insentif;
         // }
+
+  
+
+        $detailsInsentif = DetailInsentif::where('role_id', $user->role_id)
+        ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+        ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+        ->distinct()
+        ->get(['min_qty', 'max_qty', 'insentif']);
         
-$minqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('min_qty')->toArray();
-$maxqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('max_qty')->toArray();
-$insentifs = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('insentif')->toArray();
+        $maxQtyPrevious = null;
+        $minQtyPrevious = null;
+        $insentifPrevious = null;
 
 
-$detailsInsentif = DetailInsentif::where('role_id', $user->role_id)->distinct()->get(['min_qty', 'max_qty', 'insentif']);
-$maxQtyPrevious = null;
-$minQtyPrevious = null;
-$insentifPrevious = null;
 
 foreach ($detailsInsentif as $detail) {
     $minqty = $detail->min_qty;
@@ -213,21 +235,20 @@ foreach ($detailsInsentif as $detail) {
     $insentif = $detail->insentif;
 
     
-    // Pengecekan kondisi totalNTB berada di antara minqty dan maxqty
-    if ($totalNTB >= $minqty && $totalNTB <= $maxqty) {
-        // Menghitung insentifresult
-        $insentifresult = ($totalNTB - $maxQtyPrevious) * $detail->insentif;
-
+    
+    if ($totalNTB >= $minqty && ($maxqty === null || $totalNTB <= $maxqty)) {
+        $insentifresult = ($totalNTB - ($minqty-1)) * $detail->insentif;
         $result = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
-        // Gunakan dd untuk menampilkan hasil
-      
+     
     }
+   
 
     // Simpan nilai maxqty untuk iterasi berikutnya
     $maxQtyPrevious = $maxqty;
     $minQtyPrevious = $minqty;
     $insentifPrevious = $insentif;
 }
+
 
 // if ($totalNTB >= $minqtys[0] && $totalNTB <= $maxqtys[0]) {
 //     $insentif = ($totalNTB - $minqtys[0]) * $insentifs[0];
@@ -236,10 +257,6 @@ foreach ($detailsInsentif as $detail) {
 //     $insentif = ($totalNTB - $maxqtys[0]) * $insentifs[1];
 //     $result = $biayaOperasional + ( ($maxqtys[0]-$minqtys[0]) * $insentifs[0]) + $insentif;
 // }
-
-
-
-
 
         // Return the result to the view
         return view('user.kalkulatorTM', [
@@ -287,7 +304,7 @@ foreach ($detailsInsentif as $detail) {
     $produk = Product::where('role_id', $user->role_id)->get();
     $productQuantities = $request->input('product_quantity');
     $totalNtb = 0;
-
+    $tanggalBerjalan = Carbon::now();
     $products = Product::all();
 
     foreach ($products as $product) {
@@ -295,13 +312,16 @@ foreach ($detailsInsentif as $detail) {
             $quantity = $productQuantities[$product->id];
 
             // Assuming DetailInsentif model has a column named 'incentif'
-            $detailInsentif = DetailInsentif::where('produk_id', $product->id)->first();
+            $detailInsentif = DetailInsentif::where('produk_id', $product->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)->first();
+            
             $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
 
             $totalNtb += $quantity * $incentif;
         }
     }
-    $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->value('biaya_operasional');
+    $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+    ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
 
    if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Ambil data dari form dan simpan dalam sesi
@@ -311,8 +331,8 @@ foreach ($detailsInsentif as $detail) {
     }
     
 
-    $hasil = $biayaOperasional + $totalNtb;
-    $message = "Asumsi minimal menjual 5 aplikasi per minggu dalam 1 bulan";
+    $hasil = ($biayaOperasional * 4) + $totalNtb;
+    $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";
 
     
     return view('user.kalkulatorMS', [

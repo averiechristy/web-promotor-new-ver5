@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PackageDetail;
 use App\Models\Product;
+use App\Models\Skema;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -297,6 +298,12 @@ if ($request->session()->has('errors')) {
             $request->session()->flash('error', "Tidak bisa menghapus data produk karena masih ada pada package income.");
             return redirect()->route('admin.product.index');
         }
+
+        if (Skema::where('produk_id', $produk->id)->exists()) {
+            $request->session()->flash('error', "Tidak bisa menghapus data produk karena masih ada pada skema.");
+            return redirect()->route('admin.product.index');
+        }
+
         $produk->delete();
 
          $request->session()->flash('error', "Produk berhasil dihapus.");

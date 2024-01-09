@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailInsentif;
 use App\Models\LeaderBoard;
 use App\Models\Product;
+use App\Models\Skema;
 use DateTime;
 use App\Models\User;
 use App\Models\UserRole;
@@ -153,6 +155,7 @@ class LeaderBoardController extends Controller
                 $tanggalString = $rowData[1];
                 
                 $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
+                
             
                 if (!$tanggalObj) {
                     $errorDetails[] = "Kesalahan pada baris $rowNumber : Format tanggal tidak valid. Gunakan format 'dd/mm/yyyy'.";
@@ -191,6 +194,8 @@ class LeaderBoardController extends Controller
             
                 $role = UserRole::find($role_id);
             
+              
+
                 if (!$role) {
                     $errorDetails[] = "Kesalahan pada baris $rowNumber: Role tidak ditemukan.";
                     continue;
@@ -286,24 +291,73 @@ class LeaderBoardController extends Controller
                 $total = 0;
 
                 
+                // for ($j = 4; $j < count($headerRow); $j++) {
+                //     $pencapaian[$headerRow[$j]] = $rowData[$j];
+    
+                //     $namaProduk = $headerRow[$j]; // Nama produk dari header
+                //     $jumlah = $rowData[$j];
+    
+                  
+                //     // Dapatkan poin produk dari tabel master produk
+                //     $product = Product::where('nama_produk', $namaProduk)->first();
+    
+                    
+                //     // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
+                //     $total += $product->poin_produk * $jumlah;
+                // }
 
                 for ($j = 4; $j < count($headerRow); $j++) {
                     $pencapaian[$headerRow[$j]] = $rowData[$j];
-    
+            
                     $namaProduk = $headerRow[$j]; // Nama produk dari header
                     $jumlah = $rowData[$j];
-    
-                  
-                    // Dapatkan poin produk dari tabel master produk
-                    $product = Product::where('nama_produk', $namaProduk)->first();
-    
-                    
-                    // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
-                    $total += $product->poin_produk * $jumlah;
-                }
+            
+                    if ($kodeRole == 'ms') {
+                        // Jika MS, ambil insentif dari tabel detail insentif
+                        $produk = Product::where('nama_produk', $namaProduk)->first();
+                        
+            
+                        if ($produk) {
+                            $insentif = DetailInsentif::where('produk_id', $produk->id)
+                            ->where('tanggal_mulai', '<=', $tanggalObj)
+                            ->where('tanggal_selesai', '>=', $tanggalObj)
+                                ->first();
 
+            
+                            if ($insentif) {
+                                $total += $insentif->insentif * $jumlah;
+                               
+                            }
+                        }
+                    }  elseif ($kodeRole == 'tm') {
+                        // Jika TM, ambil poin produk dari tabel skema
+                        $produk = Product::where('nama_produk', $namaProduk)->first();
+
+                        if ($produk) {
+                            $poinproduk = Skema::where('produk_id', $produk->id)->where('tanggal_mulai', '<=', $tanggalObj)
+                        ->where('tanggal_selesai', '>=', $tanggalObj)->first();
+                           
+                    
+                            if ($poinproduk) {
+                                
+                                // $total += $poinproduk->poin_produk * $jumlah;
+                              
+                                $total += round($poinproduk->poin_produk * $jumlah, 0, PHP_ROUND_HALF_DOWN);
+                                
+                                
+                                // Check if the decimal part ends with 9
+                                $decimalPart = fmod($total, 1);
+                                if ($decimalPart == 0.9) {
+                                    $total = ceil($total);
+                                }
+
+            
+                            }
+                        }
+                       
+                    }
+                }
                
-    
                 // Tambahkan nilai total ke dalam array $rowData
                 $rowData[] = $total;
                 

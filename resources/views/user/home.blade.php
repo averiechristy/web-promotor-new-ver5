@@ -223,26 +223,9 @@ LeaderBoard
 
                 <div class="leaderboard-info">
                     <h4>{{ $leader->user->nama }}</h4>
-                    <p>Total Poin: {{ $leader->total_point }}</p>
+                    <p>Total : {{ $leader->total_point }}</p>
                     
-                    <?php
-if ($leader->total_point < 72) {
-    $hasil = 3600000;
-} elseif ($leader->total_point > 72 && $leader->total_point < 120) {
-    $insentif = ($leader->total_point - 72) * 40000;
-    $hasil = $insentif + 3600000;
-} elseif ($leader->total_point == 72) {
-    $hasil = 3600000;
-} elseif ($leader->total_point == 120) {
-    $hasil = 6000000;
-} elseif ($leader->total_point > 120) {
-    $insentif = ($leader->total_point - 120) * 40000;
-    $hasil = $insentif + 6000000;
-}
-
-$formattedHasil = 'Rp. ' . number_format($hasil, 0, ',', '.') . ',-';
-?>
-          <p>Pendapatan : {{ $formattedHasil }}</p>
+                  
                 </div>
             </div>
         </div>

@@ -29,12 +29,21 @@
                                             
                                             <div class="form-group mb-4">
                                                 <label for="" class="form-label">Biaya Operasional</label>
-                                                <input name ="biaya_operasional" type="number" min="1" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('biaya_operasional') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-describedby="passwordHelpInline" value="{{old('biaya_operasional')}}"oninvalid="this.setCustomValidity('Poin reward tidak boleh kosong atau 0')" oninput="setCustomValidity('')">
+                                                <input name ="biaya_operasional" type="number" min="1" style="border-color: #01004C;" id="" class="form-control {{ $errors->has('biaya_operasional') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-describedby="passwordHelpInline" value="{{old('biaya_operasional')}}"oninvalid="this.setCustomValidity('Poin reward tidak boleh kosong atau 0')"oninput="validasiNumber(this)">
                                                 @if ($errors->has('biaya_operasional'))
                                                     <p class="text-danger">{{$errors->first('biaya_operasional')}}</p>
                                                 @endif
                                             </div>
 
+                                            <script>
+function validasiNumber(input) {
+    // Hapus karakter titik (.) dari nilai input
+    input.value = input.value.replace(/\./g, '');
+
+    // Pastikan hanya karakter angka yang diterima
+    input.value = input.value.replace(/\D/g, '');
+}
+</script>
                                             <div class="form-group mb-4">
                             <label for="tanggal_mulai">Tanggal Mulai</label>
                             <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', isset($reward) ? $reward->tanggal_mulai : '') }}" >
@@ -72,19 +81,35 @@
 
 <script>
 function validateForm() {
-  let akses = document.forms["saveform"]["akses_id"].value;
-  let koderole = document.forms["saveform"]["kode_role"].value;
-  let jenisrole = document.forms["saveform"]["jenis_role"].value;
+  let koderole = document.forms["saveform"]["role_id"].value;
+let biayaoperasional = document.forms["saveform"]["biaya_operasional"].value;
+let tanggalmulai = document.forms["saveform"]["tanggal_mulai"].value;
+let tanggalselesai = document.forms["saveform"]["tanggal_selesai"].value;
 
-  if (akses == "") {
-    alert("Akses tidak boleh kosong");
-    return false;
-  } else   if (koderole == "") {
+    if (koderole == "") {
     alert("Kode role tidak boleh kosong");
     return false;
-  } else   if (jenisrole == "") {
-    alert("Jenis role tidak boleh kosong");
+  } else   if (biayaoperasional == "") {
+    alert("Biaya Operasional tidak boleh kosong");
     return false;
+  } else   if (tanggalmulai == "") {
+    alert("Tanggal Mulai tidak boleh kosong");
+    return false;
+  }
+    else   if (tanggalselesai == "") {
+    alert("Tanggal Selesai tidak boleh kosong");
+    return false;
+    }
+    else {
+    // Konversi nilai tanggal ke objek Date
+    let startDate = new Date(tanggalmulai);
+    let endDate = new Date(tanggalselesai);
+
+    // Periksa apakah tanggal mulai lebih awal dari tanggal selesai
+    if (startDate > endDate) {
+      alert("Tanggal mulai tidak boleh lebih awal dari tanggal selesai");
+      return false;
+    }
   }
 }
 </script>

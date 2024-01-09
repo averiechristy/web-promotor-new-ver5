@@ -47,6 +47,11 @@ entries
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Selesai</th>
                                             <th>Status</th>
+
+                                            <th>Created At</th>
+                                            <th>Created By</th>
+                                            <th>Updated At</th>
+                                        <th>Updated By</th>
                                             <th>Action</th>
                                           
                                         </tr>
@@ -88,7 +93,43 @@ $tanggal_selesai = date("d-m-Y", strtotime($tanggal_selesai));
         }
     @endphp
 </td>
-                                        <td></td>
+<td>{{$item -> created_at}}</td>
+<td>   @if ($item->created_by)
+                {{ $item->created_by }}
+            @else
+                User tidak terdeteksi
+            @endif</td>
+<td>{{$item -> updated_at}}</td>
+<td>@if ($item->updated_by)
+                {{ $item->updated_by }}
+            @else
+                Belum ada pembaruan
+            @endif</td>
+<td> 
+    <div class="row">
+        @php
+            $selesai = \Carbon\Carbon::parse($item->tanggal_selesai)->endOfDay();
+            $sekarang = \Carbon\Carbon::now();
+
+            if ($selesai->isPast()) {
+                // Tanggal selesai sudah lewat
+                echo '<button class="btn" data-toggle="tooltip" title="Tidak dapat edit data yang sudah tidak aktif" disabled><i class="fas fa-fw fa-edit" style="color:gray"></i></button>';
+            } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+                echo '<a href="' . route('tampilbiayaoperasional', $item->id) . '" class="btn" data-toggle="tooltip" title="Edit"><i class="fas fa-fw fa-edit" style="color:orange"></i></a>';
+            } elseif ($sekarang < $mulai) {
+                echo '<a href="' . route('tampilbiayaoperasional', $item->id) . '" class="btn" data-toggle="tooltip" title="Edit"><i class="fas fa-fw fa-edit" style="color:orange"></i></a>' .
+                     '<form method="POST" action="' . route('deletebiayaoperasional', $item->id) . '">' .
+                     csrf_field() .
+                     '<input name="_method" type="hidden" value="DELETE">' .
+                     '<button type="submit" class="btn show_confirm" data-toggle="tooltip" title="Hapus"><i class="fas fa-fw fa-trash" style="color:red"></i></button>' .
+                     '</form>';
+            } else {
+                echo '<span class="badge badge-danger">Tidak Aktif</span>';
+            }
+        @endphp
+    </div>
+</td>
+
                                      </tr>
                                      @endforeach
                      </tbody>

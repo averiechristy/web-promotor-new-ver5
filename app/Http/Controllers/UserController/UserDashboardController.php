@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Controller;
+use App\Models\BiayaOperasional;
+use App\Models\DetailInsentif;
 use App\Models\LeaderBoard;
 use App\Models\Reward;
 use Auth;
@@ -19,7 +21,10 @@ class UserDashboardController extends Controller
     {
         $userId = auth()->user()->id;
         $currentRole = auth()->user()->role;
-        
+       
+        $kodeRole = strtolower($currentRole->kode_role);
+
+        $tanggalBerjalan = Carbon::now();
              $today = Carbon::now();
 
         if ($today->isMonday()) {
@@ -43,14 +48,16 @@ class UserDashboardController extends Controller
         //     ->whereYear('tanggal', now()->year)
         //     ->whereMonth('tanggal', now()->month)
         //     ->sum('income');
-    
-           
+      
+
         // Menghitung total poin bulan ini
         $totalPointsThisMonth = LeaderBoard::where('user_id', $userId)
         ->whereYear('tanggal', now()->year)
         ->whereMonth('tanggal', now()->month)
         ->sum('total');
-    
+
+        if ($kodeRole == 'me') {
+
     if ($totalPointsThisMonth <= 0) {
         $hasil = 0;
     } else if ($totalPointsThisMonth < 72) {
@@ -66,6 +73,51 @@ class UserDashboardController extends Controller
         $insentif = ($totalPointsThisMonth - 120) * 40000;
         $hasil = $insentif + 6000000;
     }
+
+} else if ($kodeRole == 'tm') {
+
+    $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+    ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+    ->value('biaya_operasional');
+
+    $detailsInsentif = DetailInsentif::where('role_id', $currentRole->id)
+    ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+    ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+    ->distinct()
+    ->get(['min_qty', 'max_qty', 'insentif']);
+
+    foreach ($detailsInsentif as $detail) {
+        $minqty = $detail->min_qty;
+        $maxqty = $detail->max_qty;
+        $insentif = $detail->insentif;
+    
+        
+        
+        if ($totalPointsThisMonth >= $minqty && ($maxqty === null || $totalPointsThisMonth <= $maxqty)) {
+            $insentifresult = ($totalPointsThisMonth - ($minqty-1)) * $detail->insentif;
+            $hasil = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
+         
+        }
+       
+    
+        // Simpan nilai maxqty untuk iterasi berikutnya
+        $maxQtyPrevious = $maxqty;
+        $minQtyPrevious = $minqty;
+        $insentifPrevious = $insentif;
+    }
+
+
+    
+
+} else  if ($kodeRole == 'ms') {
+    
+    $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+    ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
+
+    $hasil = ($biayaOperasional * 4) + $totalPointsThisMonth;
+    $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";
+
+}
     
     $totalIncomeThisMonth = $hasil;
     

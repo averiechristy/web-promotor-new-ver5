@@ -218,6 +218,14 @@ Route::get('/tampilreward/{id}',[RewardController::class,'show'])->name('tampilr
 Route::post('/updatereward/{id}',[RewardController::class,'updatereward'])->name('updatereward');
 Route::delete('/deletereward/{id}',[RewardController::class,'destroy'])->name('deletereward');
 
+Route::get('/tampilbiayaoperasional/{id}',[BiayaOperasionalController::class,'show'])->name('tampilbiayaoperasional');
+Route::delete('/deletebiayaoperasional/{id}',[BiayaOperasionalController::class,'destroy'])->name('deletebiayaoperasional');
+Route::post('/updatebiayaoperasional/{id}',[BiayaOperasionalController::class,'update'])->name('updatebiayaoperasional');
+
+Route::get('/tampilskema/{id}',[SkemaController::class,'show'])->name('tampilskema');
+Route::post('/updateskema/{id}',[SkemaController::class,'update'])->name('updateskema');
+Route::delete('/deleteskema/{id}',[SkemaController::class,'destroy'])->name('deleteskema');
+
 
 
 // Package Route

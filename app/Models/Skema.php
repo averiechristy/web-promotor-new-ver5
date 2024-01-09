@@ -15,7 +15,9 @@ class Skema extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'role_id',
-        'keterangan'
+        'keterangan',
+        'created_by',
+        'updated_by',
 
     ];
 
@@ -37,6 +39,13 @@ class Skema extends Model
     {
         return $this->hasMany(DetailInsentif::class);
     }
+
+  // Skema.php (Model)
+public function hasPoinProduk()
+{
+    // Sesuaikan dengan logika bisnis Anda
+    return $this->poin_produk !== null;
+}
 
     
 }

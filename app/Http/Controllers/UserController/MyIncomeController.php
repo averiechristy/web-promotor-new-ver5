@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Controller;
+use App\Models\BiayaOperasional;
+use App\Models\DetailInsentif;
 use App\Models\LeaderBoard;
 use App\Models\Reward;
 use Carbon\Carbon;
@@ -15,10 +17,12 @@ class MyIncomeController extends Controller
      */
     public function index(Request $request)
     {
-        // Mengambil data pendapatan dan poin untuk pengguna yang login
         $userId = auth()->user()->id;
-        // Mengambil data tanggal awal dan akhir dari request
-        $currentRole = auth()->user()->role; // Gantilah ini dengan cara Anda mengambil peran pengguna saat ini
+        $currentRole = auth()->user()->role;
+       
+        $kodeRole = strtolower($currentRole->kode_role);
+
+        $tanggalBerjalan = Carbon::now();
        
         // Jika tidak ada tanggal yang dipilih, tampilkan total pendapatan dan total poin pada bulan berjalan
        
@@ -28,11 +32,14 @@ class MyIncomeController extends Controller
             //     ->whereYear('tanggal', now()->year)
             //     ->whereMonth('tanggal', now()->month)
             //     ->sum('income');
+            
             $totalPointsThisMonth = Leaderboard::where('user_id', $userId)
                 ->whereYear('tanggal', now()->year)
                 ->whereMonth('tanggal', now()->month)
                 ->sum('total');
 
+
+   if ($kodeRole == 'me') {
                 if ($totalPointsThisMonth <= 0) {
                     $hasil = 0;
                 } else if ($totalPointsThisMonth < 72) {
@@ -48,6 +55,55 @@ class MyIncomeController extends Controller
                     $insentif = ($totalPointsThisMonth - 120) * 40000;
                     $hasil = $insentif + 6000000;
                 }
+
+            }else if ($kodeRole == 'tm') {
+
+                $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+                ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+                ->value('biaya_operasional');
+            
+                $detailsInsentif = DetailInsentif::where('role_id', $currentRole->id)
+                ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+                ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+                ->distinct()
+                ->get(['min_qty', 'max_qty', 'insentif']);
+            
+                foreach ($detailsInsentif as $detail) {
+                    $minqty = $detail->min_qty;
+                    $maxqty = $detail->max_qty;
+                    $insentif = $detail->insentif;
+                
+                    
+                    
+                    if ($totalPointsThisMonth >= $minqty && ($maxqty === null || $totalPointsThisMonth <= $maxqty)) {
+                        $insentifresult = ($totalPointsThisMonth - ($minqty-1)) * $detail->insentif;
+                        $hasil = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
+                     
+                    }
+                   
+                
+                    // Simpan nilai maxqty untuk iterasi berikutnya
+                    $maxQtyPrevious = $maxqty;
+                    $minQtyPrevious = $minqty;
+                    $insentifPrevious = $insentif;
+                }
+            
+            
+                
+            
+            } else  if ($kodeRole == 'ms') {
+                
+                $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)
+                ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+                ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+                ->value('biaya_operasional');
+            
+                $hasil = ($biayaOperasional * 4) + $totalPointsThisMonth;
+                $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";
+            
+            }
+
+
                 
                 $totalIncomeThisMonth = $hasil;
     
@@ -64,11 +120,17 @@ class MyIncomeController extends Controller
 
     public function filterIncome(Request $request)
 {
+    
+    $currentRole = auth()->user()->role;
+    
+    $kodeRole = strtolower($currentRole->kode_role);
+
     // Ambil data bulan dan tahun yang dipilih dari request
     $selectedMonth = $request->input('selectedMonth');
     
     // Parsing bulan dan tahun dari string yang diterima
     $selectedDate = Carbon::createFromFormat('Y-m', $selectedMonth);
+
 
     // Mengambil data pendapatan dan poin sesuai dengan bulan dan tahun yang dipilih
   
@@ -78,7 +140,12 @@ class MyIncomeController extends Controller
         ->whereMonth('tanggal', $selectedDate->month)
         ->sum('total');
 
+       
+        if ($totalPoints <= 0) {
+            $hasil = 0;
+        } else {
 
+        if ($kodeRole == 'me') {
         if ( $totalPoints  <= 0) {
             $hasil = 0;
         } else if ( $totalPoints  < 72) {
@@ -94,6 +161,49 @@ class MyIncomeController extends Controller
             $insentif = ( $totalPoints  - 120) * 40000;
             $hasil = $insentif + 6000000;
         }
+    
+
+    } else if  ($kodeRole == 'tm') {
+        $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $selectedDate)
+        ->where('tanggal_selesai', '>=', $selectedDate)
+        ->value('biaya_operasional');
+    
+        $detailsInsentif = DetailInsentif::where('role_id', $currentRole->id)
+        ->where('tanggal_mulai', '<=', $selectedDate)
+        ->where('tanggal_selesai', '>=', $selectedDate)
+        ->distinct()
+        ->get(['min_qty', 'max_qty', 'insentif']);
+    
+        foreach ($detailsInsentif as $detail) {
+            $minqty = $detail->min_qty;
+            $maxqty = $detail->max_qty;
+            $insentif = $detail->insentif;
+        
+            
+            
+            if ($totalPoints >= $minqty && ($maxqty === null || $totalPoints <= $maxqty)) {
+                $insentifresult = ($totalPoints - ($minqty-1)) * $detail->insentif;
+                $hasil = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
+             
+            }
+           
+        
+            // Simpan nilai maxqty untuk iterasi berikutnya
+            $maxQtyPrevious = $maxqty;
+            $minQtyPrevious = $minqty;
+            $insentifPrevious = $insentif;
+        }
+    }
+
+    else if  ($kodeRole == 'ms') { 
+        $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $selectedDate)
+        ->where('tanggal_selesai', '>=', $selectedDate)->value('biaya_operasional');
+    
+        $hasil = ($biayaOperasional * 4) + $totalPoints;
+        $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";   
+    
+    }
+}
         
         $totalIncome = $hasil;
 

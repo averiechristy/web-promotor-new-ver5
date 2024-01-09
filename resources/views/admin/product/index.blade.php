@@ -43,7 +43,7 @@ entries
                         
                         <th>Kode Produk</th>
                         <th>Nama Produk</th>
-                        <th>Poin Produk</th>
+                        
                         <th>Gambar Produk</th>
                         <th>Deskripsi Produk</th>
                         <th>Role Produk</th>
@@ -64,7 +64,7 @@ entries
                      
                         <td>{{ $item->kode_produk}}</td>
                         <td>{{ $item->nama_produk }}</td>
-                        <td>{{ $item->poin_produk}}</td>
+                        
 
                         <td>
 

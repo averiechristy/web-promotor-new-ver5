@@ -9,57 +9,74 @@
                                     Tambah Skema Baru
                                     </div>
                                     <div class="card-body">
-                                       <form name="saveform" action="{{route('admin.skema.simpan')}}"  enctype="multipart/form-data" method="post"  onsubmit="return validateForm()">
+                                       <form name="saveform"  action="/updateskema/{{$skema->id}}" enctype="multipart/form-data" method="post"  onsubmit="return validateForm()">
                                              @csrf
                                              <div class="form-group mb-4">
-                                                <label for="" class="form-label">Kode Role</label>
-                                            <select  id="role" name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example"oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
-                                                <option value="" disabled selected>-- Pilih Kode Role--</option>
-                                                @foreach ($role as $item)
-                                                    @if ($item->Akses->jenis_akses === 'User') <!-- Ubah kondisi ini -->
-                                                    <option value="{{ $item->id }}"{{ old('role_id') == $item->id ? 'selected' : '' }}> {{ $item->kode_role }} - {{$item->jenis_role}}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select> 
-                                            @if ($errors->has('role_id'))
-                                                <p class="text-danger">{{ $errors->first('role_id') }}</p>
-                                            @endif
-                                            </div>
-                                            <div class="form-group mb-4">
-                                                <label for="" class="form-label">Produk</label>
-                                            <select name="produk_id" class="form-control {{ $errors->has('produk_id') ? 'is-invalid' : '' }} product-select" style="border-color: #01004C;" aria-label=".form-select-lg example"oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
-                                                <option value="" disabled selected>-- Pilih Produk--</option>
-                                                <!-- @foreach ($produk as $item)
-                                                    <option value="{{ $item->id }}"{{ old('produk_id') == $item->id ? 'selected' : '' }}> {{ $item->nama_produk}}</option>
-                                                @endforeach -->
-                                            </select> 
-                                            @if ($errors->has('produk_id'))
-                                                <p class="text-danger">{{ $errors->first('produk_id') }}</p>
-                                            @endif
-                                            </div>
+    <label for="" class="form-label">Kode Role</label>
+    <select id="role" name="role_id" class="form-control {{ $errors->has('role_id') ? 'is-invalid' : '' }}" style="border-color: #01004C;" aria-label=".form-select-lg example" oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
+        <option value="" disabled>-- Pilih Kode Role--</option>
+        
+        @foreach ($role as $item)
+            @if ($item->Akses->jenis_akses === 'User')
+                <option value="{{ $item->id }}"{{ $item->id == old('role_id', $selectedRoleId) ? 'selected' : '' }}> {{ $item->kode_role }} - {{ $item->jenis_role }}</option>
+            @endif
+        @endforeach
+    </select> 
+    @if ($errors->has('role_id'))
+        <p class="text-danger">{{ $errors->first('role_id') }}</p>
+    @endif
+</div>
+
+
+                                            
+<div class="form-group mb-4">
+    <label for="" class="form-label">Produk</label>
+    <select name="produk_id" class="form-control {{ $errors->has('produk_id') ? 'is-invalid' : '' }} product-select" style="border-color: #01004C;" aria-label=".form-select-lg example" oninvalid="this.setCustomValidity('Pilih salah satu role')" oninput="setCustomValidity('')">
+        <option value="" disabled>-- Pilih Produk--</option>
+        @foreach ($produk as $item)
+        @if ($item->role_id == $selectedRoleId)
+        <option value="{{ $item->id }}" {{ $selectedProductId == $item->id ? 'selected' : '' }}>
+    {{ $item->nama_produk }}
+</option>
+
+            @endif        @endforeach
+    </select>
+    @if ($errors->has('produk_id'))
+        <p class="text-danger">{{ $errors->first('produk_id') }}</p>
+    @endif
+</div>
 
                                             <div class="form-group mb-4">
-                            <label for="tanggal_mulai">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', isset($reward) ? $reward->tanggal_mulai : '') }}" >
+    <label for="tanggal_mulai">Tanggal Mulai</label>
+    @php
+        $sekarang = now()->format('Y-m-d');
+    @endphp
+
+    @if ($sekarang >= $skema->tanggal_mulai && $sekarang <= $skema->tanggal_selesai)
+        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $skema->tanggal_mulai) }}" readonly>
+        <small class="text-muted">Tanggal Mulai tidak dapat diubah karena status sedang berjalan.</small>
+    @else
+        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $skema->tanggal_mulai) }}" required>
+    @endif
+</div>
+
+
+<div class="form-group mb-4">
+                            <label for="tanggal_selesai">Tanggal Selesai</label>
+                            <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai', isset($skema) ? $skema->tanggal_selesai : '') }}" required>
                         </div>
 
                         <div class="form-group mb-4">
-                            <label for="tanggal_selesai">Tanggal Selesai</label>
-                            <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai', isset($reward) ? $reward->tanggal_selesai : '') }}">
-                        </div>
-
-                                                 <div class="form-group mb-4">
-                                            <div class="form-check form-switch">
-    <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
-    <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
-</div>
-</div>
-                                            
-<div id="formpoin" class="form-group mb-4" style="display: none;">
-  <label for="exampleFormControlInput1" class="form-label">Poin Produk</label>
-  <input type="text" name="poin_produk" class="form-control" id="exampleFormControlInput1" >
+    <div class="form-check form-switch">
+        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()" {{ $skemaHasPoinProduk ? 'checked' : '' }}>
+        <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
+    </div>
 </div>
 
+<div id="formpoin" class="form-group mb-4" style="display: {{ $skemaHasPoinProduk ? 'block' : 'none' }}">
+    <label for="exampleFormControlInput1" class="form-label">Poin Produk</label>
+    <input type="text" name="poin_produk" class="form-control" id="exampleFormControlInput1" value="{{ $skema->poin_produk }}">
+</div>
 
                     
 
@@ -79,40 +96,45 @@
 
 
 <div class="insentif-container"> 
+@foreach ($nama as $detailData)
+@foreach(old('skema', ['']) as $index => $oldProduct)
+
 
 <div class="insentif-item"> 
                                             <div class="form-row">
     <div class="col-6">
     <label for="" class="form-label">Insentif</label>
 
-      <input type="number"  name ="insentif[]" class="form-control" oninput="validasiNumber(this)"  required>
+      <input type="number"  name ="insentif[]" value="{{ old('insentif.'.$index, $detailData->insentif) }}" class="insentif-input form-control" oninput="validasiNumber(this)" required >
     </div>
     <div class="col">
     <label for="" class="form-label">Minimal Qty</label>
 
-      <input type="number" min="1" name ="min_qty[]" class="form-control" oninput="validasiNumber(this)" >
+      <input type="number" min="1" name ="min_qty[]" value="{{ old('min_qty.'.$index, $detailData->min_qty) }}" class="min_qty-input form-control" oninput="validasiNumber(this)" >
     </div>
     <div class="col">
     <label for="" class="form-label">Maksimal Qty</label>
 
-      <input type="number" min="1" name="max_qty[]" class="form-control" oninput="validasiNumber(this)" >
+      <input type="number" min="1" name="max_qty[]"  value="{{ old('max_qty.'.$index, $detailData->max_qty) }}" class="max_qty-input form-control" oninput="validasiNumber(this)">
     </div>
     <div class="col-2 mt-2">
     <label for="" class="form-label"></label>
 
-    <button type="button" class="form-control btn btn-danger btn-sm" id="remove-insentif">Delete</button>
+    <button type="button" class="form-control btn btn-danger btn-sm remove-insentif" id="remove-insentif">Delete</button>
     </div>
   </div>
 
   </div>
+  @endforeach
+  @endforeach
   </div>
 
   <div class="form-group mb-4 mt-2">
-  <button type="button" class="btn btn-success btn-sm" id="add-insentif">Tambah Insentif</button>
+  <button type="button" class="btn btn-success btn-sm add-insentif" id="add-insentif">Tambah Insentif</button>
 </div>
  <!-- <div class="form-group mb-4">
                                                 <label for="" class="form-label">Keterangan</label>
-                                                <textarea name="keterangan" type="text" class="form-control {{$errors->has('keterangan') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" oninvalid="this.setCustomValidity('Deskripsi produk tidak boleh kosong')" oninput="setCustomValidity('')">{{old('keterangan')}}</textarea>
+                                                <textarea name="keterangan" type="text" class="form-control {{$errors->has('keterangan') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="{{ old('keterangan', $skema->keterangan) }}" oninvalid="this.setCustomValidity('Deskripsi produk tidak boleh kosong')" oninput="setCustomValidity('')">{{old('keterangan', $skema->keterangan)}}</textarea>
 
                                                 @if ($errors->has('keterangan'))
                                                     <p class="text-danger">{{$errors->first('keterangan')}}</p>
@@ -149,6 +171,8 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+
         <script>
 function validasiNumber(input) {
     // Hapus karakter titik (.) dari nilai input
@@ -158,17 +182,9 @@ function validasiNumber(input) {
     input.value = input.value.replace(/\D/g, '');
 }
 </script>
-
-
         <script>
     $(document).ready(function() {
 
-    var initialRoleId = $('#role').val();
-    var initialProductId = $('.product-select').eq(0).val();
-    if (initialRoleId) {
-        fillProductOptions(initialRoleId, $('.product-select'));
-    }
-    
         $('#role').change(function() {
             var roleId = $(this).val();
             $.ajax({
@@ -179,7 +195,7 @@ function validasiNumber(input) {
                     
                     productsSelect.empty();
                     $.each(data, function(key, produk) {
-                        productsSelect.append('<option value="'+ produk.id +  '">' + produk.nama_produk + '</option>');                  
+                        productsSelect.append('<option value="'+ produk.id +  '">'  + produk.nama_produk + '</option>');                  
 
                     });
                 }
@@ -193,6 +209,45 @@ function validasiNumber(input) {
 
 
 <script>
+
+function saveProductData() {
+    var productData = [];
+    $('.insentif-item').each(function() {
+        var insentifInput = $(this).find('.insentif-input');
+        var insentif = insentifInput.val();
+
+        var minqtyInput = $(this).find('.min_qty-input');
+        var minqty = minqtyInput.val();
+
+        var maxqtyInput = $(this).find('.max_qty-input');
+        var maxqty = maxqtyInput.val();
+
+        productData.push({  insentif: insentif, minqty: minqty, maxqty: maxqty });
+    });
+    localStorage.setItem('productData', JSON.stringify(productData));
+}
+
+$(document).ready(function() {
+    // ...
+
+    // Event handler untuk menambah produk
+    $('.add-insentif').click(function() {
+        // ...
+        saveProductData();
+    });
+
+    // Event handler untuk menghapus produk
+    $(document).on('click', '.remove-insentif', function() {
+        // ...
+        saveProductData();
+    });
+
+    // ...
+});
+
+
+
+
     $(document).ready(function () {
         // ... (kode JavaScript sebelumnya) ...
 
@@ -206,6 +261,7 @@ function validasiNumber(input) {
 
             // Menambah item insentif baru ke dalam kontainer
             insentifContainer.append(newInsentifItem);
+            saveProductData();
         });
 
         // Fungsi untuk menghapus insentif
@@ -220,10 +276,10 @@ function validasiNumber(input) {
             else {
                 alert("Anda tidak dapat menghapus form insentif pertama.");
             }
+            saveProductData();
         });
     });
 </script>
-
 
 
 <script>

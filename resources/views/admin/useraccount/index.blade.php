@@ -15,8 +15,6 @@
                             <a href="{{route('admin.useraccount.create')}}" class="btn btn-warning btn-sm">Tambah Data</a>
                         </div>
                         <div class="card-body">
-
-
                         <div class="dataTables_length mb-3" id="myDataTable_length">
 <label for="entries"> Show
 <select id="entries" name="myDataTable_length" aria-controls="myDataTable"  onchange="changeEntries()" class>
@@ -42,7 +40,7 @@ entries
                                     <thead>
                                         <tr>
                                           
-                                            <th>Id User</th>
+                                            
                                             <th>Nama</th>
                                             <th>Kode Sales (Username)</th>
                                             <!-- <th>Password</th> -->
@@ -64,7 +62,7 @@ entries
                                     @foreach ($dtUser as $item) 
                                         <tr>
                                            
-                                            <td>{{ $item->kode_user}}</td>
+                                            <!-- <td>{{ $item->kode_user}}</td> -->
                                             <td>{{ $item->nama }}</td>
                                             <td>{{ $item->username }}</td>
                                             <!-- <td>{{ $item->password }}</td> -->
@@ -74,10 +72,10 @@ entries
                                             <td>{{ $item->Role->jenis_role }}</td>
                                             <td>{{$item->created_at}}</td>
                                             <td> @if ($item->created_by)
-                {{ $item->created_by }}
-            @else
-                User tidak terdeteksi
-            @endif</td>
+                                                {{ $item->created_by }}
+                                                @else
+                                                    User tidak terdeteksi
+                                                @endif</td>
 
                                             <td>{{$item->updated_at}}</td>
                                             <td> @if ($item->updated_by)

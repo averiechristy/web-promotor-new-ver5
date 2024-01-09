@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Akses;
+use App\Models\BiayaOperasional;
 use App\Models\PackageIncome;
 use App\Models\Product;
 use App\Models\Reward;
+use App\Models\Skema;
 use Illuminate\Http\Request;
 use App\Models\UserRole;
 use App\Models\User;
@@ -146,11 +148,22 @@ class UserRoleController extends Controller
             $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data paket pendapatan yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
-        
-        if (Reward::where('role_id', $userrole->id)->exists()) {
-            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data reward yang berhubungan.");
+
+        if (BiayaOperasional::where('role_id', $userrole->id)->exists()) {
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data biaya operasional yang berhubungan.");
             return redirect()->route('admin.userrole.index');
         }
+
+        if (Skema::where('role_id', $userrole->id)->exists()) {
+            $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data skema yang berhubungan.");
+            return redirect()->route('admin.userrole.index');
+        }
+
+        
+        // if (Reward::where('role_id', $userrole->id)->exists()) {
+        //     $request->session()->flash('error', "Tidak dapat menghapus role, karena masih ada data reward yang berhubungan.");
+        //     return redirect()->route('admin.userrole.index');
+        // }
         
         $userrole->delete();
         
