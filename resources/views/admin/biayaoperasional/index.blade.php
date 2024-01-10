@@ -380,7 +380,6 @@ function doubleNextPage() {
 updatePagination();
 
 
-
     // Menangani perubahan pada input pencarian
     document.getElementById('search').addEventListener('input', applySearchFilter);
     // Panggil updatePagination untuk inisialisasi

@@ -16,6 +16,7 @@ class BiayaOperasional extends Model
         'tanggal_selesai',
         'created_by',
         'updated_by',
+        
     ];
 
     public function Role()

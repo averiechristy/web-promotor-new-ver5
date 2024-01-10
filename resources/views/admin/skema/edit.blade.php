@@ -102,20 +102,25 @@
 
 <div class="insentif-item"> 
                                             <div class="form-row">
-    <div class="col-6">
+    <div class="col-4">
     <label for="" class="form-label">Insentif</label>
 
       <input type="number"  name ="insentif[]" value="{{ old('insentif.'.$index, $detailData->insentif) }}" class="insentif-input form-control" oninput="validasiNumber(this)" required >
     </div>
     <div class="col">
+    <label for="" class="form-label">Allowance</label>
+
+      <input type="number"  name ="allowance[]" value="{{ old('allowance.'.$index, $detailData->allowance) }}" class="allowance-input form-control" oninput="validasiNumber(this)" >
+    </div>
+    <div class="col">
     <label for="" class="form-label">Minimal Qty</label>
 
-      <input type="number" min="1" name ="min_qty[]" value="{{ old('min_qty.'.$index, $detailData->min_qty) }}" class="min_qty-input form-control" oninput="validasiNumber(this)" >
+      <input type="number"  name ="min_qty[]" value="{{ old('min_qty.'.$index, $detailData->min_qty) }}" class="min_qty-input form-control" oninput="validasiNumber(this)" >
     </div>
     <div class="col">
     <label for="" class="form-label">Maksimal Qty</label>
 
-      <input type="number" min="1" name="max_qty[]"  value="{{ old('max_qty.'.$index, $detailData->max_qty) }}" class="max_qty-input form-control" oninput="validasiNumber(this)">
+      <input type="number"  name="max_qty[]"  value="{{ old('max_qty.'.$index, $detailData->max_qty) }}" class="max_qty-input form-control" oninput="validasiNumber(this)">
     </div>
     <div class="col-2 mt-2">
     <label for="" class="form-label"></label>
@@ -222,7 +227,10 @@ function saveProductData() {
         var maxqtyInput = $(this).find('.max_qty-input');
         var maxqty = maxqtyInput.val();
 
-        productData.push({  insentif: insentif, minqty: minqty, maxqty: maxqty });
+        var allowanceInput = $(this).find('.allowance-input');
+        var allowance = allowanceInput.val();
+
+        productData.push({  insentif: insentif, minqty: minqty, allowance: allowance });
     });
     localStorage.setItem('productData', JSON.stringify(productData));
 }

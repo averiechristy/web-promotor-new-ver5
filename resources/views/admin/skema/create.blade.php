@@ -3,7 +3,7 @@
                 <!-- Begin Page Content -->
                     <div class="container">
                         <div class="row">
-                            <div class="col-8 offset-2">
+                            <div class="col-12 ">
                                 <div class="card mt-3">
                                     <div class="card-header">
                                     Tambah Skema Baru
@@ -48,7 +48,8 @@
                             <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai', isset($reward) ? $reward->tanggal_selesai : '') }}">
                         </div>
 
-                                                 <div class="form-group mb-4">
+                                                 <div class="form-group mb-4 ml-4">
+                                                    
                                             <div class="form-check form-switch">
     <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleFormPoin()">
     <label class="form-check-label" for="flexSwitchCheckChecked">Konversi Poin</label>
@@ -59,7 +60,6 @@
   <label for="exampleFormControlInput1" class="form-label">Poin Produk</label>
   <input type="text" name="poin_produk" class="form-control" id="exampleFormControlInput1" >
 </div>
-
 
                     
 
@@ -82,22 +82,31 @@
 
 <div class="insentif-item"> 
                                             <div class="form-row">
-    <div class="col-6">
+    <div class="col-2">
     <label for="" class="form-label">Insentif</label>
 
       <input type="number"  name ="insentif[]" class="form-control" oninput="validasiNumber(this)"  required>
     </div>
+
+    <div class="col">
+    <label for="" class="form-label">Allowance</label>
+
+      <input type="number"  name ="allowance[]" class="form-control" oninput="validasiNumber(this)" >
+    </div>
+
     <div class="col">
     <label for="" class="form-label">Minimal Qty</label>
 
-      <input type="number" min="1" name ="min_qty[]" class="form-control" oninput="validasiNumber(this)" >
+      <input type="number"  name ="min_qty[]" class="form-control" oninput="validasiNumber(this)" >
     </div>
     <div class="col">
     <label for="" class="form-label">Maksimal Qty</label>
 
-      <input type="number" min="1" name="max_qty[]" class="form-control" oninput="validasiNumber(this)" >
+      <input type="number"  name="max_qty[]" class="form-control" oninput="validasiNumber(this)" >
     </div>
-    <div class="col-2 mt-2">
+
+
+    <div class="col mt-2">
     <label for="" class="form-label"></label>
 
     <button type="button" class="form-control btn btn-danger btn-sm" id="remove-insentif">Delete</button>
@@ -188,7 +197,6 @@ function validasiNumber(input) {
 
     });
 
-    
     </script>   
 
 
@@ -203,6 +211,7 @@ function validasiNumber(input) {
 
             // Mengosongkan nilai input pada item baru
             newInsentifItem.find('input').val('');
+            
 
             // Menambah item insentif baru ke dalam kontainer
             insentifContainer.append(newInsentifItem);

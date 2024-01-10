@@ -16,6 +16,7 @@ class DetailInsentif extends Model
         'min_qty',
         'max_qty',
         'produk_id',
+        'allowance',
 
     ];
 

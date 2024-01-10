@@ -88,9 +88,11 @@ if ($existingEntry) {
                     'insentif' => $insentif,
                     'min_qty' => $request->min_qty[$key],
                     'max_qty' => $request->max_qty[$key],
+                    'allowance' => $request->allowance[$key],
                     'tanggal_mulai' => $request->tanggal_mulai,
                     'tanggal_selesai' => $request->tanggal_selesai,
                     'role_id' => $request->role_id,
+                    'status' => isset($request->status[$key]) && $request->status[$key] == 'on' ? true : false,
                 ];
             
         }
@@ -213,6 +215,7 @@ if ($request->has('insentif') && $request->has('min_qty') && $request->has('max_
             'insentif' => $insentif,
             'min_qty' => $request->min_qty[$key],
             'max_qty' => $request->max_qty[$key],
+            'allowance' => $request->allowance[$key],
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'role_id' => $request->role_id,

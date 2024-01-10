@@ -223,6 +223,7 @@ class KalkulatorController extends Controller
         ->distinct()
         ->get(['min_qty', 'max_qty', 'insentif']);
         
+
         $maxQtyPrevious = null;
         $minQtyPrevious = null;
         $insentifPrevious = null;
@@ -304,6 +305,8 @@ foreach ($detailsInsentif as $detail) {
     $produk = Product::where('role_id', $user->role_id)->get();
     $productQuantities = $request->input('product_quantity');
     $totalNtb = 0;
+
+    $hasil = 0;
     $tanggalBerjalan = Carbon::now();
     $products = Product::all();
 
@@ -312,14 +315,53 @@ foreach ($detailsInsentif as $detail) {
             $quantity = $productQuantities[$product->id];
 
             // Assuming DetailInsentif model has a column named 'incentif'
-            $detailInsentif = DetailInsentif::where('produk_id', $product->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-            ->where('tanggal_selesai', '>=', $tanggalBerjalan)->first();
-            
-            $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
+            // $detailInsentif = DetailInsentif::where('produk_id', $product->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            // ->where('tanggal_selesai', '>=', $tanggalBerjalan)->first();
 
-            $totalNtb += $quantity * $incentif;
+
+            // $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
+
+            // $totalNtb += $quantity ;
+            
+            $detailsInsentif = DetailInsentif::where('produk_id', $product->id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            ->get(['min_qty', 'max_qty', 'insentif', 'allowance']);
+
+
+            $maxQtyPrevious = null;
+            $minQtyPrevious = null;
+            $insentifPrevious = null;
+    
+    
+    foreach ($detailsInsentif as $detail) {
+        $minqty = $detail->min_qty;
+        $maxqty = $detail->max_qty;
+        $insentif = $detail->insentif;
+        $allowance = $detail -> allowance;
+        
+        if ($quantity >= $minqty && ($maxqty === null || $quantity <= $maxqty)) {
+            $insentifresult = ($quantity - ($minqty-1)) * $detail->insentif;
+            $minQtyPrevious = ($minQtyPrevious === null || $minQtyPrevious == 1) ? 0 : $minQtyPrevious;
+    
+            $tiersebelumnya = ($maxQtyPrevious - $minQtyPrevious) * $insentifPrevious;
+                        
+            $result = $detail->allowance + $tiersebelumnya +  $insentifresult ;
+            
+        }
+        
+        // Simpan nilai maxqty untuk iterasi berikutnya
+        $maxQtyPrevious = $maxqty;
+        $minQtyPrevious = $minqty;
+        $insentifPrevious = $insentif;
+    }
+
+            $hasil += $result ;
         }
     }
+
+  
+
     $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
     ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
 
@@ -331,7 +373,7 @@ foreach ($detailsInsentif as $detail) {
     }
     
 
-    $hasil = ($biayaOperasional * 4) + $totalNtb;
+    // $hasil = ($biayaOperasional * 4) + $totalNtb;
     $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";
 
     

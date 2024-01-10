@@ -20,6 +20,7 @@
     <thead>
         <tr>
         <th>Insentif</th>
+        <th>Allowance</th>
         <th>Minimal Quantity</th>
         <th>Maksimal Quantity</th>
         </tr>
@@ -28,6 +29,7 @@
         @foreach ($insentif as $item)
    <tr>
 <td>{{$item -> insentif}}</td>
+<td>{{$item -> allowance}}</td>
 <td>{{$item -> min_qty}}</td>
 <td>{{$item -> max_qty}}</td>
    </tr>
