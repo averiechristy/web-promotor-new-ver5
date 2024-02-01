@@ -31,7 +31,7 @@
     
     <div id="form-jumlah-produk" >
         <h5 class="mt-3">Jumlah Produk yang harus dijual:</h5>
-        <p> <small style="color:red;">Asumsi jika dalam 1 bulan menjual minimal 5 aplikasi per minggu</small></p>
+        <p> <small style="color:red;">Untuk NTB Reguler minimal menjual 5 aplikasi per minggu dalam 1 bulan untuk mendapatkan allowance</small></p>
 
         <div class="row">
 

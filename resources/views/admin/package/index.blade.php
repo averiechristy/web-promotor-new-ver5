@@ -79,7 +79,7 @@ entries
             @endif</td>
 
                 <td>
-                    <div class="row">
+                   
                         <a href="{{ route('tampilpackage', $item->id) }}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange"></i></a>
                         <form method="POST" action="{{ route('deletepackage', $item->id) }}">
                             @csrf

@@ -110,14 +110,14 @@ entries
                Belum ada pembaruan
             @endif</td>
                         <td> 
-                           <div class="row">
+                          
                            <a href="{{route('tampilproduct', $item->id)}}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
                            <form method="POST" action="{{ route('deleteproduct', $item->id) }}">
                             @csrf
                             <input name="_method" type="hidden" value="DELETE">
                             <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red" ></i></button>
                         </form>                                              
-                            </div>
+                          
                             </td>
                         
                     </tr>

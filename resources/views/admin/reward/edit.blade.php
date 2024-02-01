@@ -85,8 +85,12 @@
                                             
 <div class="form-group mb-4">
     <label for="tanggal_mulai">Tanggal Mulai</label>
-    @if ($status == 'Sedang Berjalan')
-    <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $data->tanggal_mulai) }}" readonly>
+    @php
+        $sekarang = now()->format('Y-m-d');
+    @endphp
+
+    @if ($sekarang >= $data->tanggal_mulai && $sekarang <= $data->tanggal_selesai)
+        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $data->tanggal_mulai) }}" readonly>
         <small class="text-muted">Tanggal Mulai tidak dapat diubah karena status sedang berjalan.</small>
     @else
         <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $data->tanggal_mulai) }}" required>

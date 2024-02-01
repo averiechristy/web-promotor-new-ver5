@@ -23,4 +23,8 @@ class DetailInsentif extends Model
     public function skema() {
         return $this->belongsTo(Product::class, 'skema_id');
     }
+
+    public function Produk() {
+        return $this->belongsTo(Product::class, 'produk_id');
+    }
 }

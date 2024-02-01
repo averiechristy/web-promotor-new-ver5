@@ -3,7 +3,7 @@
                 <!-- Begin Page Content -->
                     <div class="container">
                         <div class="row">
-                            <div class="col-8 offset-2">
+                        <div class="col-12 ">
                                 <div class="card mt-3">
                                     <div class="card-header">
                                     Tambah Skema Baru
@@ -110,7 +110,7 @@
     <div class="col">
     <label for="" class="form-label">Allowance</label>
 
-      <input type="number"  name ="allowance[]" value="{{ old('allowance.'.$index, $detailData->allowance) }}" class="allowance-input form-control" oninput="validasiNumber(this)" >
+      <input type="number"  name ="allowance[]" value="{{ old('allowance.'.$index, $detailData->allowance) }}" class="allowance-input form-control" oninput="validasiNumber(this)" required>
     </div>
     <div class="col">
     <label for="" class="form-label">Minimal Qty</label>
@@ -122,8 +122,20 @@
 
       <input type="number"  name="max_qty[]"  value="{{ old('max_qty.'.$index, $detailData->max_qty) }}" class="max_qty-input form-control" oninput="validasiNumber(this)">
     </div>
+
+
+    <div class="form-group mb-4">
+    <label for="" class="form-label">Status</label>
+    <select name="status[]" class="form-select" aria-label="Default select example" required>
+        <option value="" disabled>Pilih Status</option>
+        <option value="Aktif" @if(old('status.'.$index, $detailData->status) == 'Aktif') selected @endif>Aktif</option>
+        <option value="Tidak Aktif" @if(old('status.'.$index, $detailData->status) == 'Tidak Aktif') selected @endif>Tidak Aktif</option>
+    </select>
+</div>
+
     <div class="col-2 mt-2">
     <label for="" class="form-label"></label>
+    
 
     <button type="button" class="form-control btn btn-danger btn-sm remove-insentif" id="remove-insentif">Delete</button>
     </div>
@@ -286,6 +298,46 @@ $(document).ready(function() {
             }
             saveProductData();
         });
+
+        $(document).on('input', '.insentif-item input[name="min_qty[]"], .insentif-item input[name="max_qty[]"]', function () {
+    var insentifItems = $('.insentif-container').find('.insentif-item');
+    var previousMinQtyValues = []; // Menyimpan nilai min_qty sebelumnya
+    var previousMaxQtyValues = []; // Menyimpan nilai max_qty sebelumnya
+
+    // Memastikan nilai min_qty dan max_qty berbeda
+    insentifItems.each(function () {
+        var minQtyInput = $(this).find('input[name="min_qty[]"]');
+        var maxQtyInput = $(this).find('input[name="max_qty[]"]');
+        
+        var minQty = minQtyInput.val();
+        var maxQty = maxQtyInput.val();
+
+        // Memeriksa apakah nilai minQty atau maxQty sudah diinput sebelumnya
+        if (previousMinQtyValues.includes(minQty) || previousMaxQtyValues.includes(maxQty)) {
+            alert("Nilai Min Qty atau Max Qty tidak boleh sama dengan nilai sebelumnya.");
+            
+            // Mengosongkan nilai yang menyebabkan kesalahan
+            minQtyInput.val('');
+            maxQtyInput.val('');
+        } else  if (previousMinQtyValues.includes(maxQty) || previousMaxQtyValues.includes(minQty)) {
+            alert("Nilai Min Qty atau Max Qty tidak boleh sama dengan nilai sebelumnya.");
+            
+            // Mengosongkan nilai yang menyebabkan kesalahan
+            minQtyInput.val('');
+            maxQtyInput.val('');
+        } else if (minQty !== '' && maxQty !== '' && parseInt(minQty) >= parseInt(maxQty)) {
+            alert("Nilai Max Qty harus lebih besar dari Min Qty atau Tidak boleh sama.");
+            
+            // Mengosongkan nilai yang menyebabkan kesalahan
+            minQtyInput.val('');
+            maxQtyInput.val('');
+        } else {
+            // Menyimpan nilai min_qty dan max_qty untuk pengecekan selanjutnya
+            previousMinQtyValues.push(minQty);
+            previousMaxQtyValues.push(maxQty);
+        }
+    });
+});
     });
 </script>
 

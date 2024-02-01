@@ -22,8 +22,8 @@
     Silakan memilih peran terlebih dahulu untuk melihat data.
 </div>
 
-    <!-- <div class="row">
-        <div class="col-xl-8 col-lg-7"> -->
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -59,10 +59,10 @@
                         </div>
                     </div>
                 </div>
-            <!-- </div>
+            </div>
         </div>
-         -->
-        <!-- <div class="col-xl-4 col-lg-5">
+        
+        <div class="col-xl-4 col-lg-5">
     <div class="card shadow mb-4">
         
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -75,13 +75,13 @@
         <div id="paginationButtons">
 
         </div>
-    </div> -->
+    </div>
     
     <div class="text-center">
       
-            <!-- <div id="historyButton">
+            <div id="historyButton">
         <button class="btn btn-sm btn-link" id="historyButton">Lihat History Reward</button>
-        </div> -->
+        </div>
         
     </div>
 

@@ -51,13 +51,13 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::is('admin/biayaoperasional/index') || Request::is('admin/biayaoperasional/create') ? 'active' : '' }}">
+    <!-- <li class="nav-item {{ Request::is('admin/biayaoperasional/index') || Request::is('admin/biayaoperasional/create') ? 'active' : '' }}">
     <a class="nav-link " href="{{route('admin.biayaoperasional.index')}}" data-toggle="" data-target="#collapseTwo"
         aria-expanded="true" aria-controls="collapseTwo">
         <i class="fas fa-money-bill" style="color: #01004C"></i>
         <span style="color: #01004C">Biaya Operasional</span>
     </a>        
-</li>
+</li> -->
 
 
     <li class="nav-item {{ Request::is('admin/skema/index') || Request::is('admin/skema/create') ? 'active' : '' }}">
@@ -86,14 +86,14 @@
         
     </li>
 
-    <!-- <li class="nav-item {{ Request::is('admin/reward/index')  || Request::is('admin/reward/create')  ? 'active' : '' }}">
+    <li class="nav-item {{ Request::is('admin/reward/index')  || Request::is('admin/reward/create')  ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.reward.index') }}" data-toggle="" data-target="#collapseContact"
                 aria-expanded="true" aria-controls="collapseContact">
                 <i class="fa fa-star" style="color: #01004C"></i>
                 <span style="color: #01004C">Reward</span>
                
             </a>
-        </li> -->
+        </li>
 
     <li class="nav-item {{ Request::is('admin/leaderboard/index')  ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.leaderboard.index') }}" data-toggle="" data-target="#collapseContact"

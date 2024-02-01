@@ -60,7 +60,6 @@ if ($existingEntry) {
     return redirect(route('admin.skema.index'))->withInput();
 }
 
-        
         $loggedInUser = auth()->user();
         $loggedInUsername = $loggedInUser->nama; 
         $skema = new Skema();
@@ -73,30 +72,28 @@ if ($existingEntry) {
         $skema->keterangan = $request->keterangan;
         $skema->created_by = $loggedInUsername;
 
-     
 
         $skema->save();
-
 
         $insentifData = [];
 
         foreach ($request->insentif as $key => $insentif) {
-           
-                $insentifData[] = [
-                    'skema_id' => $skema->id,
-                    'produk_id' => $request->produk_id, 
-                    'insentif' => $insentif,
-                    'min_qty' => $request->min_qty[$key],
-                    'max_qty' => $request->max_qty[$key],
-                    'allowance' => $request->allowance[$key],
-                    'tanggal_mulai' => $request->tanggal_mulai,
-                    'tanggal_selesai' => $request->tanggal_selesai,
-                    'role_id' => $request->role_id,
-                    'status' => isset($request->status[$key]) && $request->status[$key] == 'on' ? true : false,
-                ];
-            
+            $insentifData[] = [
+                'skema_id' => $skema->id,
+                'produk_id' => $request->produk_id, 
+                'insentif' => $insentif,
+                'min_qty' => $request->min_qty[$key],
+                'max_qty' => $request->max_qty[$key],
+                'allowance' => $request->allowance[$key],
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai,
+                'role_id' => $request->role_id,
+                'status' => $request->status[$key], // Menambahkan status untuk setiap insentif
+            ];
         }
         
+        
+    
 
         // Mass insert data insentif
         if (!empty($insentifData)) {
@@ -219,6 +216,7 @@ if ($request->has('insentif') && $request->has('min_qty') && $request->has('max_
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'role_id' => $request->role_id,
+            'status' => $request->status[$key],
         ];
     }
     // Simpan data insentif ke dalam tabel DetailInsentif

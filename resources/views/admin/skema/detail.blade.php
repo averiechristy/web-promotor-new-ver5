@@ -23,6 +23,7 @@
         <th>Allowance</th>
         <th>Minimal Quantity</th>
         <th>Maksimal Quantity</th>
+        <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +33,7 @@
 <td>{{$item -> allowance}}</td>
 <td>{{$item -> min_qty}}</td>
 <td>{{$item -> max_qty}}</td>
+<td>{{$item->status}}</td>
    </tr>
    @endforeach
     </tbody>

@@ -9,7 +9,7 @@
                                     Tambah Skema Baru
                                     </div>
                                     <div class="card-body">
-                                       <form name="saveform" action="{{route('admin.skema.simpan')}}"  enctype="multipart/form-data" method="post"  onsubmit="return validateForm()">
+                                    <form name="saveform" action="{{ route('admin.skema.simpan') }}" enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
                                              @csrf
                                              <div class="form-group mb-4">
                                                 <label for="" class="form-label">Kode Role</label>
@@ -61,8 +61,6 @@
   <input type="text" name="poin_produk" class="form-control" id="exampleFormControlInput1" >
 </div>
 
-                    
-
 <script>
     function toggleFormPoin() {
         var checkbox = document.getElementById('flexSwitchCheckChecked');
@@ -75,9 +73,6 @@
         }
     }
 </script>
-
-
-
 <div class="insentif-container"> 
 
 <div class="insentif-item"> 
@@ -91,7 +86,7 @@
     <div class="col">
     <label for="" class="form-label">Allowance</label>
 
-      <input type="number"  name ="allowance[]" class="form-control" oninput="validasiNumber(this)" >
+      <input type="number"  name ="allowance[]" class="form-control" oninput="validasiNumber(this)" required >
     </div>
 
     <div class="col">
@@ -104,6 +99,16 @@
 
       <input type="number"  name="max_qty[]" class="form-control" oninput="validasiNumber(this)" >
     </div>
+
+    <div class="form-group mb-4">
+    <label for="" class="form-label">Status</label>
+    <select name="status[]" class="form-select" aria-label="Default select example" required>
+        <option value="" selected disabled>Pilih Status</option>
+        <option value="Aktif">Aktif</option>
+        <option value="Tidak Aktif">Tidak Aktif</option>
+    </select>
+</div>
+
 
 
     <div class="col mt-2">
@@ -119,6 +124,8 @@
   <div class="form-group mb-4 mt-2">
   <button type="button" class="btn btn-success btn-sm" id="add-insentif">Tambah Insentif</button>
 </div>
+
+
  <!-- <div class="form-group mb-4">
                                                 <label for="" class="form-label">Keterangan</label>
                                                 <textarea name="keterangan" type="text" class="form-control {{$errors->has('keterangan') ? 'is-invalid' : ''}}"  style="border-color: #01004C;" value="" oninvalid="this.setCustomValidity('Deskripsi produk tidak boleh kosong')" oninput="setCustomValidity('')">{{old('keterangan')}}</textarea>
@@ -158,6 +165,44 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+        
+<script>
+function validateForm() {
+  let koderole = document.forms["saveform"]["role_id"].value;
+  let produk = document.forms["saveform"]["produk_id"].value;
+let tanggalmulai = document.forms["saveform"]["tanggal_mulai"].value;
+let tanggalselesai = document.forms["saveform"]["tanggal_selesai"].value;
+
+
+    if (koderole == "") {
+    alert("Kode role tidak boleh kosong");
+    return false;
+  } else   if (produk == "") {
+    alert("Produk tidak boleh kosong");
+    return false;
+  } else   if (tanggalmulai == "") {
+    alert("Tanggal Mulai tidak boleh kosong");
+    return false;
+  }
+    else   if (tanggalselesai == "") {
+    alert("Tanggal Selesai tidak boleh kosong");
+    return false;
+    }
+    else {
+    // Konversi nilai tanggal ke objek Date
+    let startDate = new Date(tanggalmulai);
+    let endDate = new Date(tanggalselesai);
+
+    // Periksa apakah tanggal mulai lebih awal dari tanggal selesai
+    if (startDate > endDate) {
+      alert("Tanggal mulai tidak boleh lebih awal dari tanggal selesai");
+      return false;
+    }
+  }
+
+}
+</script>
+
         <script>
 function validasiNumber(input) {
     // Hapus karakter titik (.) dari nilai input
@@ -196,84 +241,85 @@ function validasiNumber(input) {
         });
 
     });
-
+    
     </script>   
 
 
 <script>
-    $(document).ready(function () {
-        // ... (kode JavaScript sebelumnya) ...
+$(document).ready(function () {
 
-        // Fungsi untuk menambah insentif
-        $('#add-insentif').click(function () {
-            var insentifContainer = $('.insentif-container');
-            var newInsentifItem = $('.insentif-item').eq(0).clone();
+// ... (kode JavaScript sebelumnya) ...
 
-            // Mengosongkan nilai input pada item baru
-            newInsentifItem.find('input').val('');
+// Fungsi untuk menambah insentif
+$('#add-insentif').click(function () {
+    var insentifContainer = $('.insentif-container');
+    var newInsentifItem = $('.insentif-item').eq(0).clone();
+
+    // Mengosongkan nilai input pada item baru
+    newInsentifItem.find('input').val('');
+
+    // Mengatur ulang status checkbox
+
+    // Menambah item insentif baru ke dalam kontainer
+    insentifContainer.append(newInsentifItem);
+});
+
+// Fungsi untuk menghapus insentif
+$(document).on('click', '#remove-insentif', function () {
+    var insentifContainer = $('.insentif-container');
+    var insentifItems = insentifContainer.find('.insentif-item');
+
+    // Memastikan ada lebih dari satu item sebelum menghapus
+    if (insentifItems.length > 1) {
+        $(this).closest('.insentif-item').remove();
+    } else {
+        alert("Anda tidak dapat menghapus form insentif pertama.");
+    }
+});
+
+$(document).on('input', '.insentif-item input[name="min_qty[]"], .insentif-item input[name="max_qty[]"]', function () {
+    var insentifItems = $('.insentif-container').find('.insentif-item');
+    var previousMinQtyValues = []; // Menyimpan nilai min_qty sebelumnya
+    var previousMaxQtyValues = []; // Menyimpan nilai max_qty sebelumnya
+
+    // Memastikan nilai min_qty dan max_qty berbeda
+    insentifItems.each(function () {
+        var minQtyInput = $(this).find('input[name="min_qty[]"]');
+        var maxQtyInput = $(this).find('input[name="max_qty[]"]');
+        
+        var minQty = minQtyInput.val();
+        var maxQty = maxQtyInput.val();
+
+        // Memeriksa apakah nilai minQty atau maxQty sudah diinput sebelumnya
+        if (previousMinQtyValues.includes(minQty) || previousMaxQtyValues.includes(maxQty)) {
+            alert("Nilai Min Qty atau Max Qty tidak boleh sama dengan nilai sebelumnya.");
             
-
-            // Menambah item insentif baru ke dalam kontainer
-            insentifContainer.append(newInsentifItem);
-        });
-
-        // Fungsi untuk menghapus insentif
-        $(document).on('click', '#remove-insentif', function () {
-            var insentifContainer = $('.insentif-container');
-            var insentifItems = insentifContainer.find('.insentif-item');
-
-            // Memastikan ada lebih dari satu item sebelum menghapus
-            if (insentifItems.length > 1) {
-                $(this).closest('.insentif-item').remove();
-            }
-            else {
-                alert("Anda tidak dapat menghapus form insentif pertama.");
-            }
-        });
+            // Mengosongkan nilai yang menyebabkan kesalahan
+            minQtyInput.val('');
+            maxQtyInput.val('');
+        } else  if (previousMinQtyValues.includes(maxQty) || previousMaxQtyValues.includes(minQty)) {
+            alert("Nilai Min Qty atau Max Qty tidak boleh sama dengan nilai sebelumnya.");
+            
+            // Mengosongkan nilai yang menyebabkan kesalahan
+            minQtyInput.val('');
+            maxQtyInput.val('');
+        } else if (minQty !== '' && maxQty !== '' && parseInt(minQty) >= parseInt(maxQty)) {
+            alert("Nilai Max Qty harus lebih besar dari Min Qty atau Tidak boleh sama.");
+            
+            // Mengosongkan nilai yang menyebabkan kesalahan
+            minQtyInput.val('');
+            maxQtyInput.val('');
+        } else {
+            // Menyimpan nilai min_qty dan max_qty untuk pengecekan selanjutnya
+            previousMinQtyValues.push(minQty);
+            previousMaxQtyValues.push(maxQty);
+        }
     });
+});
+
+
+});
+
 </script>
 
-
-
-<script>
-function validateForm() {
-  let koderole = document.forms["saveform"]["role_id"].value;
-  let produk = document.forms["saveform"]["produk_id"].value;
-let tanggalmulai = document.forms["saveform"]["tanggal_mulai"].value;
-let tanggalselesai = document.forms["saveform"]["tanggal_selesai"].value;
-let keterangan = document.forms["saveform"]["keterangan"].value;
-
-
-    if (koderole == "") {
-    alert("Kode role tidak boleh kosong");
-    return false;
-  } else   if (produk == "") {
-    alert("Produk tidak boleh kosong");
-    return false;
-  } else   if (tanggalmulai == "") {
-    alert("Tanggal Mulai tidak boleh kosong");
-    return false;
-  }
-    else   if (tanggalselesai == "") {
-    alert("Tanggal Selesai tidak boleh kosong");
-    return false;
-    }else   if (keterangan == "") {
-    alert("Keterangan tidak boleh kosong");
-    return false;
-    }
-    else {
-    // Konversi nilai tanggal ke objek Date
-    let startDate = new Date(tanggalmulai);
-    let endDate = new Date(tanggalselesai);
-
-    // Periksa apakah tanggal mulai lebih awal dari tanggal selesai
-    if (startDate > endDate) {
-      alert("Tanggal mulai tidak boleh lebih awal dari tanggal selesai");
-      return false;
-    }
-  }
-
-}
-</script>
     @endsection
-

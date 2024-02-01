@@ -25,7 +25,7 @@ class KalkulatorController extends Controller
         $produk= Product::where('role_id', $user->role_id)->get();
         
         if (strtolower($userKodeRole) === 'me') {
-            return view('user.kalkulator', [
+            return view('user.paketkalkulatorlainnya', [
                 'produk' => $produk
             ]);
         } elseif (strtolower($userKodeRole) === 'tm') {
@@ -101,6 +101,7 @@ class KalkulatorController extends Controller
             return view('user.kalkulator', compact('hasil', 'produk', 'totalPoints', 'error'));   
              }
         
+             
         // return view('user.result', ['totalPoints' => $totalPoints]);
     }
 
@@ -178,15 +179,7 @@ class KalkulatorController extends Controller
                 }
             }
         }
-    
-        
-
-        $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-        ->where('tanggal_selesai', '>=', $tanggalBerjalan)
-        ->value('biaya_operasional');
-
-        
-      
+         
         // $minqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('min_qty');
 
         // $maxqtys = DetailInsentif::where('role_id', $user->role_id)->distinct()->pluck('max_qty');
@@ -205,59 +198,110 @@ class KalkulatorController extends Controller
     
         $result = 0;
 
-        // if ($totalNTB <= 90) {
-        //     $result =     $biayaOperasional;
-        // } elseif ($totalNTB >= 91 && $totalNTB <= 155) {
-        //     $insentif = ($totalNTB - 90) * 12000;
-        //     $result =     $biayaOperasional + $insentif;
-        // } elseif ($totalNTB > 155) {
-        //     $insentif = ($totalNTB - 155) * 15500;
-        //     $result =     $biayaOperasional + 768000 + $insentif;
-        // }
-
-  
 
         $detailsInsentif = DetailInsentif::where('role_id', $user->role_id)
         ->where('tanggal_mulai', '<=', $tanggalBerjalan)
         ->where('tanggal_selesai', '>=', $tanggalBerjalan)
         ->distinct()
-        ->get(['min_qty', 'max_qty', 'insentif']);
+        ->get(['min_qty', 'max_qty', 'insentif', 'allowance', 'status']);
         
-
+        
+      
         $maxQtyPrevious = null;
         $minQtyPrevious = null;
         $insentifPrevious = null;
+        $statusPrevious = null;
+        $tiers = []; // Menyimpan tier yang memenuhi kondisi
 
 
+        foreach ($detailsInsentif as $detail) {
+            $minqty = $detail->min_qty;
+            $maxqty = $detail->max_qty;
+            $insentif = $detail->insentif;
+            $status = $detail -> status;
+            $allowance = $detail -> allowance;
 
-foreach ($detailsInsentif as $detail) {
-    $minqty = $detail->min_qty;
-    $maxqty = $detail->max_qty;
-    $insentif = $detail->insentif;
+          
+        $tiers[] = [
+            'minQty' => $minQtyPrevious,
+            'maxQty' => $maxQtyPrevious,
+            'insentif' => $insentifPrevious,
+            'status' => $statusPrevious,
+        ];
 
-    
-    
-    if ($totalNTB >= $minqty && ($maxqty === null || $totalNTB <= $maxqty)) {
-        $insentifresult = ($totalNTB - ($minqty-1)) * $detail->insentif;
-        $result = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
-     
+        
+            if ($totalNTB  == 90){
+                $result = $allowance;
+            }
+           else if ($status == 'Aktif' && $totalNTB >= $minqty && ($maxqty === null || $totalNTB <= $maxqty)) {
+                $insentifresult = ($totalNTB - ($minqty-1)) * $detail->insentif;
+                
+                $tiersebelumnya = 0;
+
+
+foreach ($tiers as $tier) {
+    $minQty = $tier['minQty'];
+    $maxQty = $tier['maxQty'];
+    $insentif = $tier['insentif'];
+    $status = $tier['status'];
+
+    if ($status == 'Aktif') {
+        $tierResult = ($maxQty - ($minQty - 1)) * $insentif;
+        $tiersebelumnya += $tierResult;
     }
-   
-
-    // Simpan nilai maxqty untuk iterasi berikutnya
-    $maxQtyPrevious = $maxqty;
-    $minQtyPrevious = $minqty;
-    $insentifPrevious = $insentif;
 }
 
 
-// if ($totalNTB >= $minqtys[0] && $totalNTB <= $maxqtys[0]) {
-//     $insentif = ($totalNTB - $minqtys[0]) * $insentifs[0];
-//     $result = $biayaOperasional + $insentif;
-// } elseif ($totalNTB >= $minqtys[1]  ) {
-//     $insentif = ($totalNTB - $maxqtys[0]) * $insentifs[1];
-//     $result = $biayaOperasional + ( ($maxqtys[0]-$minqtys[0]) * $insentifs[0]) + $insentif;
-// }
+            
+            
+            // Menambahkan allowance ke hasil akhir
+            $totalResult = $tiersebelumnya ;
+          
+            
+              
+            
+                $resultaktif = $tiersebelumnya + $insentifresult;
+                break;
+
+               
+    
+            }
+             else if ($status == 'Tidak Aktif') {
+                $insentifresult = $insentif * $totalNTB;
+                $resulttidakaktif = $insentifresult ;
+                break;
+            }
+            
+            // Simpan nilai maxqty untuk iterasi berikutnya
+            $maxQtyPrevious = $maxqty;
+            $minQtyPrevious = $minqty;
+            $insentifPrevious = $insentif;
+            $statusPrevious = $status;
+        }
+     
+        if (isset($resultaktif) && $resultaktif > 0) {
+            $allowance = DetailInsentif::where('role_id', $user->role_id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            
+            ->where('status', 'Aktif') // Menambahkan kondisi status aktif
+                    ->distinct() // Menambahkan fungsi distinct
+                    ->value('allowance'); // Mengambil nilai langsung
+    
+            
+           $result = $allowance + $resultaktif;
+          
+        } else if (isset($resulttidakaktif) && $resulttidakaktif > 0) {
+            $allowance = DetailInsentif::where('role_id', $user->role_id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            ->where('status', 'Tidak Aktif') // Menambahkan kondisi status aktif
+                    ->distinct() // Menambahkan fungsi distinct
+                    ->value('allowance'); // Mengambil nilai langsung
+    
+           $result = $allowance + $resulttidakaktif;
+
+        }
 
         // Return the result to the view
         return view('user.kalkulatorTM', [
@@ -304,67 +348,138 @@ foreach ($detailsInsentif as $detail) {
     $user = Auth::user();
     $produk = Product::where('role_id', $user->role_id)->get();
     $productQuantities = $request->input('product_quantity');
+    
     $totalNtb = 0;
 
     $hasil = 0;
     $tanggalBerjalan = Carbon::now();
     $products = Product::all();
 
+
+
     foreach ($products as $product) {
         if (isset($productQuantities[$product->id])) {
             $quantity = $productQuantities[$product->id];
 
-            // Assuming DetailInsentif model has a column named 'incentif'
-            // $detailInsentif = DetailInsentif::where('produk_id', $product->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-            // ->where('tanggal_selesai', '>=', $tanggalBerjalan)->first();
+          
 
-
-            // $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
-
-            // $totalNtb += $quantity ;
-            
             $detailsInsentif = DetailInsentif::where('produk_id', $product->id)
             ->where('tanggal_mulai', '<=', $tanggalBerjalan)
             ->where('tanggal_selesai', '>=', $tanggalBerjalan)
-            ->get(['min_qty', 'max_qty', 'insentif', 'allowance']);
+            ->get(['min_qty', 'max_qty', 'insentif', 'allowance', 'status']);
 
 
+            
             $maxQtyPrevious = null;
             $minQtyPrevious = null;
             $insentifPrevious = null;
+            $statusPrevious = null;
+            $tiers = []; // Menyimpan tier yang memenuhi kondisi
+
     
-    
+           
     foreach ($detailsInsentif as $detail) {
         $minqty = $detail->min_qty;
         $maxqty = $detail->max_qty;
         $insentif = $detail->insentif;
+        $status = $detail -> status;
         $allowance = $detail -> allowance;
+       
         
-        if ($quantity >= $minqty && ($maxqty === null || $quantity <= $maxqty)) {
+
+        if ($product->id == 121) {
+
+           
+          
+           if($quantity < 5){
+
+            $allowance = 0;
+
+           } else if ($quantity >=5 && $quantity <10){
+            $allowance = $allowance * 1;
+           }else if ($quantity >=10 && $quantity <15){
+            $allowance = $allowance * 2;
+           }else if ($quantity >=15 && $quantity <20){
+            $allowance = $allowance * 3;
+           }
+           else if ($quantity>=20){
+            $allowance = $allowance * 4;
+           }
+
+          
+        }
+
+       
+        $tiers[] = [
+            'minQty' => $minQtyPrevious,
+            'maxQty' => $maxQtyPrevious,
+            'insentif' => $insentifPrevious,
+            'status' => $statusPrevious,
+        ];
+
+        if ($status == 'Aktif' && $quantity >= $minqty && ($maxqty === null || $quantity <= $maxqty)) {
             $insentifresult = ($quantity - ($minqty-1)) * $detail->insentif;
-            $minQtyPrevious = ($minQtyPrevious === null || $minQtyPrevious == 1) ? 0 : $minQtyPrevious;
-    
-            $tiersebelumnya = ($maxQtyPrevious - $minQtyPrevious) * $insentifPrevious;
-                        
-            $result = $detail->allowance + $tiersebelumnya +  $insentifresult ;
+
+       
+$totalTierResult = 0;
+
+
+foreach ($tiers as $tier) {
+    $minQty = $tier['minQty'];
+    $maxQty = $tier['maxQty'];
+    $insentif = $tier['insentif'];
+    $status = $tier['status'];
+
+    if ($status == 'Aktif') {
+        $tierResult = ($maxQty - ($minQty - 1)) * $insentif;
+        $totalTierResult += $tierResult;
+    }
+}
+
+
+            
+            
+            // Menambahkan allowance ke hasil akhir
+            $totalResult = $totalTierResult ;
+          
+
+            
+        if  ($statusPrevious == 'Tidak Aktif') {
+                $tiersebelumnya = 0;
+                $remainingQuantity = 0;
+            } else {
+                // Tambahan pengecekan jika tiering pertama
+                $tiersebelumnya = 0;
+            }
+
+            
+            $result = $totalTierResult + $insentifresult + $allowance;
             
         }
+
+      
+
+         else if ($status == 'Tidak Aktif') {
+            $insentifresult = $insentif * $quantity;
+            $result = $insentifresult + $allowance ;
+        }
+        
         
         // Simpan nilai maxqty untuk iterasi berikutnya
         $maxQtyPrevious = $maxqty;
         $minQtyPrevious = $minqty;
         $insentifPrevious = $insentif;
+        $statusPrevious = $status;
     }
 
-            $hasil += $result ;
+ 
+            
+$hasil += $result;
+            
         }
     }
 
-  
-
-    $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-    ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
-
+   
    if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Ambil data dari form dan simpan dalam sesi
         foreach ($_POST["product_quantity"] as $produkId => $quantity) {
@@ -374,7 +489,7 @@ foreach ($detailsInsentif as $detail) {
     
 
     // $hasil = ($biayaOperasional * 4) + $totalNtb;
-    $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";
+    $message = "Untuk NTB Reguler minimal menjual 5 aplikasi per minggu dalam 1 bulan untuk mendapatkan allowance";
 
     
     return view('user.kalkulatorMS', [

@@ -77,7 +77,7 @@ entries
                 Belum ada pembaruan
             @endif</td>
                                             <td> 
-                                            <div class="row">
+                                           
                                                                <a href="{{route('tampildata', $item->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
                                                   
                                                
@@ -86,7 +86,7 @@ entries
                             <input name="_method" type="hidden" value="DELETE">
                             <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red"></i></button>
                         </form>             
-                      </div>
+                    
                      </td>
                      </tr>
                      @endforeach

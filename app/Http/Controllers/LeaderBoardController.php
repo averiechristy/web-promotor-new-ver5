@@ -98,6 +98,7 @@ class LeaderBoardController extends Controller
     {
         $file = $request->file('file');
 
+       
         if ($file->getClientOriginalExtension() != 'xlsx') {
             $request->session()->flash('error', 'Tipe file tidak sesuai. Harap unggah file Excel (xlsx).');
             return redirect(route('admin.leaderboard.index'));
@@ -155,6 +156,7 @@ class LeaderBoardController extends Controller
                 $tanggalString = $rowData[1];
                 
                 $tanggalObj = DateTime::createFromFormat('d/m/Y', $tanggalString);
+                
                 
             
                 if (!$tanggalObj) {
@@ -256,22 +258,76 @@ class LeaderBoardController extends Controller
                     }
     
                     // Dapatkan poin produk dari tabel master produk
-                    $product = Product::where('nama_produk', $namaProduk)->first();
+                    $product = Product::where('nama_produk', $namaProduk) ->where('role_id', $role_id)->first();
     
                     if (!$product) {
                         // Tangani kesalahan jika produk tidak ditemukan
                         $request->session()->flash('error', 'Produk tidak ditemukan dalam database.');
                         return redirect(route('admin.leaderboard.index'))->withInput();
                     }    
+
+                    
                     // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
                 }
+
+               
+                $pencapaianflag = [];
+                $totalflag = 0;
+    
+                for ($j = 4; $j < count($headerRow); $j++) {
+                    
+                    // $pencapaianflag[$headerRow[$j]] = $rowData[$j];
+
+                    $namaProduk = $headerRow[$j]; // Nama produk dari header
+                    $jumlah = $rowData[$j];
+    
+                    // Memeriksa apakah $jumlah adalah angka
+                    if (!is_numeric($jumlah)) {
+                        // Tangani kesalahan jika $jumlah bukan angka
+                        $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk harus berupa angka.";
+                        continue;
+                    }
+
+                    if (intval($jumlah) != $jumlah || $jumlah < 0) {
+                        $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk tidak boleh desimal.";
+                        continue;
+                    }
+    
+                    $jumlah = intval($jumlah); // Mengonversi ke integer setelah memastikan itu adalah angka
+    
+                    // Cek apakah nilai negatif
+                    if ($jumlah < 0) {
+                        // Tangani nilai negatif sesuai dengan kebutuhan Anda.
+                        
+                        $errorDetails[] = "Kesalahan pada baris $rowNumber: Jumlah produk tidak boleh negatif.";
+                        continue;
+                    }
+    
+                    // Dapatkan poin produk dari tabel master produk
+                    $product = Product::where('nama_produk', $namaProduk) ->where('role_id', $role_id)->first();
+    
+                    if (!$product) {
+                        // Tangani kesalahan jika produk tidak ditemukan
+                        $request->session()->flash('error', 'Produk tidak ditemukan dalam database.');
+                        return redirect(route('admin.leaderboard.index'))->withInput();
+                    }    
+
+                    $pencapaianflag[$product->id] =  $rowData[$j];
+
+                    // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
+                }
+              
 
                 $rowData[0] = $maxNo + 1;
                 $rowData['user_id'] = $user->id;
             
                 $validData[] = $rowData;
             }
-            
+
+          
+
+
+
             if (!empty($errorDetails)) {
                 $errorMessages = implode('<br>', $errorDetails);
                 $errorMessages = nl2br($errorMessages); // Gantikan baris baru dengan tag <br>
@@ -280,9 +336,12 @@ class LeaderBoardController extends Controller
             }
             
 
-            foreach ($validData as $rowData) {
 
+            foreach ($validData as $rowData) {
+                
                 $maxNo = LeaderBoard::max('no');
+
+             
                 // Lakukan semua perubahan yang diperlukan sebelum menyimpan data ke dalam database
 
                 $rowData[0] = $maxNo + 1;
@@ -290,45 +349,43 @@ class LeaderBoardController extends Controller
                 $pencapaian = [];
                 $total = 0;
 
-                
-                // for ($j = 4; $j < count($headerRow); $j++) {
-                //     $pencapaian[$headerRow[$j]] = $rowData[$j];
-    
-                //     $namaProduk = $headerRow[$j]; // Nama produk dari header
-                //     $jumlah = $rowData[$j];
-    
-                  
-                //     // Dapatkan poin produk dari tabel master produk
-                //     $product = Product::where('nama_produk', $namaProduk)->first();
-    
-                    
-                //     // Hitung total poin berdasarkan poin produk dan jumlah yang diisi
-                //     $total += $product->poin_produk * $jumlah;
-                // }
+               
 
                 for ($j = 4; $j < count($headerRow); $j++) {
                     $pencapaian[$headerRow[$j]] = $rowData[$j];
             
                     $namaProduk = $headerRow[$j]; // Nama produk dari header
                     $jumlah = $rowData[$j];
+
+                    
             
                     if ($kodeRole == 'ms') {
                         // Jika MS, ambil insentif dari tabel detail insentif
                         $produk = Product::where('nama_produk', $namaProduk)->first();
-                        
-            
+                       
+          
                         if ($produk) {
-                            $insentif = DetailInsentif::where('produk_id', $produk->id)
-                            ->where('tanggal_mulai', '<=', $tanggalObj)
-                            ->where('tanggal_selesai', '>=', $tanggalObj)
-                                ->first();
 
-            
-                            if ($insentif) {
-                                $total += $insentif->insentif * $jumlah;
+                           
+                            $poinproduk = Skema::where('produk_id', $produk->id)->where('tanggal_mulai', '<=', $tanggalObj)
+                            ->where('tanggal_selesai', '>=', $tanggalObj)->first();
+                            
+                            if ($poinproduk) {
+                                $poin = round($poinproduk->poin_produk * $jumlah, 0, PHP_ROUND_HALF_DOWN);
                                
-                            }
+                               
+                                $decimalPart = fmod($poin, 1);
+                                if ($decimalPart == 0.9) {
+                                    $poin = ceil($poin);
+                                }
+
+                              
+                                $total += $poin;                           
+                             }
                         }
+
+
+                       
                     }  elseif ($kodeRole == 'tm') {
                         // Jika TM, ambil poin produk dari tabel skema
                         $produk = Product::where('nama_produk', $namaProduk)->first();
@@ -336,31 +393,84 @@ class LeaderBoardController extends Controller
                         if ($produk) {
                             $poinproduk = Skema::where('produk_id', $produk->id)->where('tanggal_mulai', '<=', $tanggalObj)
                         ->where('tanggal_selesai', '>=', $tanggalObj)->first();
-                           
-                    
+                        
+                   
                             if ($poinproduk) {
-                                
-                                // $total += $poinproduk->poin_produk * $jumlah;
+                               
+                                $poin = round($poinproduk->poin_produk * $jumlah, 0, PHP_ROUND_HALF_DOWN);
+
+                                $decimalPart = fmod($poin, 1);
+                                if ($decimalPart == 0.9) {
+                                    $poin = ceil($poin);
+                                }
+
                               
-                                $total += round($poinproduk->poin_produk * $jumlah, 0, PHP_ROUND_HALF_DOWN);
+                                $total += $poin;
                                 
                                 
                                 // Check if the decimal part ends with 9
-                                $decimalPart = fmod($total, 1);
-                                if ($decimalPart == 0.9) {
-                                    $total = ceil($total);
-                                }
+                               
 
-            
+                                
                             }
+
+                           
                         }
                        
                     }
                 }
                
+            
+        
+                $totalflag = 0;
+                $pencapaianflag = [];
+              
+                for ($j = 4; $j < count($headerRow); $j++) {
+                    $namaProduk = $headerRow[$j]; // Nama produk dari header
+                    $jumlah = $rowData[$j];
+                
+                    if ($kodeRole == 'ms' || $kodeRole == 'tm') {
+                        // Jika MS atau TM, ambil id produk dari tabel produk
+                        $produk = Product::where('nama_produk', $namaProduk)->where('role_id', $role_id)->first();
+
+                
+                        if ($produk) {
+                            $productId = $produk->id; // Get the product ID
+                
+                            $poinproduk = Skema::where('produk_id', $productId)
+                                ->where('tanggal_mulai', '<=', $tanggalObj)
+                                ->where('tanggal_selesai', '>=', $tanggalObj)
+                                ->first();
+                
+                            if ($poinproduk) {
+                                $poin = round($poinproduk->poin_produk * $jumlah, 0, PHP_ROUND_HALF_DOWN);
+                                
+                
+                                $decimalPart = fmod($poin, 1);
+                                if ($decimalPart == 0.9) {
+                                    $poin = ceil($poin);
+                                }
+                
+                                $totalflag += $poin;
+                
+                                // Update the array with product ID instead of product name
+                                $pencapaianflag[$productId] = $rowData[$j];
+                            }
+                        }
+                    }
+                }
+
+                
+
+                $valueForId121 = isset($pencapaianflag[121]) ? $pencapaianflag[121] : null;
+             
+                
+       
                 // Tambahkan nilai total ke dalam array $rowData
                 $rowData[] = $total;
-                
+               
+                $rowData[] = $totalflag;
+
 
                 LeaderBoard::create([
                     'no' => $rowData[0], // Kolom 'No'
@@ -369,14 +479,21 @@ class LeaderBoardController extends Controller
                     'nama' => $rowData[2], // Kolom 'Nama'
                     'kode_sales' => $rowData[3],
                     'tanggal' => $rowData[1], // Kolom 'Tanggal'
-                   
+                   'pencapaian_flag' => $pencapaianflag,
+                   'ntb_reg_flag' => $valueForId121,
                     'pencapaian' => $pencapaian, // Kolom-kolom pencapaian dari header
-                    'total' => $total, // Kolom 'Total' (ambil dari indeks terakhir)
+                    'total' => $total, 
+                    'totalflag' => $totalflag,// Kolom 'Total' (ambil dari indeks terakhir)
                 ]);
     
                 // Increment nomor terbesar
                 $maxNo++;
             }
+
+
+           
+
+
             $request->session()->flash('success', 'Data berhasil diimport.');
     
         return redirect(route('admin.leaderboard.index'))->withInput();

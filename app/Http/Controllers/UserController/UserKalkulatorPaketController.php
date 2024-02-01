@@ -145,7 +145,7 @@ if ($totalPersen != 100) {
     public function hitungTM(Request $request)
     {
 
- $user = Auth::user();
+        $user = Auth::user();
 
         $barang= Product::where('role_id', $user->role_id)->get();
 
@@ -186,66 +186,58 @@ if ($totalPersen != 100) {
             }
         }
 
-        // Tambahkan 3 juta ke total cicilan
+        // Tambahkan untuk kebutuhan hidup
         $totalCicilan += 4900000;
-
-
+        
+ 
+        
+        
         $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
         ->where('tanggal_selesai', '>=', $tanggalBerjalan)
         ->value('biaya_operasional');
-        
-        
+
+
         $detailsInsentif = DetailInsentif::where('role_id', $user->role_id)
         ->where('tanggal_mulai', '<=', $tanggalBerjalan)
         ->where('tanggal_selesai', '>=', $tanggalBerjalan)
         ->distinct()
         ->get(['min_qty', 'max_qty', 'insentif']);
+     
         
-    
-        $insentifnext = null;
+    $insentifnext = null;
     $minqtynext = null;
     $maxqtynext = null;
     $rangenext = null;
-
+    $statusnext = null;
+    $tiers = []; // Menyimpan tier yang memenuhi kondisi
+    $maxQtyPrevious = null;
+        $minQtyPrevious = null;
+        $insentifPrevious = null;
+        $statusPrevious = null;
+   
     $selisih = ceil($totalCicilan - $biayaOperasional);
 
     $totalntb = 0; // Inisialisasi nilai totalntb di luar loop
     
     $selisih = ceil($totalCicilan - $biayaOperasional);
     $totalntb = 0; // Inisialisasi nilai totalntb di luar loop
+
     
-    // foreach ($detailsInsentif as $key => $detail) {
-    //     // Accessing values from the current and next elements
-    //     $minqty = $detail->min_qty;
-    //     $maxqty = $detail->max_qty;
-    //     $insentif = $detail->insentif;
-    //     $range = ceil(($maxqty - $minqty) * $insentif);
-
-    //     if (isset($detailsInsentif[$key + 1])) {
-    //         $minqtynext = $detailsInsentif[$key + 1]->min_qty;
-    //         $maxqtynext = $detailsInsentif[$key + 1]->max_qty;
-    //         $insentifnext = $detailsInsentif[$key + 1]->insentif;
-    
-    //         $rangenext = ceil(($maxqtynext - $minqtynext) * $insentifnext);
-
-    //         if ($selisih < $range ) {
-    //             $totalntb = ceil(($minqty - 1) + ($selisih / $insentif));
-                
-    //             break;
-    //         } elseif ($selisih >= $range ){
-    //             $totalntb = ceil(($minqtynext - 1) + (($selisih - $range) / $insentifnext));
-    //             dd($totalntb);
-    //             break;
-    //         }
-    //     }
-    // }
-
     foreach ($detailsInsentif as $key => $detail) {
         // Accessing values from the current and next elements
         $minqty = $detail->min_qty;
         $maxqty = $detail->max_qty;
         $insentif = $detail->insentif;
+        $status = $detail->status;
     
+        $tiers[] = [
+            'minQty' => $minQtyPrevious,
+            'maxQty' => $maxQtyPrevious,
+            'insentif' => $insentifPrevious,
+            'status' => $statusPrevious,
+        ];
+
+       
         // Handling the case where maxqty is null (unbounded)
         if ($maxqty === null) {
             $range = PHP_INT_MAX; // A very large number to represent unbounded range
@@ -258,6 +250,10 @@ if ($totalPersen != 100) {
             $minqtynext = $detailsInsentif[$key + 1]->min_qty;
             $maxqtynext = $detailsInsentif[$key + 1]->max_qty;
             $insentifnext = $detailsInsentif[$key + 1]->insentif;
+            $statusnext = $detailsInsentif[$key + 1]->status;
+         
+
+       
     
             // Handling the case where maxqtynext is null (unbounded)
             if ($maxqtynext === null) {
@@ -270,13 +266,14 @@ if ($totalPersen != 100) {
                 // Jika selisih kurang dari rentang, hitung totalntb berdasarkan rumus pertama
                 $totalntb = ceil(($minqty - 1) + ($selisih / $insentif));
                 break;
-            } elseif ($selisih >= $range && $selisih <  $rangenext) {
-                // Jika selisih lebih dari atau sama dengan rentang dan kurang dari rentang + rentang selanjutnya,
-                // hitung totalntb berdasarkan rumus kedua
+            } elseif ($selisih >= $range && $selisih <  $rangenext   ) {
+                    
+               
                 $totalntb = ceil(($minqtynext - 1) + (($selisih - $range) / $insentifnext));
+                
               
                 break;
-            }
+            } 
         } else {
             // Handling the case where there is no next range
             if ($selisih >= $range) {
@@ -287,8 +284,13 @@ if ($totalPersen != 100) {
                 break;
             }
         }
+
+        $maxQtyPrevious = $maxqty;
+        $minQtyPrevious = $minqty;
+        $insentifPrevious = $insentif;
+        $statusPrevious = $status;
     }
-    
+ 
       
         // if ($index + 1 < count($detailsInsentif)) {
         //     $insentifnext = $detailsInsentif[$index+1]->insentif;                 
@@ -477,11 +479,11 @@ public function hitungMS (Request $request) {
 
         // Ambil data dari formulir
         $cicilanInputs = $request->input('cicilan');
-
-       
+    
 
         $cicilanInputs = $request->input('cicilan');
         $productPersen = $request->input('product_persen');
+        
         $selectedBarang = $request->input('nama_barang');
     
         // Validasi bahwa barang yang dipilih tidak boleh sama
@@ -489,8 +491,10 @@ public function hitungMS (Request $request) {
             return redirect()->back()->with('error', 'Barang yang dipilih tidak boleh sama');
         }
 
+        
         $totalCicilan = 0;
         $cicilanInputs = $request->input('cicilan');
+        
         $filteredCicilanInputs = [];
         
 
@@ -500,7 +504,6 @@ public function hitungMS (Request $request) {
             $filteredCicilanInputs[] = $cicilanValue;
         }
 
-
         foreach ($filteredCicilanInputs as $cicilan) {
             if (is_numeric($cicilan)) {
                 $totalCicilan += (int)$cicilan;
@@ -509,7 +512,192 @@ public function hitungMS (Request $request) {
 
         // Tambahkan 3 juta ke total cicilan
         $totalCicilan += 3000000;
+       
+        $totalCicilanPerProduk = [];
+        $totalJumlahProdukPerProduk =[];
+       
+        foreach ($product as $produk) {
+            $productId = $produk->id;
+            $cicilanProduk = $totalCicilan * ($productPersen[$productId] / 100);
+            $totalCicilanPerProduk[$productId] = $cicilanProduk;
 
+           
+
+            if ($cicilanProduk === 0) {
+                // Lakukan tindakan sesuai kebutuhan jika cicilanProduk sama dengan 0
+                // Misalnya, set jumlah produk ke 0 atau lanjut ke iterasi berikutnya
+                $totalJumlahProdukPerProduk[$productId] = 0;
+                continue;
+            }
+        
+
+            $detailsInsentif = DetailInsentif::where('produk_id', $produk->id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            ->get(['min_qty', 'max_qty', 'insentif', 'allowance', 'status']);
+
+          
+
+    
+        $insentifnext = null;
+        $minqtynext = null;
+        $maxqtynext = null;
+        $rangenext = null;
+        $allowancenext = null;
+        $statusnext = null;
+        $insentifdoublenext = null;
+        $rangecoublenext = null;
+        $minqtydoublenext = null;
+        $maxqtydoublenext = null;
+        $tiers = []; // Menyimpan tier yang memenuhi kondisi
+        $maxQtyPrevious = null;
+            $minQtyPrevious = null;
+            $insentifPrevious = null;
+            $statusPrevious = null;
+        
+            foreach ($detailsInsentif as $key => $detail) {
+                $minqty = $detail->min_qty;
+                $maxqty = $detail->max_qty;
+                $insentif = $detail->insentif;
+                $allowance = $detail->allowance;
+                $status = $detail->status;
+                
+                
+                $tiers[] = [
+                    'minQty' => $minQtyPrevious,
+                    'maxQty' => $maxQtyPrevious,
+                    'insentif' => $insentifPrevious,
+                    'status' => $statusPrevious,
+                ];
+
+
+                if ($maxqty === null) {
+                    $range = PHP_INT_MAX; // A very large number to represent unbounded range
+                    
+                } else {
+                    $range = ceil(($maxqty - ($minqty-1)) * $insentif);
+                }
+
+               
+
+               if (isset($detailsInsentif[$key + 1])) {
+                $minqtynext = $detailsInsentif[$key + 1]->min_qty;
+                $maxqtynext = $detailsInsentif[$key + 1]->max_qty;
+                $insentifnext = $detailsInsentif[$key + 1]->insentif;
+                $allowancenext = $detailsInsentif[$key + 1]->allowance;
+                $statusnext = $detailsInsentif[$key + 1]->status;
+                if (isset($detailsInsentif[$key + 2])) {
+                    $insentifdoublenext = $detailsInsentif[$key + 2]->insentif;
+                   
+                }
+               
+            
+                
+        
+                // Handling the case where maxqtynext is null (unbounded)
+                if ($maxqtynext === null) {
+                    $rangenext = PHP_INT_MAX; // A very large number to represent unbounded range
+                } else {
+                    $rangenext = ceil(($maxqtynext - ($minqtynext-1)) * $insentifnext);
+                }
+
+                if ($maxqtydoublenext === null) {
+                    $rangedoublenext = PHP_INT_MAX; // A very large number to represent unbounded range
+                } else {
+                    $rangedobulenext = ceil(($maxqtydoublenext - ($minqtydoublenext-1)) * $insentifdoublenext);
+                }
+
+                
+                
+               
+                if ($cicilanProduk <= $range) {
+
+                $jumlahproduk = ceil( ($minqty-1) + ($cicilanProduk / $insentif));
+                
+
+                break;
+               
+
+                } elseif ($cicilanProduk > $range && $cicilanProduk <= $rangenext && $status == 'Aktif' ){
+
+                   
+                   
+                    $totalTierResult = 0;
+
+
+                    foreach ($tiers as $tier) {
+                        $minQty = $tier['minQty'];
+                        $maxQty = $tier['maxQty'];
+                        $insentif = $tier['insentif'];
+                        $status = $tier['status'];
+                    
+                        if ($status == 'Aktif') {
+                            $tierResult = ($maxQty - ($minQty - 1)) * $insentif;
+                            $totalTierResult += $tierResult;
+                        }
+                    }
+                    
+                    $selisih = $cicilanProduk - $allowance- $range - $totalTierResult;
+
+                    
+                    $jumlahproduk = ceil (($maxqty - ($minqty-1))) +  ceil($selisih/$insentifnext) + $maxQtyPrevious;
+
+                   
+                
+                    break;
+
+                }  elseif ($cicilanProduk > $range && $cicilanProduk <= $rangenext  && $status == 'Tidak Aktif'){
+
+                    $selisih = $cicilanProduk - $allowancenext ;
+                 
+                    
+
+                    if ($selisih <= $rangenext){
+                      
+                        $jumlahproduk = ceil( ($minqtynext-1) + ($selisih / $insentifnext));
+                      
+                        break;
+
+                    }
+                    elseif ($selisih > $rangenext && $selisih <= $rangedoublenext){
+
+                        $beda = $selisih - $rangenext;
+                        $jumlahproduk = ceil (($minqtydoublenext -1) +  ($beda/$insentifdoublenext));
+                        break;
+
+                    }
+
+                }  
+                
+
+            }
+            else {
+
+                
+                if ($cicilanProduk <= $range) {
+                   
+                   $beda = $cicilanProduk - $allowance; 
+                    $jumlahproduk = ceil(($minqty - 1) + ($beda / $insentif));
+
+                    
+               
+                    break;
+                }
+            }
+
+          
+            $maxQtyPrevious = $maxqty;
+            $minQtyPrevious = $minqty;
+            $insentifPrevious = $insentif;
+            $statusPrevious = $status;
+           
+        }
+
+       
+        $totalJumlahProdukPerProduk[$productId] = $jumlahproduk;
+    }
+ 
+    
 
         // Validasi bahwa persentase tidak boleh kurang dari 0 atau lebih dari 100
         foreach ($productPersen as $barangId => $persen) {
@@ -529,49 +717,36 @@ public function hitungMS (Request $request) {
             return redirect()->back()->with('error', 'Total persen produk harus sama dengan 100%')->withInput();
         }
 
+       
 
-        $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-        ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
+        // $biayaOperasional = BiayaOperasional::where('role_id', $user->role_id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+        // ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
     
 
-        $insentif = $totalCicilan - ($biayaOperasional * 4);
+        // $insentif = $totalCicilan - ($biayaOperasional * 4);
 
-
-
-// foreach ($product as $produk) { 
+// $jumlahProduk = [];
+// foreach ($product as $produk) {
 //     $productId = $produk->id;
-
-//     // Perhitungan jumlah produk untuk kategori ntb
-//     $jumlahProdukntb[$productId] = intval(ceil((($ntbPersenInputs[$productId] * $insentif) / 100) / 50000));
-
-//     // Perhitungan jumlah produk untuk kategori sosmed
-//     $jumlahProduksosmed[$productId] = intval(ceil((($sosmedPersenInputs[$productId] *  $insentif ) / 100) / 20000));
-
-//     $jumlahProdukpersonal[$productId] = intval(ceil((($personalPersenInputs[$productId] *  $insentif ) / 100 )/10000));
-
-// }
-
-$jumlahProduk = [];
-foreach ($product as $produk) {
-    $productId = $produk->id;
-    $detailInsentif = DetailInsentif::where('produk_id', $produk->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-    ->where('tanggal_selesai', '>=', $tanggalBerjalan)->first();
+//     $detailInsentif = DetailInsentif::where('produk_id', $produk->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+//     ->where('tanggal_selesai', '>=', $tanggalBerjalan)->first();
     
-    $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
+//     $incentif = $detailInsentif ? $detailInsentif->insentif : 0;
 
-    $jumlahProduk[$productId] = intval(ceil(($productPersen[$productId] * $insentif / 100)/$incentif));
-}
+//     $jumlahProduk[$productId] = intval(ceil(($productPersen[$productId] * $insentif / 100)/$incentif));
+// }
 
 
 return view('user.hasilhitungprodukMS', [
     'totalCicilan' => $totalCicilan,
-  'jumlahProduk' => $jumlahProduk,
+  'jumlahProduk' => $totalJumlahProdukPerProduk,
     'product' => $product,
 
 ]);
    
 
 }
+
 
 
     /**

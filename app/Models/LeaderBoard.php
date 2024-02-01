@@ -343,6 +343,7 @@ public static function getRankForUser($userId, $role)
     
     // Ambil tanggal awal bulan ini
     $startDate = $today->startOfMonth()->toDateString();
+
     
     // Ambil tanggal akhir bulan ini
     $endDate = $today->endOfMonth()->toDateString();
@@ -355,9 +356,12 @@ public static function getRankForUser($userId, $role)
         ->groupBy('user_id')
         ->orderBy('total_point', 'desc');
 
+        
+
     // Query untuk mengambil peringkat pengguna tertentu.
     $userRank = $userRankQuery->pluck('user_id')->search($userId);
 
+    
     if ($userRank === false) {
         // Handle the case where no data exists for the given user.
         return null; // You can return null or an appropriate value indicating no data.
@@ -418,8 +422,6 @@ public static function getLeaderboardForRoleMonth($role, $startDate, $endDate)
         ->get();
 }
 
-
-
     protected $fillable = [
         'no',
         'role_id',
@@ -427,13 +429,16 @@ public static function getLeaderboardForRoleMonth($role, $startDate, $endDate)
         'nama',
         'pencapaian',
         'tanggal',
-      
+        'pencapaian_flag',
         'kode_sales',
+        'ntb_reg_flag',
+        'totalflag',
         'total',// Kolom JSON yang baru ditambahkan
     ];
 
     protected $casts = [
         'pencapaian' => 'array',
+        'pencapaian_flag' => 'array',
     ];
 
     public function User()

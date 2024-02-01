@@ -53,7 +53,7 @@
     
 <div class="row portfolio-container" data-aos-delay="200">
 
-        <div class="col-lg-6 col-md-6 portfolio-item">
+<div class="col-lg-4 col-md-6 portfolio-item">
             <div class="card-deck">
             <div class="icon-card">
                 
@@ -81,7 +81,7 @@
             </div>
         </div>
         
-        <!-- <div class="col-lg-4 col-md-6 portfolio-item">
+        <div class="col-lg-4 col-md-6 portfolio-item">
             <div class="card-deck">
             <div class="icon-card">
                             <div class="card-body ">
@@ -97,16 +97,16 @@
     <div class="col text-center">
     <small> </small>
       <a href="{{ route('user.myincome') }}">
-        <button class="btn btn-sm btn-link">Lihat riwayat poin</button>
+        <!-- <button class="btn btn-sm btn-link">Lihat riwayat poin</button> -->
       </a>
     </div>
   </div>
 </div>    </div>
                 </div>
             </div>
-        </div> -->
+        </div>
 
-        <div class="col-lg-6 col-md-6 portfolio-item">
+        <div class="col-lg-4 col-md-6 portfolio-item">
     <div class="card-deck">
         <div class="icon-card">
            
@@ -151,7 +151,7 @@
 </div>
 </div>
 
-<!-- 
+
 <div class="card-reward">
   
 <div class="row portfolio-container" data-aos-delay="200">
@@ -224,7 +224,7 @@
         @endif
 </div>
 </div>
-            </div> -->
+            </div>
 
 
 </section>

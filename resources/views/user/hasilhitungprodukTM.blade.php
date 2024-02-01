@@ -14,9 +14,6 @@
         <div class="row">
        
       
-        
-
-
           <div class="alert alert-info mt-3">
    Asumsikan ditambahkan senilai Rp. 4.900.000 dari total cicilan untuk kebutuhan harianmu ya.
 </div>

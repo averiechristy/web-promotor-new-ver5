@@ -39,6 +39,7 @@ entries
                                 <table  class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>
+                                        <th>Role</th>
                                         <th>Nama Produk</th>
                                         <th>Insentif</th>
                                         <th>Poin</th>
@@ -57,6 +58,7 @@ entries
                                     <tbody>
                                         @foreach ($skema as $item)
                                         <tr>
+                                   <td>{{$item -> Role -> jenis_role}}</td>
                                   <td>{{$item -> Produk -> nama_produk }}</td>
                                   <td>    
                     <a href="{{ route('tampildetailinsentif', $item->id) }}"><button type="button" class="btn btn-link">

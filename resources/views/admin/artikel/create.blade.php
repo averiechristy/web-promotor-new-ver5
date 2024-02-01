@@ -57,7 +57,7 @@
 
                                                 </script>
                                                 <div class="form-group mb-4">
-                                              <label>Isi Artikel</label>
+                                              <label>Isi Berita</label>
                                               <div class="form-group">
                                               <!-- <textarea name="isi_artikel" class="my-editor form-control {{$errors->has('isi_artikel') ? 'is-invalid' : ''}}" style="border-color: #01004C;" id="my-editor" cols="30" rows="10" required>{{old('isi_artikel')}}</textarea>                                             -->
                                               <textarea name="isi_artikel" class="my-editor form-control {{$errors->has('isi_artikel') ? 'is-invalid' : ''}} " id="my-editor"cols="30" rows="10" style="border-color: #01004C;" value="" required oninvalid="this.setCustomValidity('Isi artikel tidak boleh kosong')" oninput="setCustomValidity('')">{{ old('isi_artikel') }}

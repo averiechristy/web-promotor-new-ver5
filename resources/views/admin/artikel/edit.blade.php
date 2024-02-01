@@ -52,7 +52,7 @@
 
                                             
                                            
-                                              <label>Isi Artikel</label>
+                                              <label>Isi Berita</label>
                                               <div class="form-group">
                                               <textarea name="isi_artikel"  class="my-editor form-control {{$errors->has('isi_artikel') ? 'is-invalid' : ''}}" id="my-editor" cols="30" rows="10" value=""  oninvalid="this.setCustomValidity('Isi artikel tidak boleh kosong')" oninput="setCustomValidity('')"
 

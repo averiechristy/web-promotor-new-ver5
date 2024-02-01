@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BiayaOperasional;
 use App\Models\DetailInsentif;
 use App\Models\LeaderBoard;
+use App\Models\Product;
 use App\Models\Reward;
 use Auth;
 use Illuminate\Http\Request;
@@ -20,9 +21,14 @@ class UserDashboardController extends Controller
     public function index()
     {
         $userId = auth()->user()->id;
+
         $currentRole = auth()->user()->role;
        
         $kodeRole = strtolower($currentRole->kode_role);
+
+        $roleid = $currentRole->id;
+
+        $user = Auth::user();
 
         $tanggalBerjalan = Carbon::now();
              $today = Carbon::now();
@@ -55,6 +61,82 @@ class UserDashboardController extends Controller
         ->whereYear('tanggal', now()->year)
         ->whereMonth('tanggal', now()->month)
         ->sum('total');
+        
+        
+    
+      
+
+   
+  $produk = LeaderBoard::where('user_id', $userId)
+        ->whereYear('tanggal', now()->year)
+        ->whereMonth('tanggal', now()->month)
+        ->get(['pencapaian_flag','tanggal']);
+
+
+        
+    
+    $pencapaianArray = json_decode($produk, true);
+    
+    // Fetch product names and IDs from the "Product" table
+    $products = Product::where('role_id', $roleid)->pluck('nama_produk', 'id');
+
+    
+    // Map product names to product IDs in $pencapaianArray
+  
+        $totalPerProduk = [];
+
+        foreach ($pencapaianArray as $pencapaian) {
+            foreach ($pencapaian['pencapaian_flag'] as $produk => $jumlah) {
+                // Jika produk sudah ada dalam $totalPerProduk, tambahkan jumlahnya
+                if (isset($totalPerProduk[$produk])) {
+                    $totalPerProduk[$produk] += (int)$jumlah;
+                } else {
+                    // Jika produk belum ada, inisialisasi dengan jumlah dari pencapaian saat ini
+                    $totalPerProduk[$produk] = (int)$jumlah;
+                }
+            }
+        }
+        $weekTotalPerProduk = [];
+
+  
+    
+        foreach ($pencapaianArray as $pencapaian) {
+            // Ambil informasi minggu dari tanggal pencapaian
+            $weekNumber = date('W', strtotime($pencapaian['tanggal']));
+        
+            foreach ($pencapaian['pencapaian_flag'] as $produk => $jumlah) {
+                // Tambahkan kondisi untuk memeriksa produk ID
+                if ($produk == 121) {
+                    // Buat kunci unik untuk setiap produk berdasarkan minggu
+                    $key = $produk . '_week_' . $weekNumber;
+        
+                    // Jika produk sudah ada dalam $weekTotalPerProduk, tambahkan jumlahnya
+                    if (isset($weekTotalPerProduk[$key])) {
+                        $weekTotalPerProduk[$key] += (int)$jumlah;
+                    } else {
+                        // Jika produk belum ada, inisialisasi dengan jumlah dari pencapaian saat ini
+                        $weekTotalPerProduk[$key] = (int)$jumlah;
+                    }
+                }
+            }
+        }
+
+        
+        
+        // Hasil akhir hanya berisi data dengan produk ID 121
+        $productQuantities = $totalPerProduk;
+        
+       
+        $weeklyProductQuantities = $weekTotalPerProduk;
+
+      
+
+
+
+
+
+$products = Product::all();
+
 
         if ($kodeRole == 'me') {
 
@@ -76,46 +158,298 @@ class UserDashboardController extends Controller
 
 } else if ($kodeRole == 'tm') {
 
-    $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-    ->where('tanggal_selesai', '>=', $tanggalBerjalan)
-    ->value('biaya_operasional');
+    // $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
+    // ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+    // ->value('biaya_operasional');
 
-    $detailsInsentif = DetailInsentif::where('role_id', $currentRole->id)
-    ->where('tanggal_mulai', '<=', $tanggalBerjalan)
-    ->where('tanggal_selesai', '>=', $tanggalBerjalan)
-    ->distinct()
-    ->get(['min_qty', 'max_qty', 'insentif']);
 
+    // $detailsInsentif = DetailInsentif::where('role_id', $currentRole->id)
+    // ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+    // ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+    // ->distinct()
+    // ->get(['min_qty', 'max_qty', 'insentif']);
+
+
+
+    // foreach ($detailsInsentif as $detail) {
+    //     $minqty = $detail->min_qty;
+    //     $maxqty = $detail->max_qty;
+    //     $insentif = $detail->insentif;
+    
+        
+        
+    //     if ($totalPointsThisMonth >= $minqty && ($maxqty === null || $totalPointsThisMonth <= $maxqty)) {
+    //         $insentifresult = ($totalPointsThisMonth - ($minqty-1)) * $detail->insentif;
+    //         $hasil = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
+         
+    //     }
+       
+    
+    //     // Simpan nilai maxqty untuk iterasi berikutnya
+    //     $maxQtyPrevious = $maxqty;
+    //     $minQtyPrevious = $minqty;
+    //     $insentifPrevious = $insentif;
+    // }
+
+ $hasil = 0;
+
+
+        $detailsInsentif = DetailInsentif::where('role_id', $user->role_id)
+        ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+        ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+        ->distinct()
+        ->get(['min_qty', 'max_qty', 'insentif', 'allowance', 'status']);
+        
+      
+        $maxQtyPrevious = null;
+        $minQtyPrevious = null;
+        $insentifPrevious = null;
+        $statusPrevious = null;
+        $tiers = []; 
+
+
+        foreach ($detailsInsentif as $detail) {
+            $minqty = $detail->min_qty;
+            $maxqty = $detail->max_qty;
+            $insentif = $detail->insentif;
+            $status = $detail -> status;
+            $allowance = $detail -> allowance;
+
+            $tiers[] = [
+                'minQty' => $minQtyPrevious,
+                'maxQty' => $maxQtyPrevious,
+                'insentif' => $insentifPrevious,
+                'status' => $statusPrevious,
+            ];
+            
+          
+            if ($totalPointsThisMonth  == 90){
+                $hasil = $allowance;
+            }
+            else if ($status == 'Aktif' && $totalPointsThisMonth >= $minqty && ($maxqty === null || $totalPointsThisMonth <= $maxqty)) {
+                $insentifresult = ($totalPointsThisMonth - ($minqty-1)) * $detail->insentif;
+                
+                
+                $tiersebelumnya = 0;
+                foreach ($tiers as $tier) {
+                    $minQty = $tier['minQty'];
+                    $maxQty = $tier['maxQty'];
+                    $insentif = $tier['insentif'];
+                    $status = $tier['status'];
+                
+                    if ($status == 'Aktif') {
+                        $tierResult = ($maxQty - ($minQty - 1)) * $insentif;
+                        $tiersebelumnya += $tierResult;
+                    }
+                }
+                
+                
+                            
+                            
+                            // Menambahkan allowance ke hasil akhir
+                            $totalResult = $tiersebelumnya ;
+            
+                $resultaktif = $tiersebelumnya + $insentifresult;
+                break;
+
+               
+    
+            }
+             else if ($status == 'Tidak Aktif') {
+                $insentifresult = $insentif * $totalPointsThisMonth;
+                $resulttidakaktif = $insentifresult ;
+                break;
+            }
+            
+            // Simpan nilai maxqty untuk iterasi berikutnya
+            $maxQtyPrevious = $maxqty;
+            $minQtyPrevious = $minqty;
+            $insentifPrevious = $insentif;
+            $statusPrevious = $status;
+        }
+     
+        if (isset($resultaktif) && $resultaktif > 0) {
+            $allowance = DetailInsentif::where('role_id', $user->role_id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            
+            ->where('status', 'Aktif') // Menambahkan kondisi status aktif
+                    ->distinct() // Menambahkan fungsi distinct
+                    ->value('allowance'); // Mengambil nilai langsung
+    
+            
+           $hasil = $allowance + $resultaktif;
+          
+        } else if (isset($resulttidakaktif) && $resulttidakaktif > 0) {
+            $allowance = DetailInsentif::where('role_id', $user->role_id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            ->where('status', 'Tidak Aktif') // Menambahkan kondisi status aktif
+                    ->distinct() // Menambahkan fungsi distinct
+                    ->value('allowance'); // Mengambil nilai langsung
+    
+           $hasil = $allowance + $resulttidakaktif;
+
+        }
+    
+
+} else  if ($kodeRole == 'ms') {
+
+
+    
+    
+    $products = Product::where('role_id', $user->role_id)->get();
+  
+
+    $hasil = 0;
+
+
+    foreach ($products as $product) {
+        if (isset($productQuantities[$product->id]) && $productQuantities[$product->id] != 0) {
+                        $quantity = $productQuantities[$product->id];
+                      
+           
+
+                        if($product->id == 121){
+
+                                            
+            $detailsInsentif = DetailInsentif::where('produk_id', $product->id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            ->get(['min_qty', 'max_qty', 'insentif', 'allowance', 'status']);
+
+                            $weeklyResults=[];
+
+                            foreach ($detailsInsentif as $detail) {
+        foreach ($weeklyProductQuantities as $key => $quantity) {
+            // Ambil minggu dari kunci
+            $week = substr($key, strpos($key, '_week_') + 6);
+        
+            // Insentif dan Allowance
+            $insentif = $detail->insentif;
+          
+
+            if($quantity >=5){
+                $allowance = $detail->allowance;
+            } else if ($quantity<5){
+                $allowance=0;
+            }
+            // Hitung hasil berdasarkan rumus yang diberikan
+            $result = ($quantity * $insentif) +$allowance;
+        
+            // Tetapkan hasil ke dalam array atau variabel sesuai kebutuhan Anda
+            $weeklyResults[$key] = $result;
+        }
+        
+    }
+     
+        // Sekarang $weeklyResults berisi hasil untuk setiap minggu berdasarkan rumus yang diberikan.
+        
+        $result = array_sum($weeklyResults);
+
+                          
+
+                        } else {
+                          
+            $detailsInsentif = DetailInsentif::where('produk_id', $product->id)
+            ->where('tanggal_mulai', '<=', $tanggalBerjalan)
+            ->where('tanggal_selesai', '>=', $tanggalBerjalan)
+            ->get(['min_qty', 'max_qty', 'insentif', 'allowance', 'status']);
+
+            
+
+            
+            $maxQtyPrevious = null;
+            $minQtyPrevious = null;
+            $insentifPrevious = null;
+            $statusPrevious = null;
+            $tiers = []; // Menyimpan tier yang memenuhi kondisi
+    
+   
     foreach ($detailsInsentif as $detail) {
         $minqty = $detail->min_qty;
         $maxqty = $detail->max_qty;
         $insentif = $detail->insentif;
-    
-        
-        
-        if ($totalPointsThisMonth >= $minqty && ($maxqty === null || $totalPointsThisMonth <= $maxqty)) {
-            $insentifresult = ($totalPointsThisMonth - ($minqty-1)) * $detail->insentif;
-            $hasil = $biayaOperasional + (($maxQtyPrevious-$minQtyPrevious) * $insentifPrevious ) +  $insentifresult ;
-         
-        }
+        $status = $detail -> status;
+
+        $tiers[] = [
+            'minQty' => $minQtyPrevious,
+            'maxQty' => $maxQtyPrevious,
+            'insentif' => $insentifPrevious,
+            'status' => $statusPrevious,
+        ];
+
        
-    
+        if ($product->id == 121) {
+            $allowance =0;
+        } else {
+        $allowance = $detail -> allowance;
+
+        }
+
+
+        
+       
+     
+        
+        
+        if ($status == 'Aktif' && $quantity >= $minqty && ($maxqty === null || $quantity <= $maxqty)) {
+            $insentifresult = ($quantity - ($minqty-1)) * $detail->insentif;
+            
+           
+            $tiersebelumnya = 0;
+
+
+            foreach ($tiers as $tier) {
+                $minQty = $tier['minQty'];
+                $maxQty = $tier['maxQty'];
+                $insentif = $tier['insentif'];
+                $status = $tier['status'];
+            
+                if ($status == 'Aktif') {
+                    $tierResult = ($maxQty - ($minQty - 1)) * $insentif;
+                    $tiersebelumnya += $tierResult;
+                }
+            }
+            
+            
+                        
+                        
+                        // Menambahkan allowance ke hasil akhir
+                        $totalResult = $tiersebelumnya ;
+                      
+
+            
+            $result = $tiersebelumnya + $insentifresult + $allowance;
+            
+        }
+
+         else if ($status == 'Tidak Aktif') {
+            $insentifresult = $insentif * $quantity;
+            $result = $insentifresult + $allowance ;
+        }
+        
+        
         // Simpan nilai maxqty untuk iterasi berikutnya
         $maxQtyPrevious = $maxqty;
         $minQtyPrevious = $minqty;
         $insentifPrevious = $insentif;
+        $statusPrevious = $status;
+    }
+}
+
+
+            $hasil += $result ;
+           
+
+            
+        }
+
+     
     }
 
-
     
 
-} else  if ($kodeRole == 'ms') {
-    
-    $biayaOperasional = BiayaOperasional::where('role_id', $currentRole->id)->where('tanggal_mulai', '<=', $tanggalBerjalan)
-    ->where('tanggal_selesai', '>=', $tanggalBerjalan)->value('biaya_operasional');
-
-    $hasil = ($biayaOperasional * 4) + $totalPointsThisMonth;
-    $message = "Asumsi  minimal menjual 5 aplikasi per minggu dalam 1 bulan";
 
 }
     
@@ -213,7 +547,7 @@ foreach ($activeRewards as $activeReward) {
         ->groupBy('user_id')
         ->orderByDesc('total_points')
         ->pluck('user_id')
-        ->search($userId) + 1;
+        ->search($userId);
     
     
 

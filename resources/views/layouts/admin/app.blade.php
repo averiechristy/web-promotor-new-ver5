@@ -33,6 +33,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
     <script src="https://cdn.tiny.cloud/1/leb0njd3p3ivoira40rg4f6z9td385g0nvaokiax96r6t9um/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 </head>
@@ -208,13 +211,21 @@
 
 
 
-  <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+  <!-- <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('my-editor');
-    </script>
+    </script> -->
 
 
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
+<script>
+
+$(document).ready(function() {
+  $('#my-editor').summernote();
+});
+</script>
 
 
 </body>

@@ -40,9 +40,9 @@ entries
                                     <thead>
                                         <tr>
                                            
-                                            <th>Judul Promo</th>
-                                            <th>Gambar Promo</th>
-                                            <th>Isi Promo</th>
+                                            <th>Judul Berita</th>
+                                            <th>Gambar Berita</th>
+                                            <th>Isi Berita</th>
                                             <th>Created At </th>
                                             <th>Created By </th>
                                             <th>Updated At </th>
@@ -84,7 +84,7 @@ entries
                                             </td>
                                             <td>
                                             <a href="{{ route('detailartikel', $item->id) }}"><button type="button" class="btn btn-link">
-    Lihat Isi Promo
+    Lihat Isi Berita
 </button></a>
 <td>{{$item->created_at}}</td>
 <td>            @if ($item->created_by)
@@ -102,14 +102,14 @@ entries
 </td>
 
                                             <td> 
-                                               <div class="row">
+                                               
                                                <a href="{{route('tampilartikel', $item->id)}}" class="btn" data-toggle="tooltip" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
                                                <form method="POST" action="{{ route('deleteartikel', $item->id) }}">
                             @csrf
                             <input name="_method" type="hidden" value="DELETE">
                             <button type="submit" class="btn show_confirm " data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red" ></i></button>
                         </form>                                              
-                                                </div>
+                                                
                                                 </td>
                                             
                                         </tr>

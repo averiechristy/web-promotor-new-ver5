@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Akses;
+use App\Models\LeaderBoard;
 use App\Models\UserRole;
 use Auth;
 use Illuminate\Http\Request;
@@ -210,6 +211,11 @@ public function resetPassword(User $user, Request $request)
             if ($adminCount <= 1) {
                 return redirect()->route('admin.useraccount.index')->with('error', 'Tidak dapat menghapus akun admin terakhir.');
             }
+        }
+
+        if (LeaderBoard::where('user_id', $useraccount->id)->exists()) {
+            $request->session()->flash('error', "Tidak dapat menghapus user, karena masih ada data pencapaian yang berhubungan.");
+            return redirect()->route('admin.useraccount.index');
         }
 
         $useraccount->delete();

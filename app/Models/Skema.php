@@ -14,6 +14,7 @@ class Skema extends Model
         'poin_produk',
         'tanggal_mulai',
         'tanggal_selesai',
+        'status',
         'role_id',
         'keterangan',
         'created_by',
